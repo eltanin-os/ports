@@ -1,5 +1,5 @@
 <$PORTS/mk/build.mk
-# ABOUT
+
 NAME    = utilchest
 VERSION = 0
 LICENSE = UNLICENSE
@@ -7,7 +7,6 @@ DESCRIPTION = A set of unix utilities
 
 MAKEDEPS= libc
 
-# RULES
-SRC = utilchest
+SRC = $NAME
 GIT = https://github.com/eltanin-os/utilchest
 MKFILE = ../utilchest.mk

@@ -1,0 +1,12 @@
+<$PORTS/mk/build.mk
+
+NAME    = mksh
+VERSION = 56-b
+LICENSE = MIROS
+DESCRIPTION = MirBSD Korn Shell - an enhanced version of the public domain ksh.
+
+MAKEDEPS = libc
+
+SRC = $NAME
+URL = https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-R56b.tgz
+MKFILE = ../mksh.mk

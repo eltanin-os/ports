@@ -1,8 +1,9 @@
 <$PORTS/mk/build.mk
 
-NAME    =
-VERSION =
-LICENSE =
+NAME     =
+LONGNAME =
+VERSION  =
+LICENSE  =
 DESCRIPTION =
 
 RUNDEPS  =
