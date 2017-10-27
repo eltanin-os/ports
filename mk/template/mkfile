@@ -1,0 +1,14 @@
+<$PORTS/mk/build.mk
+
+NAME    =
+VERSION =
+LICENSE =
+DESCRIPTION =
+
+RUNDEPS  =
+MAKEDEPS =
+
+SRC =
+URL =
+GIT =
+MKFILE =
