@@ -23,7 +23,7 @@ MANDIR = ${PREFIX}/share/man
 
 # TOOLS
 FETCH   = curl -LO
-INSTALL = install
+INSTALL = /usr/bin/install
 STRIP   = strip
 SUM     = sha512sum
 
