@@ -40,7 +40,8 @@ clean:QV:
 distclean:QV:
 	if test -d $SRC; then
 		rm -rf $SRC dbfile
-		rm -rf *.pkg.tgz .cache*
+		rm -rf *.pkg.tgz *.tar.gz
+		rm -rf cache*
 	fi
 
 <$PORTS/mk/fetch.mk

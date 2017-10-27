@@ -1,3 +1,6 @@
+# ENV PATH
+DBDIR= /var/pkg/local
+
 # COMPILE
 CC     = ecc
 CXX    = ecc++
@@ -10,7 +13,7 @@ CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE
 CFLAGS   =
 LDFLAGS  = -Os -static
 
-# PATH
+# COMPILE PATH
 PREFIX =
 BINDIR = ${PREFIX}/bin
 LIBDIR = ${PREFIX}/lib

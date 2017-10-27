@@ -11,18 +11,20 @@ dbfile:QV: pkgroot
 	pkgsize=`du -sk $name | awk '{printf "%u", $1*1024}'`
 	dirs=`find .pkgroot -type d -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
 	files=`find -L .pkgroot -type f -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
-	echo "name:$NAME" >> dbfile
+	echo "name:$NAME"               >> dbfile
 	[ -z "$LONGNAME" ] && LONGNAME=$NAME
-	echo "name-long:$LONGNAME" >> dbfile
-	echo "version:$VERSION" >> dbfile
-	echo "license:$LICENSE" >> dbfile
+	echo "name-long:$LONGNAME"      >> dbfile
+	echo "version:$VERSION"         >> dbfile
+	echo "license:$LICENSE"         >> dbfile
 	echo "description:$DESCRIPTION" >> dbfile
-	echo "size:$size" >> dbfile
-	echo "pkgsize:$pkgsize" >> dbfile
+	echo "size:$size"               >> dbfile
+	echo "pkgsize:$pkgsize"         >> dbfile
 	for d in $RUNDEPS; do
 		echo "run-dep:$d" >> dbfile
 	done
 	for d in $MAKEDEPS; do
+		# get package version from dbfile
+		d="$d#`grep 'version' ${DBDIR}/$d | sed 's/version://g'`"
 		echo "make-dep:$d" >> dbfile
 	done
 	for d in $dirs; do

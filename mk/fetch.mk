@@ -12,7 +12,7 @@ fetch-other:QV:
 	if test -n "$URL"; then
 		pkgsrc=`basename $URL`
 		$FETCH $URL
-		rval=`cat CHECKSUMS | $SUM -c || echo -n $?`
+		rval=`cat checksums | $SUM -c || echo -n $?`
 		if test -e "$pkgsrc"; then
 			tar -xf "$pkgsrc"
 		fi
