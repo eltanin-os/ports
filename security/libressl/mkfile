@@ -1,0 +1,13 @@
+<$PORTS/mk/build.mk
+
+NAME    = libressl
+VERSION = 2.6.2
+LICENSE = OPENSSL
+DESCRIPTION = LibreSSL is a fork of, and drop in replacement for OpenSSL.
+
+MAKEDEPS= libc linux-headers
+
+
+SRC = $NAME-$VERSION
+URL = https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.6.2.tar.gz
+MKFILE = ../libressl.mk
