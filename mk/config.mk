@@ -2,7 +2,7 @@
 DBDIR= /var/pkg/local
 
 # COMPILE
-CC     = ecc
+CC     = cc
 CXX    = c++
 LD     = $CC
 AR     = ar
