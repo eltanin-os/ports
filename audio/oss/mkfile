@@ -1,0 +1,14 @@
+<$PORTS/mk/build.mk
+
+NAME     = oss
+VERSION  = 4.2-build2017
+LICENSE  = GPL2
+DESCRIPTION = Open Sound System UNIX audio architecture.
+PATCHES  = ../patches/musl_linux_static_hack.patch
+
+# add 'libvorbis' to ogg support
+MAKEDEPS = libc linux-headers
+
+SRC = ${NAME}-v${VERSION}-src-gpl
+URL = http://www.4front-tech.com/developer/sources/stable/gpl/${NAME}-v${VERSION}-src-gpl.tar.bz2
+MKFILE = ../oss.mk

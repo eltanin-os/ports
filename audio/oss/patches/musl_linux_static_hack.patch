@@ -1,0 +1,218 @@
+diff -Naur oss-v4.2-build2017-src-gpl/kernel/framework/include/oss_config.h oss4/kernel/framework/include/oss_config.h
+--- oss-v4.2-build2017-src-gpl/kernel/framework/include/oss_config.h	2017-02-17 17:20:41.000000000 -0200
++++ oss4/kernel/framework/include/oss_config.h	2017-10-28 14:05:37.347308176 -0200
+@@ -44,6 +44,14 @@
+ #error OS_VERSION not defined in os.h
+ #endif
+ 
++/* define if not */
++#ifndef loff_t
++# ifndef __kernel_loff_t
++#  define __kernel_loff_t off_t
++# endif
++# define loff_t __kernel_loff_t
++#endif
++
+ /*
+  * Memory block allocation (oss_memblk.h/c)
+  */
+diff -Naur oss-v4.2-build2017-src-gpl/kernel/OS/Linux/wrapper/wrap.h oss4/kernel/OS/Linux/wrapper/wrap.h
+--- oss-v4.2-build2017-src-gpl/kernel/OS/Linux/wrapper/wrap.h	2017-02-17 17:20:40.000000000 -0200
++++ oss4/kernel/OS/Linux/wrapper/wrap.h	2017-10-28 14:06:04.094251788 -0200
+@@ -135,6 +135,14 @@
+ 
+ extern int oss_vma_get_flags (oss_vm_area_handle_t *);
+ 
++/* define if not */
++#ifndef loff_t
++# ifndef __kernel_loff_t
++#  define __kernel_loff_t off_t
++# endif
++# define loff_t __kernel_loff_t
++#endif
++
+ typedef struct oss_file_operation_handle
+ {
+   ssize_t (*read) (oss_file_handle_t *, char *, size_t, loff_t *);
+diff -Naur oss-v4.2-build2017-src-gpl/lib/libOSSlib/compile.sh oss4/lib/libOSSlib/compile.sh
+--- oss-v4.2-build2017-src-gpl/lib/libOSSlib/compile.sh	2014-02-14 20:59:55.000000000 -0200
++++ oss4/lib/libOSSlib/compile.sh	2017-10-28 14:06:25.341138599 -0200
+@@ -4,7 +4,7 @@
+ case `uname` in
+ 
+ "Linux")
+-	$MAKE libOSSlib.so
++	$MAKE libOSSlib.a CFLAGS=""
+ 	;;
+ 
+ "FreeBSD")
+diff -Naur oss-v4.2-build2017-src-gpl/os_cmd/Linux/ossdetect/ossdetect.c oss4/os_cmd/Linux/ossdetect/ossdetect.c
+--- oss-v4.2-build2017-src-gpl/os_cmd/Linux/ossdetect/ossdetect.c	2017-02-17 17:20:42.000000000 -0200
++++ oss4/os_cmd/Linux/ossdetect/ossdetect.c	2017-10-28 14:05:09.023681795 -0200
+@@ -24,6 +24,10 @@
+ #include <sys/stat.h>
+ #include <sys/dir.h>
+ 
++#ifndef PATH_MAX
++#define PATH_MAX 4096
++#endif
++
+ #define PCI_PASS	0
+ #define USB_PASS	1
+ #define PSEUDO_PASS	2
+@@ -675,7 +679,7 @@
+ 
+   snprintf (instfname, sizeof (instfname), "%s/%s", osslibdir,
+ 	    "etc/installed_drivers");
+- 
++
+   if ((f = fopen (instfname, "w")) == NULL)
+     {
+       perror (instfname);
+diff -Naur oss-v4.2-build2017-src-gpl/setup/Linux/make.local oss4/setup/Linux/make.local
+--- oss-v4.2-build2017-src-gpl/setup/Linux/make.local	2014-02-14 20:59:55.000000000 -0200
++++ oss4/setup/Linux/make.local	2017-10-28 14:07:08.868256665 -0200
+@@ -16,6 +16,6 @@
+ 		sh setup/Linux/mkdeb.sh
+ 
+ install:	copy
+-	cd ${OSSLIBDIR}/build && sh install.sh
+-	sync
+-	soundoff && sync && soundon && echo "OSS has started OK"
++#	cd ${OSSLIBDIR}/build && sh install.sh
++#	sync
++#	soundoff && sync && soundon && echo "OSS has started OK"
+diff -Naur oss-v4.2-build2017-src-gpl/setup/srcconf.c oss4/setup/srcconf.c
+--- oss-v4.2-build2017-src-gpl/setup/srcconf.c	2017-02-17 17:20:42.000000000 -0200
++++ oss4/setup/srcconf.c	2017-10-28 14:06:43.691328834 -0200
+@@ -93,8 +93,8 @@
+ static int useronly = 0;
+ static int do_warning_checks=1;
+ 
+-static char *shlib_cflags = "-shared -fPIC";
+-static char *shlib_ldflags = "-shared -fPIC";
++static char *shlib_cflags = "-static";
++static char *shlib_ldflags = "-static";
+ 
+ static char *extra_libraries = "";
+ 
+@@ -317,19 +317,19 @@
+ 	         {
+ 		      printf
+ 			("Directory depends on the VMIX subsystem which is not enabled\n");
+-	
++
+ 		      return 0;
+ 	         }
+ 	      continue;
+ 	    }
+ 
+-	  if (strcmp (parms, "MIDI") == 0) // Skip if MIDI is disabled 
++	  if (strcmp (parms, "MIDI") == 0) // Skip if MIDI is disabled
+ 	    {
+ 	      if (strcmp(config_midi, "DISABLED")==0)
+ 	         {
+ 		      printf
+ 			("Directory depends on the MIDI subsystem which is not enabled\n");
+-	
++
+ 		      return 0;
+ 	         }
+ 	      continue;
+@@ -340,7 +340,7 @@
+ 	      if (strcmp(config_midi, "DISABLED")!=0)
+ 	         {
+ 			// printf ("Directory not compatible with MIDI subsystem (which is enabled)\n");
+-	
++
+ 		      return 0;
+ 	         }
+ 	      continue;
+@@ -914,6 +914,8 @@
+   if (config_phpmake)
+      fprintf (f, "<?php require getenv(\"PHPMAKE_LIBPATH\") . \"library.php\"; phpmake_makefile_top_rules(); ?>\n");
+ 
++  fprintf(f, "AR=ar\n");
++  fprintf(f, "AROPTS=rc\n");
+   fprintf (f, "CC=%s\n", conf.ccomp);
+   // fprintf (f, "LD=ld\n");
+   fprintf (f, "HOSTCC=%s\n", hostcc);
+@@ -1113,7 +1115,7 @@
+     }
+   else if (conf.mode == MD_SHLIB)
+     {
+-	fprintf (f, "$(LIBDIR)/%s.so ", name);
++	fprintf (f, "$(LIBDIR)/%s.a ", name);
+     }
+   else if (conf.mode != MD_KERNEL)
+     {
+@@ -1177,17 +1179,17 @@
+ 
+   if (conf.mode == MD_SHLIB)
+     {
+-      fprintf (f, "%s.so:\t$(LIBDIR)/%s.so\n\n", name, name);
++      fprintf (f, "%s.a:\t$(LIBDIR)/%s.a\n\n", name, name);
+ 
+-      fprintf (f, "$(LIBDIR)/%s.so:\t$(OBJECTS)\n", name);
++      fprintf (f, "$(LIBDIR)/%s.a:\t$(OBJECTS)\n", name);
+ #if defined(linux)
+-      /* gcc -shared works much better than ld on Linux */
++      /* static */
+       fprintf (f,
+-	       "\t$(CC) $(LDFLAGS) %s -o $(LIBDIR)/%s.so $(OBJECTS)\n",
+-	       shlib_cflags, name);
++	       "\t$(AR) $(AROPTS) -o $(LIBDIR)/%s.a $(OBJECTS)\n",
++	       name);
+ #else
+       fprintf (f,
+-	       "\t$(LD) $(LDFLAGS) %s -o $(LIBDIR)/%s.so $(OBJECTS)\n",
++	       "\t$(LD) $(LDFLAGS) %s -o $(LIBDIR)/%s.a $(OBJECTS)\n",
+ 	       shlib_ldflags, name);
+ #endif
+       fprintf (f, "\n\n");
+@@ -1574,7 +1576,7 @@
+ 			fclose (cf);
+      		}
+      }
+-  
++
+ 
+   produce_output (&conf);
+ 
+diff -Naur oss-v4.2-build2017-src-gpl/setup/srcconf_linux.inc oss4/setup/srcconf_linux.inc
+--- oss-v4.2-build2017-src-gpl/setup/srcconf_linux.inc	2017-01-31 18:37:08.000000000 -0200
++++ oss4/setup/srcconf_linux.inc	2017-10-28 14:06:51.681411698 -0200
+@@ -42,7 +42,7 @@
+   if (do_warning_checks)
+     strcpy(conf->OSflags, "-Wall");
+   strcpy (conf->ccomp, targetcc);
+-  strcpy (conf->cplusplus, "g++ -fno-rtti -fno-exceptions -I.");
++  strcpy (conf->cplusplus, "c++ -fno-rtti -fno-exceptions -I.");
+   strcpy (conf->platform, "i86pc");
+ }
+ 
+@@ -51,20 +51,20 @@
+ {
+ # if defined(__x86_64__)
+   fprintf (f,
+-	     "CFLAGS += -O3 -fno-common -mcmodel=kernel  -mno-red-zone -fno-pie  -fno-asynchronous-unwind-tables -ffreestanding%s\n", fnsp);
++	     "CFLAGS += -Os -fno-common -mcmodel=kernel  -mno-red-zone -fno-pie  -fno-asynchronous-unwind-tables -ffreestanding%s\n", fnsp);
+ # else
+ #   ifndef __arm__
+   if (getenv ("NO_REGPARM") == NULL)
+ 	{
+ 	  fprintf (f,
+-		   "CFLAGS += -O3 -fno-common -ffreestanding -mregparm=3 -DUSE_REGPARM%s\n", fnsp);
++		   "CFLAGS += -Os -fno-common -ffreestanding -mregparm=3 -DUSE_REGPARM%s\n", fnsp);
+ 	}
+   else
+ 	{
+-	  fprintf (f, "CFLAGS += -O3 -fno-common -ffreestanding -DNO_REGPARM%s\n", fnsp);
++	  fprintf (f, "CFLAGS += -Os -fno-common -ffreestanding -DNO_REGPARM%s\n", fnsp);
+ 	}
+ #   else
+-  fprintf (f, "CFLAGS += -O3 -fno-common -ffreestanding%s\n", fnsp);
++  fprintf (f, "CFLAGS += -Os -fno-common -ffreestanding%s\n", fnsp);
+ #   endif
+ # endif
+ }
