@@ -9,8 +9,12 @@ fetch-git:QV:
 	fi
 
 fetch-other:QV:
-	if test -n "$URL"; then
-		pkgsrc=`basename $URL`
+	rval=""
+	pkgsrc=`basename $URL`
+	if test -e "$pkgsrc"; then
+		rval=`cat checksums | $SUM -c || echo -n $?`
+	fi
+	if test -z "$rval" && test -n "$URL"; then
 		$FETCH $URL
 		rval=`cat checksums | $SUM -c || echo -n $?`
 		if test -e "$pkgsrc"; then

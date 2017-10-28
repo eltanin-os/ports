@@ -2,11 +2,11 @@
 DBDIR= /var/pkg/local
 
 # COMPILE
-CC     = ecc
-CXX    = ecc++
+CC     = cc
+CXX    = cc++
 LD     = $CC
-AR     = ecc-ar
-RANLIB = ecc-ranlib
+AR     = cc-ar
+RANLIB = cc-ranlib
 
 # COMPILE FLAGS
 CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE
@@ -15,11 +15,12 @@ LDFLAGS  = -Os -static
 
 # COMPILE PATH
 PREFIX =
+USRDIR = ${PREFIX}/usr
 BINDIR = ${PREFIX}/bin
 LIBDIR = ${PREFIX}/lib
 ETCDIR = ${PREFIX}/etc
 DFLDIR = ${ETC}/default
-MANDIR = ${PREFIX}/share/man
+MANDIR = ${USRDIR}/share/man
 
 # TOOLS
 FETCH   = curl -LO
