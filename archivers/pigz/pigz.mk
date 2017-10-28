@@ -1,12 +1,7 @@
 <| cat $PORTS/mk/config.mk
 
 build:QV:
-	# prepare env
-	sed -e "s/CC=cc/CC=$CC/g" -e "s/CFLAGS=/CFLAGS+= $CPPFLAGS /g"\
-	    -e "s/LDFLAGS=/LDFLAGS+=/g" Makefile > tmp
-	mv tmp Makefile
-	#
-	make
+	make CC="$CC" CFLAGS="$CPPFLAGS $CFLAGS" LDFLAGS="$LDFLAGS"
 
 install:QV:
 	mkdir -p ${ROOT}/${BINDIR} ${ROOT}/${MANDIR}/man1

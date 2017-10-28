@@ -2,15 +2,15 @@
 DBDIR= /var/pkg/local
 
 # COMPILE
-CC     = cc
+CC     = ecc
 CXX    = c++
 LD     = $CC
-AR     = ${CC}-ar
-RANLIB = ${CC}-ranlib
+AR     = ar
+RANLIB = ranlib
 
 # COMPILE FLAGS
 CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE
-CFLAGS   =
+CFLAGS   = -std=c99 -pedantic
 LDFLAGS  = -Os -static
 
 # COMPILE PATH
