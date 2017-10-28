@@ -9,20 +9,20 @@ fetch-git:QV:
 	fi
 
 fetch-other:QV:
-	rval=""
+	rval=1
 	pkgsrc=`basename $URL`
 	if test -e "$pkgsrc"; then
-		rval=`cat checksums | $SUM -c || echo -n $?`
+		cat checksums | $SUM -c && rval=0 || rval=1
 	fi
-	if test -z "$rval" && test -n "$URL"; then
+	if test "$rval" -ne "0" && test -n "$URL"; then
 		$FETCH $URL
-		rval=`cat checksums | $SUM -c || echo -n $?`
-		if test -e "$pkgsrc"; then
-			tar -xf "$pkgsrc"
-		fi
-		if test -z "$rval"; then
+		cat checksums | $SUM -c && rval=0 || rval=1
+		if test "$rval" -ne "0"; then
 			echo "Package fetching failed" 1>&2
 			false
+		fi
+		if test -e "$pkgsrc"; then
+			tar -xf "$pkgsrc"
 		fi
 	fi
 
