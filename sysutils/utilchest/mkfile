@@ -3,10 +3,10 @@
 NAME    = utilchest
 VERSION = 0
 LICENSE = UNLICENSE
-DESCRIPTION = A set of unix utilities
+DESCRIPTION = A set of unix utilities.
 
 MAKEDEPS= libc
 
 SRC = $NAME
-GIT = https://github.com/eltanin-os/utilchest
+GIT = https://github.com/eltanin-os/$NAME
 MKFILE = ../utilchest.mk

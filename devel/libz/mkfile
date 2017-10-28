@@ -5,10 +5,10 @@ VERSION = 1.2.8.2015.12.26
 LICENSE = zlib
 DESCRIPTION = ABI and API compatible zlib fork with focus\
     on correctness, proper portability, auditability, simplification\
-    and opportunities to optimize
+    and opportunities to optimize.
 
 MAKEDEPS = libc
 
 SRC = $NAME-$VERSION
-URL = https://sortix.org/libz/release/libz-1.2.8.2015.12.26.tar.gz
+URL = https://sortix.org/libz/release/${NAME}-${VERSION}.tar.gz
 MKFILE = ../libz.mk
