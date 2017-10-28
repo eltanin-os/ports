@@ -3,10 +3,10 @@ DBDIR= /var/pkg/local
 
 # COMPILE
 CC     = cc
-CXX    = cc++
+CXX    = c++
 LD     = $CC
-AR     = cc-ar
-RANLIB = cc-ranlib
+AR     = ${CC}-ar
+RANLIB = ${CC}-ranlib
 
 # COMPILE FLAGS
 CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE
