@@ -1,23 +1,5 @@
 <| cat $PORTS/mk/config.mk
 
-LIBUTILOBJ=\
-	lib/util/chown.o\
-	lib/util/cp.o\
-	lib/util/dir.o\
-	lib/util/ealloc.o\
-	lib/util/mode.o\
-	lib/util/pathcat.o\
-	lib/util/stoll.o
-
-LIBUTFOBJ=\
-	lib/utf/chartorune.o\
-	lib/utf/iscntrlrune.o\
-	lib/utf/isprintrune.o\
-	lib/utf/isvalidrune.o\
-	lib/utf/runetype.o
-
-LIB= lib/libutil.a lib/libutf.a
-
 BIN=\
 	src/basename\
 	src/cat\
@@ -58,6 +40,23 @@ BIN=\
 	src/whoami\
 	src/yes
 
+LIBUTILOBJ=\
+	lib/util/chown.o\
+	lib/util/cp.o\
+	lib/util/dir.o\
+	lib/util/ealloc.o\
+	lib/util/mode.o\
+	lib/util/pathcat.o\
+	lib/util/stoll.o
+
+LIBUTFOBJ=\
+	lib/utf/chartorune.o\
+	lib/utf/iscntrlrune.o\
+	lib/utf/isprintrune.o\
+	lib/utf/isvalidrune.o\
+	lib/utf/runetype.o
+
+LIB= lib/libutil.a lib/libutf.a
 OBJ= ${BIN:%=%.o} $LIBUTILOBJ $LIBUTFOBJ
 
 <$PORTS/mk/mk.build
@@ -66,6 +65,7 @@ CFLAGS = $CFLAGS -I inc
 LDLIBS = ${LIB}
 
 lib/libutil.a: $LIBUTILOBJ
-lib/libutf.a: $LIBUTFOBJ
+lib/libutf.a:  $LIBUTFOBJ
 
 build:QV: $LIB all
+install:QV: install-bin
