@@ -1,4 +1,4 @@
-<$PORTS/mk/build.mk
+<$PORTSmk/mk.3rd
 
 NAME    = libz
 VERSION = 1.2.8.2015.12.26

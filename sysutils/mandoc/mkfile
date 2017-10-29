@@ -1,4 +1,4 @@
-<$PORTS/mk/build.mk
+<$PORTSmk/mk.3rd
 
 NAME     = mandoc
 VERSION  = 1.14.3

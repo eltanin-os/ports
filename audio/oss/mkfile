@@ -1,4 +1,4 @@
-<$PORTS/mk/build.mk
+<$PORTSmk/mk.3rd
 
 NAME     = oss
 VERSION  = 4.2-build2017

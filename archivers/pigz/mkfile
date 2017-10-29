@@ -1,4 +1,4 @@
-<$PORTS/mk/build.mk
+<$PORTSmk/mk.3rd
 
 NAME     = pigz
 VERSION  = 2.3.4

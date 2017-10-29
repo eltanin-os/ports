@@ -1,0 +1,34 @@
+<| cat $PORTS/mk/config.mk
+
+all:QV: $OBJ $LIB $BIN
+
+install:QV: install-bin install-lib
+
+# RULES
+install-bin:QV: all
+	echo INSTALL BIN: $prereq
+
+install-lib:QV: all
+	echo INSTALL LIB: $prereq
+
+install-sym:QV: all
+	echo INSTALL SYM: $prereq
+
+clean:QV:
+	rm -f $OBJ $LIB $BIN
+
+# SUFFIX RULES
+%.a:
+	$AR rc $stem.a $prereq
+	$RANLIB $stem.a
+
+%.c: %.y
+	$YACC $stem.y
+	mv -f y.tab.c $stem.c
+
+%.o: %.c
+	$CC $CFLAGS $CPPFLAGS -o $stem.o -c $stem.c
+
+%: %.o
+	$CC $LDFLAGS -o $stem $prereq $LDLIBS
+
