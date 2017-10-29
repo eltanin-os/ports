@@ -43,5 +43,5 @@ distclean:QV:
 		rm -rf $SRC dbfile *.pkg.tgz .cache*
 	fi
 
-<$PORTS/mk/fetch.mk
-<$PORTS/mk/package.mk
+<$PORTS/mk/mk.fetch
+<$PORTS/mk/mk.package

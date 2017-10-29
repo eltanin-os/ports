@@ -1,4 +1,4 @@
-<$PORTSmk/mk.3rd
+<$PORTS/mk/mk.3rd
 
 NAME     = bzip2
 VERSION  = 1.0.6
