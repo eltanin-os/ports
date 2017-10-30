@@ -2,17 +2,21 @@
 
 all:QV: $OBJ $LIB $BIN
 
-install:QV: install-bin install-lib
-
 # RULES
 install-bin:QV: all
-	echo INSTALL BIN: $prereq
+	$INSTALL -dm 755 ${ROOT}$BINDIR
+	$INSTALL -csm 755 $BIN ${ROOT}$BINDIR
 
 install-lib:QV: all
-	echo INSTALL LIB: $prereq
+	$INSTALL -dm 755 ${ROOT}$LIBDIR
+	$INSTALL -csm 755 $LIB ${ROOT}$LIBDIR
+
+install-man:QV: all
+	$INSTALL -dm 755 ${ROOT}$MANDIR
+	$INSTALL -csm 755 $MAN ${ROOT}$LIBDIR
 
 install-sym:QV: all
-	echo INSTALL SYM: $prereq
+	echo INSTALL SYM $SYM
 
 clean:QV:
 	rm -f $OBJ $LIB $BIN
