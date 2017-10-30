@@ -9,4 +9,7 @@ MAKEDEPS= libc
 
 SRC = $NAME
 GIT = https://github.com/eltanin-os/$NAME
-MKFILE = ../utilchest.mk
+MKFILE = ../utilchest-box.mk
+
+# utilchest in multiple binaries
+# MKFILE = ../utilchest.mk
