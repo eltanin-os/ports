@@ -1,0 +1,13 @@
+<$PORTS/mk/mk.3rd
+
+NAME     = ncurses
+LONGNAME = netbsd-curses
+VERSION  = 0.2.1
+LICENSE  = BSD-3
+DESCRIPTION = netbsd curses library
+
+MAKEDEPS = libc
+
+SRC = ${LONGNAME}-${VERSION}
+URL = http://ftp.barfooze.de/pub/sabotage/tarballs/${LONGNAME}-${VERSION}.tar.xz
+MKFILE = ../ncurses.mk

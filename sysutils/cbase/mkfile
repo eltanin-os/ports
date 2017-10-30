@@ -5,7 +5,7 @@ VERSION  = 0.0
 LICENSE  = MULTIPLE
 DESCRIPTION = complementary set of unix utilities for utilchest
 
-MAKEDEPS = libc
+MAKEDEPS = libc ncurses
 
 SRC = $NAME
 GIT = https://github.com/eltanin-os/$NAME
