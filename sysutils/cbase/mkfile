@@ -1,0 +1,12 @@
+<$PORTS/mk/mk.3rd
+
+NAME     = cbase
+VERSION  = 0.0
+LICENSE  = MULTIPLE
+DESCRIPTION = complementary set of unix utilities for utilchest
+
+MAKEDEPS = libc
+
+SRC = $NAME
+GIT = https://github.com/eltanin-os/$NAME
+MKFILE = ../cbase.mk
