@@ -5,7 +5,7 @@ VERSION  = 2.3.4
 LICENSE  = zlib
 DESCRIPTION = Parallel implementation of the gzip file compressor.
 
-MAKEDEPS = libc
+MAKEDEPS = libc zlib
 
 SRC = ${NAME}-${VERSION}
 URL = https://zlib.net/pigz/${NAME}-${VERSION}.tar.gz
