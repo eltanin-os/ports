@@ -7,25 +7,34 @@ install:QV: install-bin install-lib install-man install-sym
 
 install-bin:QV: all
 	if test -n "$BINS"; then
-		$INSTALL -dm 755 ${ROOT}$BINDIR
+		$INSTALL -dm  755 ${ROOT}$BINDIR
 		$INSTALL -csm 755 $BINS ${ROOT}$BINDIR
+	fi
+
+install-inc:QV: all
+	if test -n "$INCS"; then
+		$INSTALL -dm 755 ${ROOT}$INCDIR
+		$INSTALL -cm 644 $LIBS ${ROOT}$INCDIR
 	fi
 
 install-lib:QV: all
 	if test -n "$LIBS"; then
 		$INSTALL -dm 755 ${ROOT}$LIBDIR
-		$INSTALL -cm 755 $LIBS ${ROOT}$LIBDIR
+		$INSTALL -cm 644 $LIBS ${ROOT}$LIBDIR
 	fi
 
 install-man:QV: all
 	if test -n "$MANS"; then
-		$INSTALL -dm 755 ${ROOT}$MANDIR
-		$INSTALL -cm 755 $MANS ${ROOT}$MANDIR
+		eval `echo $MANS | tr ' ' '\n' | paste -d ' ' - - | \
+		    awk '{ printf("$INSTALL -dm 755 ${ROOT}${MANDIR}/man%s; \
+		    $INSTALL -cm 644 %s ${ROOT}${MANDIR}/man%s;\n", \
+		    $1, $2, $1) }'`
 	fi
 
 install-sym:QV: all
 	if test -n "$SYMS"; then
-		echo INSTALL SYM $SYMS
+		eval `echo $SYMS | tr ' ' '\n' | paste -d ' ' - - | \
+		    awk '{ printf("ln -sf %s ${ROOT}${PREFIX}%s;\n", $1, $2) }'`
 	fi
 
 clean:QV:

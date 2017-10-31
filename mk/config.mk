@@ -20,6 +20,7 @@ LIBDIR = ${PREFIX}/lib
 ETCDIR = ${PREFIX}/etc
 DFLDIR = ${ETC}/default
 MANDIR = ${PREFIX}/share/man
+INCDIR = ${PREFIX}/include
 
 # TOOLS
 FETCH   = curl -LO

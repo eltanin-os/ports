@@ -1,48 +1,47 @@
 <| cat $PORTS/mk/config.mk
 
-BIN = utilchest
+BINS =\
+	utilchest
 
-SYM =\
-	src/basename\
-	src/cat\
-	src/chgrp\
-	src/chmod\
-	src/chown\
-	src/chroot\
-	src/clear\
-	src/cp\
-	src/date\
-	src/dirname\
-	src/domainname\
-	src/echo\
-	src/env\
-	src/false\
-	src/head\
-	src/hostname\
-	src/id\
-	src/link\
-	src/ln\
-	src/ls\
-	src/mkdir\
-	src/mkfifo\
-	src/mknod\
-	src/mv\
-	src/nice\
-	src/printenv\
-	src/pwd\
-	src/readlink\
-	src/rm\
-	src/rmdir\
-	src/sleep\
-	src/sync\
-	src/true\
-	src/tty\
-	src/uname\
-	src/unlink\
-	src/whoami\
-	src/yes
-
-SRC = ${SYM:%=%.c}
+SRC  =\
+	src/basename.c\
+	src/cat.c\
+	src/chgrp.c\
+	src/chmod.c\
+	src/chown.c\
+	src/chroot.c\
+	src/clear.c\
+	src/cp.c\
+	src/date.c\
+	src/dirname.c\
+	src/domainname.c\
+	src/echo.c\
+	src/env.c\
+	src/false.c\
+	src/head.c\
+	src/hostname.c\
+	src/id.c\
+	src/link.c\
+	src/ln.c\
+	src/ls.c\
+	src/mkdir.c\
+	src/mkfifo.c\
+	src/mknod.c\
+	src/mv.c\
+	src/nice.c\
+	src/printenv.c\
+	src/pwd.c\
+	src/readlink.c\
+	src/rm.c\
+	src/rmdir.c\
+	src/sleep.c\
+	src/sync.c\
+	src/true.c\
+	src/tty.c\
+	src/uname.c\
+	src/unlink.c\
+	src/whoami.c\
+	src/yes.c
 
 LIBUTILOBJ =\
 	lib/util/chown.o\
@@ -60,8 +59,54 @@ LIBUTFOBJ =\
 	lib/utf/isvalidrune.o\
 	lib/utf/runetype.o
 
-LOCAL_LIB = lib/libutil.a lib/libutf.a
-OBJS      = ${SYM:%=%.o} $LIBUTILOBJ $LIBUTFOBJ
+LOCAL_LIB =\
+	lib/libutil.a\
+	lib/libutf.a
+
+SYMS =\
+	utilchest ${BINDIR}/basename\
+	utilchest ${BINDIR}/cat\
+	utilchest ${BINDIR}/chgrp\
+	utilchest ${BINDIR}/chmod\
+	utilchest ${BINDIR}/chown\
+	utilchest ${BINDIR}/chroot\
+	utilchest ${BINDIR}/clear\
+	utilchest ${BINDIR}/cp\
+	utilchest ${BINDIR}/date\
+	utilchest ${BINDIR}/dirname\
+	utilchest ${BINDIR}/domainname\
+	utilchest ${BINDIR}/echo\
+	utilchest ${BINDIR}/env\
+	utilchest ${BINDIR}/false\
+	utilchest ${BINDIR}/head\
+	utilchest ${BINDIR}/hostname\
+	utilchest ${BINDIR}/id\
+	utilchest ${BINDIR}/link\
+	utilchest ${BINDIR}/ln\
+	utilchest ${BINDIR}/ls\
+	utilchest ${BINDIR}/mkdir\
+	utilchest ${BINDIR}/mkfifo\
+	utilchest ${BINDIR}/mknod\
+	utilchest ${BINDIR}/mv\
+	utilchest ${BINDIR}/nice\
+	utilchest ${BINDIR}/printenv\
+	utilchest ${BINDIR}/pwd\
+	utilchest ${BINDIR}/readlink\
+	utilchest ${BINDIR}/rm\
+	utilchest ${BINDIR}/rmdir\
+	utilchest ${BINDIR}/sleep\
+	utilchest ${BINDIR}/sync\
+	utilchest ${BINDIR}/true\
+	utilchest ${BINDIR}/tty\
+	utilchest ${BINDIR}/uname\
+	utilchest ${BINDIR}/unlink\
+	utilchest ${BINDIR}/whoami\
+	utilchest ${BINDIR}/yes
+
+OBJS =\
+	$LIBUTILOBJ\
+	$LIBUTFOBJ\
+	${SRC:%.c=%.o}
 
 <$PORTS/mk/mk.build
 
@@ -69,8 +114,6 @@ CFLAGS = $CFLAGS -I inc
 
 lib/libutil.a: $LIBUTILOBJ
 lib/libutf.a:  $LIBUTFOBJ
-
-install:QV: utilchest-install
 
 utilchest: $LOCAL_LIB
 	mkdir -p build
@@ -87,8 +130,3 @@ utilchest: $LOCAL_LIB
 	echo 'putchar(0xa); }; return 0; }'                                                                                                                     >> build/$target.c
 	$CC $CFLAGS $CPPFLAGS $LDFLAGS -o $target build/*.c $prereq
 	rm -rf build
-
-utilchest-install:QV: utilchest
-	install -dm 755 ${ROOT}/${BINDIR}
-	install -csm 755 utilchest ${ROOT}/${BINDIR}
-	for f in $(echo $SYM | sed 's/src\///g'); do ln -s utilchest ${ROOT}/${BINDIR}/$f; done
