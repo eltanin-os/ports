@@ -1,11 +1,10 @@
 <$PORTS/mk/mk.3rd
 
-NAME    = libz
-VERSION = 1.2.8.2015.12.26
-LICENSE = zlib
-DESCRIPTION = ABI and API compatible zlib fork with focus\
-    on correctness, proper portability, auditability, simplification\
-    and opportunities to optimize.
+NAME     = zlib
+LONGNAME = libz
+VERSION  = 1.2.8.2015.12.26
+LICENSE  = zlib
+DESCRIPTION = An ABI-compatible and API-compatible drop-in replacement for zlib.
 
 MAKEDEPS = libc
 

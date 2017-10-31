@@ -3,7 +3,7 @@
 NAME     = cbase
 VERSION  = 0.0
 LICENSE  = MULTIPLE
-DESCRIPTION = complementary set of unix utilities for utilchest
+DESCRIPTION = Complementary set of unix utilities for utilchest.
 
 MAKEDEPS = libc ncurses
 

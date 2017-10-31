@@ -3,7 +3,7 @@
 NAME    = mksh
 VERSION = 56b
 LICENSE = MIROS
-DESCRIPTION = MirBSD Korn Shell - an enhanced version of the public domain ksh.
+DESCRIPTION = An enhanced version of the public domain ksh.
 
 MAKEDEPS = libc
 

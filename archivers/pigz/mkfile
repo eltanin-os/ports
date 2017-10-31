@@ -3,7 +3,7 @@
 NAME     = pigz
 VERSION  = 2.3.4
 LICENSE  = zlib
-DESCRIPTION = Parallel implementation of the gzip file compressor
+DESCRIPTION = Parallel implementation of the gzip file compressor.
 
 MAKEDEPS = libc
 

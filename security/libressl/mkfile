@@ -3,7 +3,7 @@
 NAME    = libressl
 VERSION = 2.6.2
 LICENSE = OPENSSL
-DESCRIPTION = LibreSSL is a fork of, and drop in replacement for OpenSSL.
+DESCRIPTION = Is a fork of, and drop in replacement for OpenSSL.
 
 MAKEDEPS= libc linux-headers
 
