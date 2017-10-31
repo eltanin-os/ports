@@ -1,7 +1,9 @@
 <| cat $PORTS/mk/config.mk
 
+all:QV: build
+
 build:QV:
-	./configure --prefix=/
+	./configure --prefix="$PREFIX"
 	make
 
 install:QV:

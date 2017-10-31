@@ -1,5 +1,7 @@
 <| cat $PORTS/mk/config.mk
 
+all:QV: build
+
 build:QV:
 	chmod +x Build.sh
 	rm -rf build

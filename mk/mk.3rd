@@ -11,7 +11,7 @@ build:QV: fetch patch
 		status=`cmp -s $f $cachefile || echo -n $?`
 		if test -n "$status"; then
 			env -i PATH="$PATH" PORTS="$PORTS"\
-			    mk -f $f build
+			    mk -f $f
 			cp $f $cachefile
 		fi
 	done

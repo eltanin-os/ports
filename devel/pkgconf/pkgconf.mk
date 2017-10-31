@@ -1,7 +1,9 @@
 <| cat $PORTS/mk/config.mk
 
+all:QV: all
+
 build:QV:
-	./configure --prefix=$PREFIX --enable-shared=no
+	./configure --prefix="$PREFIX" --enable-shared=no
 	make
 
 install:QV:

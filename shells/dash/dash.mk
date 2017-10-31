@@ -1,7 +1,9 @@
 <| cat $PORTS/mk/config.mk
 
+all:QV: build
+
 build:QV:
-	./configure --prefix=/ --enable-static
+	./configure --prefix="$PREFIX" --enable-static
 	make
 
 install:QV:

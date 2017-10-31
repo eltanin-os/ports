@@ -12,4 +12,4 @@ GIT = https://github.com/eltanin-os/$NAME
 MKFILE = ../utilchest-box.mk
 
 # utilchest in multiple binaries
-# MKFILE = ../utilchest.mk
+#MKFILE = ../utilchest.mk

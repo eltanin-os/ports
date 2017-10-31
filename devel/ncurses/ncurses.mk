@@ -1,5 +1,7 @@
 <| cat $PORTS/mk/config.mk
 
+all:QV: all
+
 build:QV:
 	make CC="$CC" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" all-static
 

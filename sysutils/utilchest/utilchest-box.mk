@@ -1,8 +1,8 @@
 <| cat $PORTS/mk/config.mk
 
-BIN= utilchest
+BIN = utilchest
 
-SYM=\
+SYM =\
 	src/basename\
 	src/cat\
 	src/chgrp\
@@ -42,9 +42,9 @@ SYM=\
 	src/whoami\
 	src/yes
 
-SRC= ${SYM:%=%.c}
+SRC = ${SYM:%=%.c}
 
-LIBUTILOBJ=\
+LIBUTILOBJ =\
 	lib/util/chown.o\
 	lib/util/cp.o\
 	lib/util/dir.o\
@@ -53,27 +53,26 @@ LIBUTILOBJ=\
 	lib/util/pathcat.o\
 	lib/util/stoll.o
 
-LIBUTFOBJ=\
+LIBUTFOBJ =\
 	lib/utf/chartorune.o\
 	lib/utf/iscntrlrune.o\
 	lib/utf/isprintrune.o\
 	lib/utf/isvalidrune.o\
 	lib/utf/runetype.o
 
-LIB= lib/libutil.a lib/libutf.a
+LOCAL_LIB = lib/libutil.a lib/libutf.a
+OBJS      = ${SYM:%=%.o} $LIBUTILOBJ $LIBUTFOBJ
 
 <$PORTS/mk/mk.build
 
 CFLAGS = $CFLAGS -I inc
-LDLIBS = ${LIB}
 
 lib/libutil.a: $LIBUTILOBJ
 lib/libutf.a:  $LIBUTFOBJ
 
-build:QV: utilchest
 install:QV: utilchest-install
 
-utilchest: $LIB
+utilchest: $LOCAL_LIB
 	mkdir -p build
 	for f in ${SRC}; do sed "s/^main(/$(echo "$(basename ${f%.c})" | sed s/-/_/g)_&/" < $f > build/$(basename $f); done
 	echo '#include <libgen.h>'                                                                                                                              > build/$target.c
@@ -89,7 +88,7 @@ utilchest: $LIB
 	$CC $CFLAGS $CPPFLAGS $LDFLAGS -o $target build/*.c $prereq
 	rm -rf build
 
-utilchest-install:QV: build
+utilchest-install:QV: utilchest
 	install -dm 755 ${ROOT}/${BINDIR}
 	install -csm 755 utilchest ${ROOT}/${BINDIR}
 	for f in $(echo $SYM | sed 's/src\///g'); do ln -s utilchest ${ROOT}/${BINDIR}/$f; done

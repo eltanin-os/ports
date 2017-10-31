@@ -1,25 +1,35 @@
 <| cat $PORTS/mk/config.mk
 
-all:QV: $OBJ $LIB $BIN
+all:QV: $OBJS $LIBS $BINS
 
 # RULES
+install:QV: install-bin install-lib install-man install-sym
+
 install-bin:QV: all
-	$INSTALL -dm 755 ${ROOT}$BINDIR
-	$INSTALL -csm 755 $BIN ${ROOT}$BINDIR
+	if test -n "$BINS"; then
+		$INSTALL -dm 755 ${ROOT}$BINDIR
+		$INSTALL -csm 755 $BINS ${ROOT}$BINDIR
+	fi
 
 install-lib:QV: all
-	$INSTALL -dm 755 ${ROOT}$LIBDIR
-	$INSTALL -csm 755 $LIB ${ROOT}$LIBDIR
+	if test -n "$LIBS"; then
+		$INSTALL -dm 755 ${ROOT}$LIBDIR
+		$INSTALL -cm 755 $LIBS ${ROOT}$LIBDIR
+	fi
 
 install-man:QV: all
-	$INSTALL -dm 755 ${ROOT}$MANDIR
-	$INSTALL -csm 755 $MAN ${ROOT}$LIBDIR
+	if test -n "$MANS"; then
+		$INSTALL -dm 755 ${ROOT}$MANDIR
+		$INSTALL -cm 755 $MANS ${ROOT}$MANDIR
+	fi
 
 install-sym:QV: all
-	echo INSTALL SYM $SYM
+	if test -n "$SYMS"; then
+		echo INSTALL SYM $SYMS
+	fi
 
 clean:QV:
-	rm -f $OBJ $LIB $BIN
+	rm -f $OBJS $LIBS $BINS $LOCAL_LIBS
 
 # SUFFIX RULES
 %.a:

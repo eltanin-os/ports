@@ -1,0 +1,13 @@
+<$PORTS/mk/mk.3rd
+
+NAME     = m4
+LONGNAME = quasar-m4
+VERSION  = 2
+LICENSE  = BSD-2
+DESCRIPTION =
+
+MAKEDEPS = libc
+
+SRC = ${NAME}-${VERSION}
+URL = http://haddonthethird.net/${NAME}/${NAME}-${VERSION}.tar.bz2
+MKFILE = ../m4.mk

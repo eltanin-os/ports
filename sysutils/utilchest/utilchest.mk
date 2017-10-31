@@ -1,6 +1,6 @@
 <| cat $PORTS/mk/config.mk
 
-BIN=\
+BINS =\
 	src/basename\
 	src/cat\
 	src/chgrp\
@@ -40,7 +40,7 @@ BIN=\
 	src/whoami\
 	src/yes
 
-LIBUTILOBJ=\
+LIBUTILOBJ =\
 	lib/util/chown.o\
 	lib/util/cp.o\
 	lib/util/dir.o\
@@ -49,23 +49,25 @@ LIBUTILOBJ=\
 	lib/util/pathcat.o\
 	lib/util/stoll.o
 
-LIBUTFOBJ=\
+LIBUTFOBJ =\
 	lib/utf/chartorune.o\
 	lib/utf/iscntrlrune.o\
 	lib/utf/isprintrune.o\
 	lib/utf/isvalidrune.o\
 	lib/utf/runetype.o
 
-LIB= lib/libutil.a lib/libutf.a
-OBJ= ${BIN:%=%.o} $LIBUTILOBJ $LIBUTFOBJ
+LOCAL_LIBS = lib/libutil.a lib/libutf.a
+OBJS       = ${BINS:%=%.o} $LIBUTILOBJ $LIBUTFOBJ
 
 <$PORTS/mk/mk.build
 
+all:QV: $LOCAL_LIBS
+
 CFLAGS = $CFLAGS -I inc
-LDLIBS = ${LIB}
+LDLIBS = ${LOCAL_LIBS}
 
 lib/libutil.a: $LIBUTILOBJ
 lib/libutf.a:  $LIBUTFOBJ
 
-build:QV: $LIB all
-install:QV: install-bin
+# TODO: SEE A BETER WAY TO HANDLE PREREQ
+${BINS}: ${LOCAL_LIBS}

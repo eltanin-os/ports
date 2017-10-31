@@ -1,5 +1,7 @@
 <| cat $PORTS/mk/config.mk
 
+all:QV: build
+
 build:QV:
 	# set env
 	echo "CC=\"$CC\""                    >> configure.local
