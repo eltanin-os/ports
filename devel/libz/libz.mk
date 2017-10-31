@@ -1,13 +1,31 @@
 <| cat $PORTS/mk/config.mk
 
-all:QV: build
+LIBS =\
+	libz.a
 
-build:QV:
-	./configure --prefix="$PREFIX" --disable-shared
-	make
+MANS =\
+	3 libz.3
 
-install:QV:
-	make DESTDIR="$ROOT" install
+OBJS =\
+	adler32.o\
+	compress.o\
+	crc32.o\
+	deflate.o\
+	gzclose.o\
+	gzlib.o\
+	gzread.o\
+	gzwrite.o\
+	infback.o\
+	inffast.o\
+	inflate.o\
+	inftrees.o\
+	trees.o\
+	uncompr.o\
+	zutil.o\
 
-clean:QV:
-	make clean
+<$PORTS/mk/mk.build
+
+CFLAGS   = $CFLAGS -I.
+CPPFLAGS = $CPPFLAGS -DZ_INSIDE_LIBZ
+
+${LIBS}: ${OBJS}

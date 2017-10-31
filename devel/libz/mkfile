@@ -8,6 +8,6 @@ DESCRIPTION = An ABI-compatible and API-compatible drop-in replacement for zlib.
 
 MAKEDEPS = libc
 
-SRC = $NAME-$VERSION
-URL = https://sortix.org/libz/release/${NAME}-${VERSION}.tar.gz
+SRC = ${LONGNAME}-${VERSION}
+URL = https://sortix.org/libz/release/${LONGNAME}-${VERSION}.tar.gz
 MKFILE = ../libz.mk
