@@ -15,12 +15,11 @@ LDFLAGS  = -Os -static
 
 # COMPILE PATH
 PREFIX =
-USRDIR = ${PREFIX}/usr
 BINDIR = ${PREFIX}/bin
 LIBDIR = ${PREFIX}/lib
 ETCDIR = ${PREFIX}/etc
 DFLDIR = ${ETC}/default
-MANDIR = ${USRDIR}/share/man
+MANDIR = ${PREFIX}/share/man
 
 # TOOLS
 FETCH   = curl -LO
