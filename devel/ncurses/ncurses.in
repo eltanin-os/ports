@@ -1,0 +1,151 @@
+set:srcdir
+	.
+
+set:outdir
+	.
+
+set:cflags
+	$cflags
+	-I$srcdir
+	-I$srcdir/libcurses
+	-I$srcdir/libform
+	-I$srcdir/libmenu
+	-I$srcdir/libpanel
+	-I$srcdir/libterminfo
+
+lib:libcurses/libcurses.a
+	libcurses/acs.c
+	libcurses/addbytes.c
+	libcurses/addch.c
+	libcurses/addchnstr.c
+	libcurses/addnstr.c
+	libcurses/attributes.c
+	libcurses/background.c
+	libcurses/bell.c
+	libcurses/border.c
+	libcurses/box.c
+	libcurses/chgat.c
+	libcurses/clear.c
+	libcurses/clearok.c
+	libcurses/clrtobot.c
+	libcurses/clrtoeol.c
+	libcurses/color.c
+	libcurses/copywin.c
+	libcurses/cr_put.c
+	libcurses/ctrace.c
+	libcurses/cur_hash.c
+	libcurses/curses.c
+	libcurses/curs_set.c
+	libcurses/delch.c
+	libcurses/deleteln.c
+	libcurses/delwin.c
+	libcurses/echochar.c
+	libcurses/erase.c
+	libcurses/fileio.c
+	libcurses/flushok.c
+	libcurses/fullname.c
+	libcurses/getch.c
+	libcurses/getstr.c
+	libcurses/getyx.c
+	libcurses/idcok.c
+	libcurses/idlok.c
+	libcurses/id_subwins.c
+	libcurses/immedok.c
+	libcurses/inch.c
+	libcurses/inchstr.c
+	libcurses/initscr.c
+	libcurses/insch.c
+	libcurses/insdelln.c
+	libcurses/insertln.c
+	libcurses/instr.c
+	libcurses/keyname.c
+	libcurses/keypad.c
+	libcurses/leaveok.c
+	libcurses/line.c
+	libcurses/meta.c
+	libcurses/move.c
+	libcurses/mvwin.c
+	libcurses/newwin.c
+	libcurses/nodelay.c
+	libcurses/notimeout.c
+	libcurses/overlay.c
+	libcurses/overwrite.c
+	libcurses/pause.c
+	libcurses/printw.c
+	libcurses/putchar.c
+	libcurses/refresh.c
+	libcurses/resize.c
+	libcurses/ripoffline.c
+	libcurses/scanw.c
+	libcurses/screen.c
+	libcurses/scroll.c
+	libcurses/scrollok.c
+	libcurses/setterm.c
+	libcurses/slk.c
+	libcurses/standout.c
+	libcurses/syncok.c
+	libcurses/timeout.c
+	libcurses/toucholap.c
+	libcurses/touchwin.c
+	libcurses/tstp.c
+	libcurses/tty.c
+	libcurses/unctrl.c
+	libcurses/underscore.c
+
+lib:libform/libform.a
+	libform/driver.c
+	libform/field.c
+	libform/field_types.c
+	libform/form.c
+	libform/internals.c
+	libform/post.c
+	libform/std_header.c
+	libform/type_alnum.c
+	libform/type_alpha.c
+	libform/type_enum.c
+	libform/type_integer.c
+	libform/type_ipv4.c
+	libform/type_ipv6.c
+	libform/type_numeric.c
+	libform/type_regex.c
+
+lib:libmenu/libmenu.a
+	libmenu/attributes.c
+	libmenu/driver.c
+	libmenu/internals.c
+	libmenu/item.c
+	libmenu/menu.c
+	libmenu/post.c
+	libmenu/userptr.c
+
+lib:libpanel/libpanel.a
+	libpanel/above.c
+	libpanel/below.c
+	libpanel/bottom.c
+	libpanel/_deck.c
+	libpanel/del.c
+	libpanel/getuser.c
+	libpanel/hidden.c
+	libpanel/hide.c
+	libpanel/move.c
+	libpanel/new.c
+	libpanel/replace.c
+	libpanel/setuser.c
+	libpanel/show.c
+	libpanel/top.c
+	libpanel/update.c
+	libpanel/window.c
+
+lib:libterminfo/libterminfo.a
+	libterminfo/cdbr.c
+	libterminfo/compile.c
+	libterminfo/curterm.c
+	libterminfo/mi_vector_hash.c
+	libterminfo/setupterm.c
+	libterminfo/term.c
+	libterminfo/termcap.c
+	libterminfo/termcap_map.c
+	libterminfo/ti.c
+	libterminfo/tparm.c
+	libterminfo/tputs.c
+
