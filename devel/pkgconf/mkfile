@@ -9,6 +9,6 @@ DESCRIPTION = A program which helps to configure compiler and linker flags\
 
 MAKEDEPS = libc
 
-SRC = ${NAME}-${VERSION}
-URL = https://distfiles.dereferenced.org/pkgconf/${NAME}-${VERSION}.tar.gz
+SRC = ${LONGNAME}-${VERSION}
+URL = https://distfiles.dereferenced.org/pkgconf/${LONGNAME}-${VERSION}.tar.gz
 MKFILE = ../pkgconf.mk
