@@ -1,0 +1,21 @@
+set:srcdir
+	.
+
+set:outdir
+	../out
+
+set:ldlibs
+	-lm -lpthread -lz
+
+bin:pigz
+	try.c
+	yarn.c
+	zopfli/src/zopfli/blocksplitter.c
+	zopfli/src/zopfli/cache.c
+	zopfli/src/zopfli/deflate.c
+	zopfli/src/zopfli/hash.c
+	zopfli/src/zopfli/katajainen.c
+	zopfli/src/zopfli/lz77.c
+	zopfli/src/zopfli/squeeze.c
+	zopfli/src/zopfli/tree.c
+	zopfli/src/zopfli/util.c

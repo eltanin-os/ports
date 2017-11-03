@@ -1,7 +1,16 @@
-<| cat $PORTS/mk/config.mk
+<$PORTS/mk/mk.3rd
 
-build:QV:
+NAME     =
+LONGNAME =
+VERSION  =
+LICENSE  =
+DESCRIPTION =
+PATCHES  =
 
-install:QV:
+RUNDEPS  =
+MAKEDEPS =
 
-clean:QV:
+SRC =
+URL =
+GIT =
+MKFILE =

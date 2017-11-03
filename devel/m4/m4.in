@@ -1,0 +1,13 @@
+set:srcdir
+	.
+
+set:outdir
+	.
+
+bin:main
+	eval.c
+	expr.c
+	look.c
+	misc.c
+	gnum4.c
+	trace.c

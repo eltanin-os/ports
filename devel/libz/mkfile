@@ -10,4 +10,4 @@ MAKEDEPS = libc
 
 SRC = ${LONGNAME}-${VERSION}
 URL = https://sortix.org/libz/release/${LONGNAME}-${VERSION}.tar.gz
-MKFILE = ../libz.mk
+INFILE = ../libz.in

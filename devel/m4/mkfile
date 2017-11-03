@@ -10,4 +10,4 @@ MAKEDEPS = libc
 
 SRC = ${NAME}-${VERSION}
 URL = http://haddonthethird.net/m4/${NAME}-${VERSION}.tar.bz2
-MKFILE = ../m4.mk
+INFILE = ../m4.in

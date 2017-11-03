@@ -1,0 +1,18 @@
+set:srcdir
+	.
+
+set:outdir
+	.
+
+lib:libbz2.a
+	blocksort.c
+	huffman.c
+	crctable.c
+	randtable.c
+	compress.c
+	decompress.c
+	bzlib.c
+
+bins:libbz2.a
+	bzip2
+	bzip2recover

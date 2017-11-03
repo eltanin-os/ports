@@ -1,20 +1,35 @@
 <| cat $PORTS/mk/config.mk
 
 all:QV: build
+build:QV: build-mk build-in
 
-build:QV: fetch patch
+build-mk:QV: fetch patch
 	oldpwd=`pwd`
 	mkdir -p $SRC
 	cd $SRC
-	for f in $MKFILE; do
-		cachefile="${oldpwd}/.cache-$(basename $f)"
-		status=`cmp -s $f $cachefile || echo -n $?`
+	if test -n "$MKFILE"; then
+		cachefile="${oldpwd}/.cache-$(basename $MKFILE)"
+		status=`cmp -s $MKFILE $cachefile || echo -n $?`
 		if test -n "$status"; then
 			env -i PATH="$PATH" PORTS="$PORTS"\
-			    mk -f $f
-			cp $f $cachefile
+			    mk -f $MKFILE
+			cp $MKFILE $cachefile
 		fi
-	done
+	fi
+
+build-in:QV: fetch patch
+	oldpwd=`pwd`
+	mkdir -p $SRC
+	cd $SRC
+	if test -n "$INFILE"; then
+		cachefile="${oldpwd}/.cache-$(basename $INFILE)"
+		status=`cmp -s $INFILE $cachefile || echo -n $?`
+		if test -n "$status"; then
+			$INTERPRES $INFILE
+			$NINJA
+			cp $INFILE $cachefile
+		fi
+	fi
 
 patch:QV: fetch
 	mkdir -p $SRC
@@ -44,4 +59,3 @@ distclean:QV:
 	fi
 
 <$PORTS/mk/mk.fetch
-<$PORTS/mk/mk.package

@@ -9,4 +9,4 @@ MAKEDEPS = libc zlib
 
 SRC = ${NAME}-${VERSION}
 URL = https://zlib.net/pigz/${NAME}-${VERSION}.tar.gz
-MKFILE = ../pigz.mk
+INFILE = ../pigz.in

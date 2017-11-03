@@ -9,4 +9,4 @@ MAKEDEPS = libc
 
 SRC = ${NAME}-${VERSION}
 URL = http://www.bzip.org/1.0.6/${NAME}-${VERSION}.tar.gz
-MKFILE = ../bzip2.mk
+INFILE = ../bzip2.in

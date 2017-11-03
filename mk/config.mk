@@ -2,7 +2,7 @@
 DBDIR= /var/pkg/local
 
 # COMPILE
-CC     = cc
+CC     = ecc
 CXX    = c++
 LD     = $CC
 AR     = ar
@@ -23,10 +23,12 @@ MANDIR = ${PREFIX}/share/man
 INCDIR = ${PREFIX}/include
 
 # TOOLS
-FETCH   = curl -LO
-INSTALL = /usr/bin/install
-STRIP   = strip
-SUM     = sha512sum
+INTERPRES = interpres
+FETCH     = curl -LO
+INSTALL   = /usr/bin/install
+STRIP     = strip
+SUM       = sha512sum
+NINJA     = samu
 
 # OTHERS
 nprocs = 2
