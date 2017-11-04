@@ -1,12 +1,5 @@
-cc = ecc
-ar = ar
-as = as
-
 # file copied from https://github.com/michaelforney/oasis (rules.ninja)
 # 03/11/17
-rule gen
-  command = lua setup.lua $dir
-  generator = 1
 
 # toolchain
 rule cc
