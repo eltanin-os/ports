@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 
 NAME="bzip2"
 LONGNAME="$NAME"

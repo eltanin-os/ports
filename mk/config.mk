@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # COMPILE
 export CC="cc"
 export CXX="c++"
