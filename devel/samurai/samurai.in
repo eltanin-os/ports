@@ -4,7 +4,7 @@ set:srcdir
 set:outdir
 	.
 
-bin:samurai
+bin:samu
 	build.c
 	env.c
 	deps.c
@@ -13,5 +13,6 @@ bin:samurai
 	lex.c
 	log.c
 	parse.c
+	samurai.c
 	tool.c
 	util.c

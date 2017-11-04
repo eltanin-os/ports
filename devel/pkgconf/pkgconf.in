@@ -12,6 +12,9 @@ set:cflags
 	-DSYSTEM_INCLUDEDIR='"$prefix/include"'
 	-DSYSTEM_LIBDIR='"$prefix/lib"'
 
+set:ldflags
+	libpkgconf.a
+
 lib:libpkgconf.a
 	libpkgconf/argvsplit.c
 	libpkgconf/audit.c
@@ -26,8 +29,6 @@ lib:libpkgconf.a
 	libpkgconf/queue.c
 	libpkgconf/tuple.c
 
-objs:
+bin:pkgconf
 	getopt_long.c
-
-bins:getopt_long.c.o libpkgconf.a
-	main
+	main.c

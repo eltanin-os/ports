@@ -8,6 +8,7 @@ set:ldlibs
 	-lm -lpthread -lz
 
 bin:pigz
+	pigz.c
 	try.c
 	yarn.c
 	zopfli/src/zopfli/blocksplitter.c

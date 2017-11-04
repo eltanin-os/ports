@@ -4,13 +4,12 @@ set:srcdir
 set:outdir
 	.
 
-bin:main
+bin:m4
 	eval.c
 	expr.c
 	look.c
+	main.c
 	misc.c
 	gnum4.c
 	trace.c
 
-copy:
-	m4 main
