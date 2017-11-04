@@ -1,0 +1,17 @@
+set:srcdir
+	.
+
+set:outdir
+	.
+
+bin:samurai
+	build.c
+	env.c
+	deps.c
+	graph.c
+	htab.c
+	lex.c
+	log.c
+	parse.c
+	tool.c
+	util.c
