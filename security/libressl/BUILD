@@ -1,0 +1,30 @@
+#!/bin/sh
+
+NAME="libressl"
+LONGNAME="$NAME"
+VERSION="2.6.2"
+LICENSE="OPENSSL"
+DESCRIPTION="Is a fork of, and drop in replacement for OpenSSL."
+MAKEDEPS="libc linux-headers"
+
+SRC="${NAME}-${VERSION}"
+URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${NAME}-${VERSION}.tar.gz"
+INFILE=""
+
+. ${PORTS}/mk/default.sh
+
+prepare() {
+	default_prepare
+}
+
+build() {
+	cd $SRC
+	./configure --prefix="$PREFIX"
+	make
+}
+
+install() {
+	true
+}
+
+$@

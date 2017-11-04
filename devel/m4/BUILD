@@ -1,0 +1,28 @@
+#!/bin/sh
+
+NAME="m4"
+LONGNAME="quasar m4"
+VERSION="2"
+LICENSE="BSD-2"
+DESCRIPTION="A general-purpose macro processor."
+MAKEDEPS="libc"
+
+SRC="${NAME}-${VERSION}"
+URL="http://haddonthethird.net/m4/${NAME}-${VERSION}.tar.bz2"
+INFILE="../m4.in"
+
+. ${PORTS}/mk/default.sh
+
+prepare() {
+	default_prepare
+}
+
+build() {
+	default_build
+}
+
+install() {
+	true
+}
+
+$@

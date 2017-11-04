@@ -11,3 +11,6 @@ bin:main
 	misc.c
 	gnum4.c
 	trace.c
+
+copy:
+	m4 main

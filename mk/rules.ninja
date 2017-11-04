@@ -1,0 +1,84 @@
+cc = ecc
+ar = ar
+as = as
+
+# file copied from https://github.com/michaelforney/oasis (rules.ninja)
+# 03/11/17
+rule gen
+  command = lua setup.lua $dir
+  generator = 1
+
+# toolchain
+rule cc
+  command = $cc -MMD -MF $out.d $cflags -c -o $out $in
+  depfile = $out.d
+  deps = gcc
+
+rule as
+  command = $as $asflags -o $out $in
+
+rule link
+  command = $cc $ldflags -o $out $in $ldlibs
+
+rule ar
+  command = rm -f $out && $ar crs $out $in
+
+rule ld
+  command = $ld -o $out $in
+
+rule objcopy
+  command = $objcopy $objcopyflags $in $out
+
+rule lines
+  command = ln -f $rspfile $out
+  rspfile = $out.tmp
+  rspfile_content = $in_newline
+
+# TODO: Enable dependency-tracking for nasm when
+# https://bugzilla.nasm.us/show_bug.cgi?id=3392280#c6 is fixed.
+rule nasm
+  command = nasm $nasmflags -o $out $in
+
+rule mc
+  command = $mc $mcflags -o $out $in
+
+rule muse
+  command = muse $museflags -o $out $in
+
+# misc tools
+rule touch
+  command = touch $out
+
+rule empty
+  command = >$out
+
+rule copy
+  command = ln -f $in $out
+
+rule cat
+  command = cat $in >$out.tmp && mv $out.tmp $out
+
+rule mergeperms
+  command = sort -k 2 -m $in >$out.tmp && mv $out.tmp $out
+
+rule gzip
+  command = gzip -c -9 -n <$in >$out.tmp && mv $out.tmp $out
+
+rule yacc
+  command = yacc $yaccflags $in
+
+rule sed
+  command = sed $expr $in >$out.tmp && mv $out.tmp $out
+
+rule awk
+  command = awk $expr $in >$out.tmp && mv $out.tmp $out
+
+rule grep
+  command = grep $expr $in >$out.tmp && mv $out.tmp $out
+
+rule tic
+  command = tic $ticflags $in
+
+rule waylandproto
+  command = wayland-scanner $type <$in >$out.tmp && mv $out.tmp $out
+

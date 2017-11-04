@@ -1,0 +1,28 @@
+#!/bin/sh
+
+NAME="pigz"
+LONGNAME="$NAME"
+VERSION="2.3.4"
+LICENSE="zlib"
+DESCRIPTION="Parallel implementation of the gzip file compressor."
+RUNDEPS="libc zlib"
+
+SRC="${NAME}-${VERSION}"
+URL="https://zlib.net/pigz/${NAME}-${VERSION}.tar.gz"
+INFILE="../pigz.in"
+
+. ${PORTS}/mk/default.sh
+
+prepare() {
+	default_prepare
+}
+
+build() {
+	default_build
+}
+
+install() {
+	true
+}
+
+$@

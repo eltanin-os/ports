@@ -1,34 +1,34 @@
-# ENV PATH
-DBDIR= /var/pkg/local
-
 # COMPILE
-CC     = ecc
-CXX    = c++
-LD     = $CC
-AR     = ar
-RANLIB = ranlib
+export CC="cc"
+export CXX="c++"
+export LD="$CC"
+export AR="ar"
+export RANLIB="ranlib"
 
 # COMPILE FLAGS
-CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE
-CFLAGS   = -std=c99 -pedantic
-LDFLAGS  = -Os -static
+export CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE"
+export CFLAGS="$CPPFLAGS -std=c99 -pedantic"
+export LDFLAGS="-Os -static"
+
+# ENV PATH
+DBDIR="/var/pkg/local"
 
 # COMPILE PATH
-PREFIX =
-BINDIR = ${PREFIX}/bin
-LIBDIR = ${PREFIX}/lib
-ETCDIR = ${PREFIX}/etc
-DFLDIR = ${ETC}/default
-MANDIR = ${PREFIX}/share/man
-INCDIR = ${PREFIX}/include
+PREFIX=""
+BINDIR="${PREFIX}/bin"
+LIBDIR="${PREFIX}/lib"
+ETCDIR="${PREFIX}/etc"
+DFLDIR="${ETC}/default"
+MANDIR="${PREFIX}/share/man"
+INCDIR="${PREFIX}/include"
 
 # TOOLS
-INTERPRES = interpres
-FETCH     = curl -LO
-INSTALL   = /usr/bin/install
-STRIP     = strip
-SUM       = sha512sum
-NINJA     = samu
+INTERPRES="interpres"
+FETCH="curl -LO"
+INSTALL="/usr/bin/install"
+STRIP="strip"
+SUM="sha512sum"
+NINJA="samu"
 
 # OTHERS
-nprocs = 2
+nprocs="2"

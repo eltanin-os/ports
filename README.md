@@ -1,4 +1,4 @@
 # Ports - EltaninOS ports
 
-A plan9 mk-based build system, used to build softwares packages
-with mkfiles.
+A build system that uses shell script and interpres, to generate ninja
+files, to build packages.

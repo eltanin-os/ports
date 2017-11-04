@@ -1,0 +1,38 @@
+#!/bin/sh
+
+NAME="mandoc"
+LONGNAME="$NAME"
+VERSION="1.14.3"
+LICENSE="ISC"
+DESCRIPTION="A suite of tools compiling mdoc from the OpenBSD project."
+MAKEDEPS="libc"
+
+SRC="${NAME}-${VERSION}"
+URL="http://mdocml.bsd.lv/snapshots/${NAME}-${VERSION}.tar.gz"
+INFILE=""
+
+. ${PORTS}/mk/default.sh
+
+prepare() {
+	default_prepare
+	cd $SRC
+	echo "CC=\"$CC\""                             >> configure.local
+	echo "CFLAGS=\"$CFLAGS\""                     >> configure.local
+	echo "LDFLAGS=\"$LDFLAGS\""                   >> configure.local
+	echo "BUILD_CATMAN=1"                         >> configure.local
+	echo "PREFIX=\"${PREFIX}/\""                  >> configure.local
+	echo "INSTALL_PROGRAM=\"$INSTALL -s\""        >> configure.local
+	echo "MANPATH_DEFAULT=\"${MANDIR}\""          >> configure.local
+}
+
+build() {
+	cd $SRC
+	./configure
+	make
+}
+
+install() {
+	true
+}
+
+$@

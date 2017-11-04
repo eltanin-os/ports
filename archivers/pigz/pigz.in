@@ -2,7 +2,7 @@ set:srcdir
 	.
 
 set:outdir
-	../out
+	.
 
 set:ldlibs
 	-lm -lpthread -lz
