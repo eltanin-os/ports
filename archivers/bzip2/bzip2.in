@@ -13,6 +13,12 @@ lib:libbz2.a
 	decompress.c
 	bzlib.c
 
+mans:
+	bzdiff.1
+	bzgrep.1
+	bzip2.1
+	bzmore.1
+
 bins:libbz2.a
 	bzip2
 	bzip2recover

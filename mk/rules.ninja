@@ -1,9 +1,9 @@
 # file copied from https://github.com/michaelforney/oasis (rules.ninja)
-# 03/11/17
+# copied in 03/11/17 | it's modified
 
 # toolchain
 rule cc
-  command = $cc -MMD -MF $out.d $cflags -c -o $out $in
+  command = $cc -MMD -MF $out.d $cflags $cppflags -c -o $out $in
   depfile = $out.d
   deps = gcc
 
@@ -14,7 +14,7 @@ rule link
   command = $cc $ldflags -o $out $in $ldlibs
 
 rule ar
-  command = rm -f $out && $ar crs $out $in
+  command = rm -f $out && $ar crs $out $in && ranlib $out
 
 rule ld
   command = $ld -o $out $in

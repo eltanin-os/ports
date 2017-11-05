@@ -7,6 +7,9 @@ set:outdir
 set:ldlibs
 	-lm -lpthread -lz
 
+mans:
+	pigz.1
+
 bin:pigz
 	pigz.c
 	try.c
