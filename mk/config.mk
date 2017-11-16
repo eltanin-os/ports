@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # COMPILE
-export CC="cc"
-export CXX="c++"
+export CC="ecc"
+export CXX="ecc++"
 export LD="$CC"
-export AR="ar"
-export RANLIB="ranlib"
+export AR="ecc-ar"
+export RANLIB="ecc-ranlib"
 
 # COMPILE FLAGS
 export CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE"

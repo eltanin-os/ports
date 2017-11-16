@@ -13,16 +13,20 @@ INFILE="../utilchest.in"
 
 . ${PORTS}/mk/default.sh
 
-prepare() {
+Prepare() {
 	default_prepare
 }
 
-build() {
+Build() {
 	default_build
 }
 
-install() {
-	true
+Install() {
+	default_install LIBS
+}
+
+Package() {
+	default_package
 }
 
 $@

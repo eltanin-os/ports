@@ -14,7 +14,7 @@ rule link
   command = $cc $ldflags -o $out $in $ldlibs
 
 rule ar
-  command = rm -f $out && $ar crs $out $in && ranlib $out
+  command = rm -f $out && $ar crs $out $in && $ranlib $out
 
 rule ld
   command = $ld -o $out $in

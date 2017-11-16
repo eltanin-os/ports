@@ -16,13 +16,13 @@ PATCHES=""
 
 . ${PORTS}/mk/default.sh
 
-prepare() {
+Prepare() {
 }
 
-build() {
+Build() {
 }
 
-install() {
+Install() {
 }
 
 $@

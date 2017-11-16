@@ -13,15 +13,15 @@ INFILE="../bzip2.in"
 
 . ${PORTS}/mk/default.sh
 
-prepare() {
+Prepare() {
 	default_prepare
 }
 
-build() {
+Build() {
 	default_build
 }
 
-install() {
+Install() {
 	true
 }
 

@@ -13,16 +13,16 @@ INFILE=""
 
 . ${PORTS}/mk/default.sh
 
-prepare() {
+Prepare() {
 	default_prepare
 }
 
-build() {
+Build() {
 	cd $SRC
 	make AR=$AR CC=$CC RANLIB=$RANLIB cbase
 }
 
-install() {
+Install() {
 	true
 }
 

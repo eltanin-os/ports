@@ -13,16 +13,16 @@ INFILE="../ncurses.in"
 
 . ${PORTS}/mk/default.sh
 
-prepare() {
+Prepare() {
 	default_prepare
 }
 
-build() {
+Build() {
 	cd $SRC
 	make CC="$CC" CFLAGS="$CPPFLAGS $CFLAGS" LDFLAGS="$LDFLAGS" all-static
 }
 
-install() {
+Install() {
 	true
 }
 

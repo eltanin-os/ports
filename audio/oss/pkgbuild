@@ -13,11 +13,11 @@ PATCHES="../patches/musl_linux_static_hack.patch"
 
 . ${PORTS}/mk/default.sh
 
-prepare() {
+Prepare() {
 	default_prepare
 }
 
-build() {
+Build() {
 	cd "$SRC"
 	oldpwd="$(pwd)"
 	mkdir build
@@ -26,7 +26,7 @@ build() {
 	make
 }
 
-install() {
+Install() {
 	true
 }
 

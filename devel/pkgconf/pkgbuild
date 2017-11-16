@@ -14,17 +14,17 @@ INFILE="../pkgconf.in"
 
 . ${PORTS}/mk/default.sh
 
-prepare() {
+Prepare() {
 	default_prepare
 }
 
-build() {
+Build() {
 	cd $SRC
 	./configure --prefix="$PREFIX" --enable-shared=no
 	make
 }
 
-install() {
+Install() {
 	true
 }
 

@@ -13,17 +13,17 @@ INFILE=""
 
 . ${PORTS}/mk/default.sh
 
-prepare() {
+Prepare() {
 	default_prepare
 }
 
-build() {
+Build() {
 	cd $SRC
 	./configure --prefix="$PREFIX"
 	make
 }
 
-install() {
+Install() {
 	true
 }
 

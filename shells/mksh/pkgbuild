@@ -13,11 +13,11 @@ INFILE=""
 
 . ${PORTS}/mk/default.sh
 
-prepare() {
+Prepare() {
 	default_prepare
 }
 
-build() {
+Build() {
 	cd $SRC
 	chmod +x Build.sh
 	rm -rf build
@@ -26,7 +26,7 @@ build() {
 	../Build.sh
 }
 
-install() {
+Install() {
 	true
 }
 

@@ -13,7 +13,7 @@ INFILE=""
 
 . ${PORTS}/mk/default.sh
 
-prepare() {
+Prepare() {
 	default_prepare
 	cd $SRC
 	echo "CC=\"$CC\""                             >> configure.local
@@ -25,13 +25,13 @@ prepare() {
 	echo "MANPATH_DEFAULT=\"${MANDIR}\""          >> configure.local
 }
 
-build() {
+Build() {
 	cd $SRC
 	./configure
 	make
 }
 
-install() {
+Install() {
 	true
 }
 
