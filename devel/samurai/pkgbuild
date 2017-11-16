@@ -22,7 +22,11 @@ Build() {
 }
 
 Install() {
-	true
+	default_install
+}
+
+Package() {
+	default_package
 }
 
 $@
