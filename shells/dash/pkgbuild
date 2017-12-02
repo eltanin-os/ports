@@ -1,4 +1,5 @@
 #!/bin/sh
+#NONDBUILD
 
 NAME="dash"
 LONGNAME="$NAME"
