@@ -1,5 +1,5 @@
 #!/bin/sh
-
+#Uncomment line 13 and comment lines 12, 16 and 20 for separated binaries.
 NAME="utilchest"
 LONGNAME="$NAME"
 VERSION="0"
@@ -9,12 +9,15 @@ MAKEDEPS="libc"
 
 SRC="$NAME"
 GIT="https://github.com/eltanin-os/$NAME"
-INFILE="../utilchest.in"
+INFILE="../utilchest-box.in"
+#INFILE="../utilchest.in"
 
 . ${PORTS}/mk/default.sh
+. extra/box.sh
 
 Prepare() {
 	default_prepare
+	prepare_box
 }
 
 Build() {

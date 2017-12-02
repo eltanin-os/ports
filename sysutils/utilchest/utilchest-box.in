@@ -1,0 +1,68 @@
+set:srcdir
+	.
+
+set:outdir
+	.
+
+set:cflags
+	$cflags
+	-I$srcdir/inc
+
+lib:lib/libutf.a
+	lib/utf/chartorune.c
+	lib/utf/iscntrlrune.c
+	lib/utf/isprintrune.c
+	lib/utf/isvalidrune.c
+	lib/utf/runetype.c
+
+lib:lib/libutil.a
+	lib/util/chown.c
+	lib/util/cp.c
+	lib/util/dir.c
+	lib/util/ealloc.c
+	lib/util/mode.c
+	lib/util/pathcat.c
+	lib/util/stoll.c
+
+lib:lib/libbins.a
+	build/basename.c
+	build/cat.c
+	build/chgrp.c
+	build/chmod.c
+	build/chown.c
+	build/chroot.c
+	build/clear.c
+	build/cp.c
+	build/date.c
+	build/dirname.c
+	build/domainname.c
+	build/echo.c
+	build/env.c
+	build/false.c
+	build/head.c
+	build/hostname.c
+	build/id.c
+	build/link.c
+	build/ln.c
+	build/ls.c
+	build/mkdir.c
+	build/mkfifo.c
+	build/mknod.c
+	build/mv.c
+	build/nice.c
+	build/printenv.c
+	build/pwd.c
+	build/readlink.c
+	build/rm.c
+	build/rmdir.c
+	build/sleep.c
+	build/sync.c
+	build/true.c
+	build/tty.c
+	build/uname.c
+	build/unlink.c
+	build/whoami.c
+	build/yes.c
+
+bins:lib/libbins.a lib/libutf.a lib/libutil.a
+	build/utilchest
