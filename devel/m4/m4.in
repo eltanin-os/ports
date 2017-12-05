@@ -1,10 +1,13 @@
-set:srcdir
-	.
+. ${PORTS}/mk/langs/C
 
-set:outdir
-	.
+srcdir="."
+outdir="."
 
-bin:m4
+bins=` cat <<-EOF
+	m4
+`
+
+objs=` cat <<-EOF
 	eval.c
 	expr.c
 	look.c
@@ -12,4 +15,7 @@ bin:m4
 	misc.c
 	gnum4.c
 	trace.c
+EOF
+`
 
+bin m4 $objs

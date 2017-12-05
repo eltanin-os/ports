@@ -1,0 +1,42 @@
+OUTPUT="build.ninja"
+
+#bin(bin, deps...)
+bin() {
+	printf "->BIN $@\n" 1>&2
+	bina="${1}"
+	shift
+	printf "build ${outdir}/${bina}: link "
+	for dep in ${@}; do
+		printf " ${outdir}/${dep}";
+	done
+	printf "\n"
+}
+
+#copy(src, dest)
+copy() {
+	printf "build ${outdir}/${1}: copy ${srcdir}/${2}\n"
+}
+
+#lib(lib, deps...)
+lib() {
+	liba="${1}"
+	shift
+	printf "build ${outdir}/${liba}: ar"
+	for dep in ${@}; do
+		printf " ${outdir}/${dep}";
+	done
+	printf "\nbuild ${outdir}/${liba}.d: lines ${outdir}/${liba}\n"
+}
+
+#mans(mans...)
+mans() {
+	for man in ${@}; do
+		printf "build ${outdir}/${man}: gzip ${srcdir}/${man}\n"
+	done
+}
+
+#sets(var, value)
+sets() {
+	${1}="${2}"
+	printf "${1}=${2}"
+}

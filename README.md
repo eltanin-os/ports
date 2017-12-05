@@ -1,4 +1,4 @@
 # Ports - EltaninOS ports
 
-A build system that uses shell script and interpres, to generate ninja
-files, to build packages.
+A build system that uses shell script and ninja files
+to build, install and/or package the packages.

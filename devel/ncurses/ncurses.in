@@ -1,19 +1,27 @@
-set:srcdir
-	.
+. ${PORTS}/mk/langs/C
 
-set:outdir
-	.
+srcdir="."
+outdir="."
 
-set:cflags
-	$cflags
-	-I$srcdir
-	-I$srcdir/libcurses
-	-I$srcdir/libform
-	-I$srcdir/libmenu
-	-I$srcdir/libpanel
-	-I$srcdir/libterminfo
+flags=` cat <<-EOF
+	\$cflags
+	-I\$srcdir/libcurses
+	-I\$srcdir/libform
+	-I\$srcdir/libpanel
+	-I\$srcdir/libterminfo
+EOF
+`
 
-lib:libcurses/libcurses.a
+libs=` cat <<-EOF
+	libcurses/libcurses.a
+	libform/libform.a
+	libmenu/libmenu.a
+	libpanel/libpanel.a
+	libterminfo/libterminfo.a
+EOF
+`
+
+libcurses=` cat <<-EOF
 	libcurses/acs.c
 	libcurses/addbytes.c
 	libcurses/addch.c
@@ -91,8 +99,10 @@ lib:libcurses/libcurses.a
 	libcurses/tty.c
 	libcurses/unctrl.c
 	libcurses/underscore.c
+EOF
+`
 
-lib:libform/libform.a
+libform=` cat <<-EOF
 	libform/driver.c
 	libform/field.c
 	libform/field_types.c
@@ -108,8 +118,10 @@ lib:libform/libform.a
 	libform/type_ipv6.c
 	libform/type_numeric.c
 	libform/type_regex.c
+EOF
+`
 
-lib:libmenu/libmenu.a
+libmenu=` cat <<-EOF
 	libmenu/attributes.c
 	libmenu/driver.c
 	libmenu/internals.c
@@ -117,8 +129,10 @@ lib:libmenu/libmenu.a
 	libmenu/menu.c
 	libmenu/post.c
 	libmenu/userptr.c
+EOF
+`
 
-lib:libpanel/libpanel.a
+libpanel=` cat <<-EOF
 	libpanel/above.c
 	libpanel/below.c
 	libpanel/bottom.c
@@ -135,8 +149,10 @@ lib:libpanel/libpanel.a
 	libpanel/top.c
 	libpanel/update.c
 	libpanel/window.c
+EOF
+`
 
-lib:libterminfo/libterminfo.a
+libterminfo=` cat <<-EOF
 	libterminfo/cdbr.c
 	libterminfo/compile.c
 	libterminfo/curterm.c
@@ -148,4 +164,11 @@ lib:libterminfo/libterminfo.a
 	libterminfo/ti.c
 	libterminfo/tparm.c
 	libterminfo/tputs.c
+EOF
+`
 
+sets cflags $flags
+lib  libcurses/libcurses.a     $libcurses
+lib  libform/libform.a         $libform
+lib  libpanel/libpanel.a       $libpanel
+lib  libterminfo/libterminfo.a $libterminfo

@@ -13,7 +13,7 @@ INFILE="../utilchest-box.in"
 #INFILE="../utilchest.in"
 
 . ${PORTS}/mk/default.sh
-. extra/box.sh
+. buildext/box.sh
 
 Prepare() {
 	default_prepare

@@ -1,16 +1,14 @@
-set:srcdir
-	.
+. ${PORTS}/langs/C
 
-set:outdir
-	.
+srcdir="."
+outdir="."
 
-set:ldlibs
-	-lm -lpthread -lz
+bins=` cat <<-EOF
+	pigz
+EOF
+`
 
-mans:
-	pigz.1
-
-bin:pigz
+objs=` cat <<-EOF
 	pigz.c
 	try.c
 	yarn.c
@@ -23,3 +21,14 @@ bin:pigz
 	zopfli/src/zopfli/squeeze.c
 	zopfli/src/zopfli/tree.c
 	zopfli/src/zopfli/util.c
+EOF
+`
+
+manpages=` cat <<-EOF
+	pigz.1
+EOF
+`
+
+sets ldlibs "-lm -lpthread -lz"
+bin  pigz $objs
+mans $manpages

@@ -1,10 +1,14 @@
-set:srcdir
-	.
+. ${PORTS}/mk/langs/C
 
-set:outdir
-	.
+srcdir="."
+outdir="."
 
-lib:libbz2.a
+libs=`cat <<-EOF
+	libbz2.a
+EOF
+`
+
+libbz2=`cat <<-EOF
 	blocksort.c
 	huffman.c
 	crctable.c
@@ -12,13 +16,16 @@ lib:libbz2.a
 	compress.c
 	decompress.c
 	bzlib.c
+EOF
+`
 
-mans:
+manpages=`cat <<-EOF
 	bzdiff.1
 	bzgrep.1
 	bzip2.1
 	bzmore.1
+EOF
+`
 
-bins:libbz2.a
-	bzip2
-	bzip2recover
+lib  libz2.a $libbz2
+mans $manpages

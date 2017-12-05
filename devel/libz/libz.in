@@ -1,15 +1,14 @@
-set:srcdir
-	.
+. ${PORTS}/mk/langs/C
 
-set:outdir
-	.
+srcdir="."
+outdir="."
 
-set:cflags
-	$cflags
-	-I$outdir
-	-DZ_INSIDE_LIBZ
+libs=` cat <<-EOF
+	libz.a
+EOF
+`
 
-lib:libz.a
+libz=` cat <<-EOF
 	adler32.c
 	compress.c
 	crc32.c
@@ -25,3 +24,8 @@ lib:libz.a
 	trees.c
 	uncompr.c
 	zutil.c
+EOF
+`
+
+sets cflags "\$cflags -I\$outdir -DZ_INSIDE_LIBZ"
+lib  libz.a $libz

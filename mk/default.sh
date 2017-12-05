@@ -1,7 +1,5 @@
-#!/bin/sh
-# TODO: ORGANIZE 'CDS'
+# TODO: ORGANIZE 'CDS'\
 . $PORTS/mk/config.mk
-. $PORTS/mk/install.sh
 
 # BACK FUNCS
 error() {
@@ -9,14 +7,24 @@ error() {
 	exit 1
 }
 
+prepenv() {
+	[ -z $srcdir ] && srcdir="."
+	[ -z $outdir ] && outdir="."
+	printf "include ${PORTS}/mk/rules.ninja\n"
+	printf "srcdir=$srcdir\n"
+	printf "outdir=$outdir\n"
+	printf "ar = ${AR}\n"
+	printf "as = ${AS}\n"
+	printf "cc = ${CC}\n"
+	printf "ld = ${LD}\n"
+	printf "ranlib = ${RANLIB}\n"
+	printf "cflags = ${CFLAGS}\n"
+	printf "cppflags = ${CPPFLAGS}\n"
+}
+
 checksum() {
 	test -e "$1" && cat checksums | $SUM -c && rval=0 || rval=1
 	return "$rval"
-}
-
-getval() {
-	cd $SRC
-	$INTERPRES -p $1 $INFILE
 }
 
 gendbfile() {
@@ -83,24 +91,19 @@ default_prepare() {
 
 default_build() {
 	cd "$SRC"
-	$INTERPRES $INFILE
+	prepenv      1>> build.ninja
+	dash $INFILE 1>> build.ninja
 	$NINJA
 }
 
-# TODO: REMOVE SED WHEN INTERPRES REPLACE "$outdir"
+# TODO: FIX INSTALL
 default_install() {
-	BINS=`getval -b | sed 's/\$outdir/\./g'`
-	LIBS=`getval -l | sed 's/\$outdir/\./g'`
-	MANS=`getval -m | sed 's/\$outdir/\./g'`
-	for arg in "$@"; do
-		unset ${arg}
-	done
 	cd $SRC
-	[ -n "$BINS" ] && install_bin
-	[ -n "$INCS" ] && install_inc
-	[ -n "$LIBS" ] && install_lib
-	[ -n "$MANS" ] && install_man
-	[ -n "$SYMS" ] && install_sym
+	[ -n "$bins"     ] && install_bin
+	[ -n "$incs"     ] && install_inc
+	[ -n "$libs"     ] && install_lib
+	[ -n "$manpages" ] && install_man
+	[ -n "$syms"     ] && install_sym
 }
 
 default_package() {
@@ -112,4 +115,32 @@ default_package() {
 	fakeroot -- tar -zcf "${NAME}.pkg.tgz" -C .pkgroot .
 	gendbfile
 	rm -rf .pkgroot
+}
+
+# INSTALL FUNCS
+install_bin() {
+	$INSTALL -dm 755 ${ROOT}$BINDIR
+	$INSTALL -csm 755 $BINS ${ROOT}$BINDIR
+}
+
+install_inc() {
+	true
+}
+
+install_lib() {
+	$INSTALL -dm 755 ${ROOT}$LIBDIR
+	$INSTALL -csm 755 $LIBS ${ROOT}$LIBDIR
+}
+
+install_man() {
+	for mfile in "${MANS}"; do
+		man=`basename $mfile .gz`
+		mdir="${ROOT}$MANDIR/man$(echo -n $man | tail -c 1)"
+		$INSTALL -dm 755 $mdir
+		$INSTALL -csm 755 $man $mdir
+	done
+}
+
+install_sym() {
+	true
 }
