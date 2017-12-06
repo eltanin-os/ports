@@ -1,21 +1,35 @@
 # need to gen config.h and libpkgconf/config.h
-set:srcdir
-	.
+. ${PORTS}/langs/C
 
-set:outdir
-	.
+srcdir="."
+outdir="."
 
-set:cflags
-	$cflags
-	-I$srcdir
-	-DPKG_DEFAULT_PATH='"$prefix/lib/pkgconfig:$prefix/share/pkgconfig"'
-	-DSYSTEM_INCLUDEDIR='"$prefix/include"'
-	-DSYSTEM_LIBDIR='"$prefix/lib"'
+flags=` cat <<-EOF
+	\$cflags
+	-I\$srcdir
+	-DPKG_DEFAULT_PATH='"\$prefix/lib/pkgconfig:$prefix/share/pkgconfig"'
+	-DSYSTEM_INCLUDEDIR='"\$prefix/include"'
+	-DSYSTEM_LIBDIR='"\$prefix/lib"'
+EOF
+`
 
-set:ldflags
-	libpkgconf.a
+binaries=` cat <<-EOF
+	pkgconf
+EOF
+`
 
-lib:libpkgconf.a
+objs=` cat <<-EOF
+	getopt_long.c
+	main.c
+EOF
+`
+
+libs=` cat <<-EOF
+	libpkgconf/libpkfconf.a
+EOF
+`
+
+libpkgconf=` cat <<-EOF
 	libpkgconf/argvsplit.c
 	libpkgconf/audit.c
 	libpkgconf/bsdstubs.c
@@ -28,7 +42,10 @@ lib:libpkgconf.a
 	libpkgconf/pkg.c
 	libpkgconf/queue.c
 	libpkgconf/tuple.c
+EOF
+`
 
-bin:pkgconf
-	getopt_long.c
-	main.c
+sets cflags  $flags
+sets ldflags libpkgconf.a
+bin  pkgconf $objs
+lib  libpkgconf/libpkgconf.a $libpkgconf

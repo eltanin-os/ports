@@ -3,7 +3,7 @@
 srcdir="."
 outdir="."
 
-libs=`cat <<-EOF
+libraries=`cat <<-EOF
 	libbz2.a
 EOF
 `

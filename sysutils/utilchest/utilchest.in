@@ -1,30 +1,9 @@
-set:srcdir
-	.
+. ${PORTS}/mk/langs/C
 
-set:outdir
-	.
+srcdir="."
+outdir="."
 
-set:cflags
-	$cflags
-	-I$srcdir/inc
-
-lib:lib/libutf.a
-	lib/utf/chartorune.c
-	lib/utf/iscntrlrune.c
-	lib/utf/isprintrune.c
-	lib/utf/isvalidrune.c
-	lib/utf/runetype.c
-
-lib:lib/libutil.a
-	lib/util/chown.c
-	lib/util/cp.c
-	lib/util/dir.c
-	lib/util/ealloc.c
-	lib/util/mode.c
-	lib/util/pathcat.c
-	lib/util/stoll.c
-
-bins:lib/libutf.a lib/libutil.a
+binaries=` cat <<-EOF
 	src/basename
 	src/cat
 	src/chgrp
@@ -63,3 +42,71 @@ bins:lib/libutf.a lib/libutil.a
 	src/unlink
 	src/whoami
 	src/yes
+EOF
+`
+ldlibs=` cat <<-EOF
+	${outdir}/libutf/libutf.a
+	${outdir}/libutil/libutil.a
+EOF
+`
+
+libutf=` cat <<-EOF
+	lib/utf/chartorune.c
+	lib/utf/iscntrlrune.c
+	lib/utf/isprintrune.c
+	lib/utf/isvalidrune.c
+	lib/utf/runetype.c
+EOF
+`
+
+libutil=` cat <<-EOF
+	lib/util/chown.c
+	lib/util/cp.c
+	lib/util/dir.c
+	lib/util/ealloc.c
+	lib/util/mode.c
+	lib/util/pathcat.c
+	lib/util/stoll.c
+EOF
+`
+
+manpages=` cat <<-EOF
+	man/basename.1
+	man/cat.1
+	man/chgrp.1
+	man/chmod.1
+	man/cp.1
+	man/dirname.1
+	man/domainname.1
+	man/echo.1
+	man/env.1
+	man/false.1
+	man/head.1
+	man/hostname.1
+	man/link.1
+	man/ls.1
+	man/mkdir.1
+	man/mkfifo.1
+	man/mknod.1
+	man/mv.1
+	man/nice.1
+	man/printenv.1
+	man/pwd.1
+	man/rm.1
+	man/rmdir.1
+	man/sleep.1
+	man/tee.1
+	man/time.1
+	man/true.1
+	man/uname.1
+	man/unlink.1
+	man/whoami.1
+	man/yes.1
+EOF
+`
+
+sets cflags  "\$cflags -I\$srcdir/inc"
+lib  libutf/libutf.a   $libutf
+lib  libutil/libutil.a $libutil
+bins $binaries
+mans $manpages

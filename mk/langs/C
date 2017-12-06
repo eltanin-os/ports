@@ -1,15 +1,30 @@
+#!/bin/sh
 OUTPUT="build.ninja"
 
 #bin(bin, deps...)
 bin() {
-	printf "->BIN $@\n" 1>&2
-	bina="${1}"
+	binary="${1}"
+	ldlibs=`echo ${ldlibs} | tr '\n' ' '`
 	shift
-	printf "build ${outdir}/${bina}: link "
+	printf "build ${outdir}/${binary}: link"
 	for dep in ${@}; do
-		printf " ${outdir}/${dep}";
+		printf " ${outdir}/${dep}.o"
 	done
-	printf "\n"
+	printf " ${ldlibs}\n"
+	for dep in ${@}; do
+		printf "build ${outdir}/${dep}.o: cc ${srcdir}/${dep}\n"
+	done
+}
+
+#bins(bins...)
+bins() {
+	ldlibs=`echo ${ldlibs} | tr '\n' ' '`
+	for binary in ${@}; do
+		printf "build ${outdir}/${binary}: link  "
+		printf "${outdir}/${binary}.c.o ${ldlibs}\n"
+		printf "build ${outdir}/${binary}.c.o:   "
+		printf "cc ${srcdir}/${binary}.c\n"
+	done
 }
 
 #copy(src, dest)
@@ -19,24 +34,28 @@ copy() {
 
 #lib(lib, deps...)
 lib() {
-	liba="${1}"
+	library="${1}"
 	shift
-	printf "build ${outdir}/${liba}: ar"
+	printf "build ${outdir}/${library}: ar"
 	for dep in ${@}; do
-		printf " ${outdir}/${dep}";
+		printf " ${outdir}/${dep}.o";
 	done
-	printf "\nbuild ${outdir}/${liba}.d: lines ${outdir}/${liba}\n"
+	printf "\n"
+	for dep in ${@}; do
+		printf "build ${outdir}/${dep}.o: cc ${srcdir}/${dep}\n"
+	done
+	printf "build ${outdir}/${library}.d: lines ${outdir}/${library}\n"
 }
 
 #mans(mans...)
 mans() {
 	for man in ${@}; do
-		printf "build ${outdir}/${man}: gzip ${srcdir}/${man}\n"
+		printf "build ${outdir}/${man}.gz: gzip ${srcdir}/${man}\n"
 	done
 }
 
 #sets(var, value)
 sets() {
-	${1}="${2}"
-	printf "${1}=${2}"
+	#${1}="${2}"
+	printf "${1} = ${2}\n"
 }

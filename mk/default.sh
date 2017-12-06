@@ -1,4 +1,5 @@
-# TODO: ORGANIZE 'CDS'\
+#!/bin/sh
+# TODO: ORGANIZE 'CDS'
 . $PORTS/mk/config.mk
 
 # BACK FUNCS

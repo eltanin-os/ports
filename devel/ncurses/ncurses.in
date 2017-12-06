@@ -12,7 +12,7 @@ flags=` cat <<-EOF
 EOF
 `
 
-libs=` cat <<-EOF
+libraries=` cat <<-EOF
 	libcurses/libcurses.a
 	libform/libform.a
 	libmenu/libmenu.a

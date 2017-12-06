@@ -25,7 +25,7 @@ Build() {
 }
 
 Install() {
-	default_install LIBS
+	default_install
 }
 
 Package() {

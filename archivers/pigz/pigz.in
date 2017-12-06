@@ -1,9 +1,9 @@
-. ${PORTS}/langs/C
+. ${PORTS}/mk/langs/C
 
 srcdir="."
 outdir="."
 
-bins=` cat <<-EOF
+binaries=` cat <<-EOF
 	pigz
 EOF
 `

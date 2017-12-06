@@ -1,30 +1,15 @@
-set:srcdir
-	.
+. ${PORTS}/mk/langs/C
 
-set:outdir
-	.
+srcdir="."
+outdir="."
 
-set:cflags
-	$cflags
-	-I$srcdir/inc
+binaries=` cat <<-EOF
+	build/utilchest
+EOF
+`
 
-lib:lib/libutf.a
-	lib/utf/chartorune.c
-	lib/utf/iscntrlrune.c
-	lib/utf/isprintrune.c
-	lib/utf/isvalidrune.c
-	lib/utf/runetype.c
-
-lib:lib/libutil.a
-	lib/util/chown.c
-	lib/util/cp.c
-	lib/util/dir.c
-	lib/util/ealloc.c
-	lib/util/mode.c
-	lib/util/pathcat.c
-	lib/util/stoll.c
-
-lib:lib/libbins.a
+objs=` cat <<-EOF
+	build/utilchest.c
 	build/basename.c
 	build/cat.c
 	build/chgrp.c
@@ -57,12 +42,79 @@ lib:lib/libbins.a
 	build/rmdir.c
 	build/sleep.c
 	build/sync.c
+	build/tee.c
+	build/time.c
 	build/true.c
 	build/tty.c
 	build/uname.c
 	build/unlink.c
 	build/whoami.c
 	build/yes.c
+EOF
+`
 
-bins:lib/libbins.a lib/libutf.a lib/libutil.a
-	build/utilchest
+ldlibs=` cat <<-EOF
+	${outdir}/libutf/libutf.a
+	${outdir}/libutil/libutil.a
+`
+
+libutf=` cat <<-EOF
+	lib/utf/chartorune.c
+	lib/utf/iscntrlrune.c
+	lib/utf/isprintrune.c
+	lib/utf/isvalidrune.c
+	lib/utf/runetype.c
+EOF
+`
+
+libutil=` cat <<-EOF
+	lib/util/chown.c
+	lib/util/cp.c
+	lib/util/dir.c
+	lib/util/ealloc.c
+	lib/util/mode.c
+	lib/util/pathcat.c
+	lib/util/stoll.c
+EOF
+`
+
+manpages=` cat <<-EOF
+	man/basename.1
+	man/cat.1
+	man/chgrp.1
+	man/chmod.1
+	man/cp.1
+	man/dirname.1
+	man/domainname.1
+	man/echo.1
+	man/env.1
+	man/false.1
+	man/head.1
+	man/hostname.1
+	man/link.1
+	man/ls.1
+	man/mkdir.1
+	man/mkfifo.1
+	man/mknod.1
+	man/mv.1
+	man/nice.1
+	man/printenv.1
+	man/pwd.1
+	man/rm.1
+	man/rmdir.1
+	man/sleep.1
+	man/tee.1
+	man/time.1
+	man/true.1
+	man/uname.1
+	man/unlink.1
+	man/whoami.1
+	man/yes.1
+EOF
+`
+
+sets cflags "\$cflags -I\$srcdir/inc"
+lib  libutf/libutf.a   $libutf
+lib  libutil/libutil.a $libutil
+bin  build/utilchest   $objs
+mans $manpages

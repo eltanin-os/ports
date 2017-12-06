@@ -1,10 +1,14 @@
-set:srcdir
-	.
+. ${PORTS}/langs/C
 
-set:outdir
-	.
+srcdir="."
+outdir="."
 
-bin:samu
+binaries=` cat <<-EOF
+	samu
+EOF
+`
+
+objs=` cat <<-EOF
 	build.c
 	env.c
 	deps.c
@@ -16,3 +20,7 @@ bin:samu
 	samurai.c
 	tool.c
 	util.c
+EOF
+`
+
+bin samu $objs

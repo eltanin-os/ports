@@ -1,0 +1,59 @@
+. ${PORTS}/mk/langs/#language
+
+srcdir="."
+outdir="."
+
+# binaries, libraries and manpages are variables
+# that define what will be installed
+
+flags=` cat <<-EOF
+	#cflags
+EOF
+`
+
+binaries=` cat <<-EOF
+	#binaries
+EOF
+`
+
+# if build generate a single binary
+objs=` cat <<-EOF
+	#cfiles
+EOF
+`
+
+# only if binaries have different dependencies
+# otherwise use an internal library.
+binnameobjs=` cat <<-EOF
+	#cfiles
+EOF
+`
+
+ldlibs=` cat <<-EOF
+	#ldlibs
+EOF
+`
+
+libraries=` cat <<-EOF
+	#libraries
+EOF
+`
+
+#for each lib
+libname=` cat <<-EOF
+	#cfiles
+EOF
+`
+
+manpages=` cat <<-EOF
+	#manpages
+EOF
+`
+
+#rules
+bin
+bins
+copy
+lib
+mans
+sets
