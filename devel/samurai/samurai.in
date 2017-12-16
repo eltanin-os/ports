@@ -8,7 +8,7 @@ binaries=` cat <<-EOF
 EOF
 `
 
-objs=` cat <<-EOF
+samuobjs=` cat <<-EOF
 	build.c
 	env.c
 	deps.c
@@ -23,4 +23,4 @@ objs=` cat <<-EOF
 EOF
 `
 
-bin samu $objs
+bin samu $samuobjs

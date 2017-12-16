@@ -18,7 +18,7 @@ binaries=` cat <<-EOF
 EOF
 `
 
-objs=` cat <<-EOF
+pkgconfobjs=` cat <<-EOF
 	getopt_long.c
 	main.c
 EOF
@@ -47,5 +47,5 @@ EOF
 
 sets cflags  $flags
 sets ldflags libpkgconf.a
-bin  pkgconf $objs
+bin  pkgconf $pkgconfobjs
 lib  libpkgconf/libpkgconf.a $libpkgconf

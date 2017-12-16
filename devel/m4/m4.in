@@ -7,7 +7,7 @@ binaries=` cat <<-EOF
 	m4
 `
 
-objs=` cat <<-EOF
+m4objs=` cat <<-EOF
 	eval.c
 	expr.c
 	look.c
@@ -18,4 +18,4 @@ objs=` cat <<-EOF
 EOF
 `
 
-bin m4 $objs
+bin m4 $m4objs

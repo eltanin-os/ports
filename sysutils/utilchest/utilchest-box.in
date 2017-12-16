@@ -8,7 +8,7 @@ binaries=` cat <<-EOF
 EOF
 `
 
-objs=` cat <<-EOF
+utilchestobjs=` cat <<-EOF
 	build/utilchest.c
 	build/basename.c
 	build/cat.c
@@ -116,5 +116,5 @@ EOF
 sets cflags "\$cflags -I\$srcdir/inc"
 lib  libutf/libutf.a   $libutf
 lib  libutil/libutil.a $libutil
-bin  build/utilchest   $objs
+bin  build/utilchest   $utilchestobjs
 mans $manpages

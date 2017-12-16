@@ -16,14 +16,9 @@ binaries=` cat <<-EOF
 EOF
 `
 
-# if build generate a single binary
-objs=` cat <<-EOF
-	#cfiles
-EOF
-`
-
 # only if binaries have different dependencies
 # otherwise use an internal library.
+
 binnameobjs=` cat <<-EOF
 	#cfiles
 EOF
