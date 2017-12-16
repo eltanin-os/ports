@@ -29,7 +29,7 @@ checksum() {
 }
 
 gendbfile() {
-	rm dbfile
+	rm -f dbfile
 	size=`du -sk .pkgroot | awk '{printf "%u", $1*1024}'`
 	pkgsize=`du -sk $name | awk '{printf "%u", $1*1024}'`
 	dirs=`find .pkgroot -type d -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
@@ -97,14 +97,14 @@ default_build() {
 	$NINJA
 }
 
-# TODO: FIX INSTALL
 default_install() {
 	cd $SRC
-	[ -n "$bins"     ] && install_bin
-	[ -n "$incs"     ] && install_inc
-	[ -n "$libs"     ] && install_lib
-	[ -n "$manpages" ] && install_man
-	[ -n "$syms"     ] && install_sym
+	. $INFILE
+	[ -n "$binaries"  ] && install_bin
+	[ -n "$includes"  ] && install_inc
+	[ -n "$libraries" ] && install_lib
+	[ -n "$manpages"  ] && install_man
+	[ -n "$syms"      ] && install_sym
 }
 
 default_package() {
@@ -121,7 +121,7 @@ default_package() {
 # INSTALL FUNCS
 install_bin() {
 	$INSTALL -dm 755 ${ROOT}$BINDIR
-	$INSTALL -csm 755 $BINS ${ROOT}$BINDIR
+	$INSTALL -csm 755 $binaries ${ROOT}$BINDIR
 }
 
 install_inc() {
@@ -130,15 +130,15 @@ install_inc() {
 
 install_lib() {
 	$INSTALL -dm 755 ${ROOT}$LIBDIR
-	$INSTALL -csm 755 $LIBS ${ROOT}$LIBDIR
+	$INSTALL -csm 755 $libraries ${ROOT}$LIBDIR
 }
 
 install_man() {
-	for mfile in "${MANS}"; do
-		man=`basename $mfile .gz`
-		mdir="${ROOT}$MANDIR/man$(echo -n $man | tail -c 1)"
+	for mfile in `eval echo ${manpages}`; do
+		mdir=`echo ${ROOT}$MANDIR/man$(echo -n $mfile | tail -c 1)`
+		mfile=`echo ${mfile}.gz`
 		$INSTALL -dm 755 $mdir
-		$INSTALL -csm 755 $man $mdir
+		$INSTALL -cm 755 $mfile $mdir
 	done
 }
 
