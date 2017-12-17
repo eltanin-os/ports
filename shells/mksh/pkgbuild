@@ -10,25 +10,28 @@ MAKEDEPS="libc"
 
 SRC="$NAME"
 URL="https://www.mirbsd.org/MirOS/dist/mir/mksh/${NAME}-R${VERSION}.tgz"
-INFILE=""
+INFILE="../mksh.in"
 
 . ${PORTS}/mk/default.sh
 
 Prepare() {
 	default_prepare
+	chmod +x Build.sh
+	./Build.sh -r -M
+	env srcfile="rlimits.opt"  BUILDSH_RUN_GENOPT=1 ./Build.sh
+	env srcfile="sh_flags.opt" BUILDSH_RUN_GENOPT=1 ./Build.sh
 }
 
 Build() {
-	cd $SRC
-	chmod +x Build.sh
-	rm -rf build
-	mkdir build
-	cd build
-	../Build.sh
+	default_build
 }
 
 Install() {
-	true
+	default_install
+}
+
+Package() {
+	default_package
 }
 
 $@
