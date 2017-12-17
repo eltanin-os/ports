@@ -9,8 +9,8 @@ export RANLIB="ecc-ranlib"
 
 # COMPILE FLAGS
 export CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE"
-export CFLAGS="$CPPFLAGS -std=c99 -pedantic"
-export LDFLAGS="-Os -static"
+export CFLAGS="-Os -std=c99 -pedantic"
+export LDFLAGS="-static"
 
 # ENV PATH
 DBDIR="/var/pkg/local"
