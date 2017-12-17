@@ -1,5 +1,4 @@
 #!/bin/sh
-#NONDBUILD
 
 NAME="mksh"
 LONGNAME="$NAME"
