@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NAME="libressl"
-VERSION="2.6.2"
+VERSION="2.6.3"
 LICENSE="OPENSSL"
 DESCRIPTION="Is a fork of, and drop in replacement for OpenSSL."
 MAKEDEPS="libc linux-headers"
