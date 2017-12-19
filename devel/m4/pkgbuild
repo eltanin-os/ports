@@ -1,7 +1,6 @@
 #!/bin/sh
 
 NAME="m4"
-LONGNAME="quasar m4"
 VERSION="2"
 LICENSE="BSD-2"
 DESCRIPTION="A general-purpose macro processor."

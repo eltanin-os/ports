@@ -1,7 +1,6 @@
 #!/bin/sh
 
 NAME="mandoc"
-LONGNAME="$NAME"
 VERSION="1.14.3"
 LICENSE="ISC"
 DESCRIPTION="A suite of tools compiling mdoc from the OpenBSD project."

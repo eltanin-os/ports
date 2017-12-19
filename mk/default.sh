@@ -36,10 +36,8 @@ gendbfile() {
 	pkgsize=`du -sk ${name} | awk '{printf "%u", $1*1024}'`
 	dirs=`find .pkgroot -type d -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
 	files=`find -L .pkgroot -type f -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
-	printf "name:${NAME}\n"
-	[ -z "$LONGNAME" ] && LONGNAME="${NAME}"
 	cat <<-EOF
-		name-long:$LONGNAME
+		name:$NAME
 		version:$VERSION
 		license:$LICENSE
 		description:$DESCRIPTION

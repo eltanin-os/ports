@@ -1,7 +1,6 @@
 #!/bin/sh
 
 NAME="pigz"
-LONGNAME="$NAME"
 VERSION="2.3.4"
 LICENSE="zlib"
 DESCRIPTION="Parallel implementation of the gzip file compressor."

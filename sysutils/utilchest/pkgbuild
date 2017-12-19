@@ -1,7 +1,6 @@
 #!/bin/sh
 #Uncomment line 13 and comment lines 12, 16 and 20 for separated binaries.
 NAME="utilchest"
-LONGNAME="$NAME"
 VERSION="0"
 LICENSE="UNLICENSE"
 DESCRIPTION="A set of unix utilities written to be simple and small."

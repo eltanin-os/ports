@@ -1,7 +1,6 @@
 #!/bin/sh
 
 NAME="mksh"
-LONGNAME="$NAME"
 VERSION="56b"
 LICENSE="MIROS"
 DESCRIPTION="An enhanced version of the public domain ksh."

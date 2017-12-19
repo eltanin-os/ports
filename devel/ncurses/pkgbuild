@@ -1,15 +1,14 @@
 #!/bin/sh
 #NONDBUILD
 
-NAME="ncurses"
-LONGNAME="netbsd-curses"
+NAME="netbsd-ncurses"
 VERSION="0.2.1"
 LICENSE="BSD-3"
 DESCRIPTION="Netbsd curses library."
 MAKEDEPS="libc"
 
-SRC="${LONGNAME}-${VERSION}"
-URL="http://ftp.barfooze.de/pub/sabotage/tarballs/${LONGNAME}-${VERSION}.tar.xz"
+SRC="${NAME}-${VERSION}"
+URL="http://ftp.barfooze.de/pub/sabotage/tarballs/${NAME}-${VERSION}.tar.xz"
 INFILE="../ncurses.in"
 
 . ${PORTS}/mk/default.sh

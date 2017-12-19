@@ -1,7 +1,6 @@
 #!/bin/sh
 
 NAME="libressl"
-LONGNAME="$NAME"
 VERSION="2.6.2"
 LICENSE="OPENSSL"
 DESCRIPTION="Is a fork of, and drop in replacement for OpenSSL."

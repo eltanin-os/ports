@@ -1,7 +1,6 @@
 #!/bin/sh
 
 NAME="oss"
-LONGNAME="$NAME"
 VERSION="4.2-build2017"
 LICENSE="GPL2"
 DESCRIPTION="Open Sound System UNIX audio architecture."

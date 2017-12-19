@@ -1,7 +1,6 @@
 #!/bin/sh
 
 NAME="samurai"
-LONGNAME="$NAME"
 VERSION="git-master"
 LICENSE="ISC"
 DESCRIPTION="A ninja-compatible build tool written in C."

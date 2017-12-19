@@ -1,7 +1,6 @@
 #!/bin/sh
 
 NAME="bzip2"
-LONGNAME="$NAME"
 VERSION="1.0.6"
 LICENSE="BSD"
 DESCRIPTION="Is a high-quality data compressor."

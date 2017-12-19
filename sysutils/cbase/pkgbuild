@@ -2,7 +2,6 @@
 #NONDBUILD
 
 NAME="cbase"
-LONGNAME="$NAME"
 VERSION="0.0"
 LICENSE="MULTIPLE"
 DESCRIPTION="Complementary set of unix utilities for utilchest."

@@ -2,7 +2,6 @@
 #NONDBUILD
 
 NAME="dash"
-LONGNAME="$NAME"
 VERSION="0.5.9"
 LICENSE="BSD-3"
 DESCRIPTION="A POSIX compliant shell that aims to be as small as possible."

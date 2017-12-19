@@ -1,14 +1,13 @@
 #!/bin/sh
 
-NAME="zlib"
-LONGNAME="libz"
+NAME="libz"
 VERSION="1.2.8.2015.12.26"
 LICENSE="zlib"
 DESCRIPTION="An ABI-compatible and API-compatible drop-in replacement for zlib."
 MAKEDEPS="libc"
 
-SRC="${LONGNAME}-${VERSION}"
-URL="https://sortix.org/libz/release/${LONGNAME}-${VERSION}.tar.gz"
+SRC="${NAME}-${VERSION}"
+URL="https://sortix.org/libz/release/${NAME}-${VERSION}.tar.gz"
 INFILE="../libz.in"
 
 . ${PORTS}/mk/default.sh

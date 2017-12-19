@@ -1,7 +1,6 @@
 #!/bin/sh
 
 NAME=""
-LONGNAME=""
 VERSION=""
 LICENSE=""
 DESCRIPTION=""
