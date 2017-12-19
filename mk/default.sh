@@ -4,23 +4,26 @@
 
 # BACK FUNCS
 error() {
-	echo "$0: $1 failed" 1>&2
+	echo "${0}: $1 failed" 1>&2
 	exit 1
 }
 
 prepenv() {
 	[ -z $srcdir ] && srcdir="."
 	[ -z $outdir ] && outdir="."
-	printf "include ${PORTS}/mk/rules.ninja\n"
-	printf "srcdir=$srcdir\n"
-	printf "outdir=$outdir\n"
-	printf "ar = ${AR}\n"
-	printf "as = ${AS}\n"
-	printf "cc = ${CC}\n"
-	printf "ld = ${LD}\n"
-	printf "ranlib = ${RANLIB}\n"
-	printf "cflags = ${CFLAGS}\n"
-	printf "cppflags = ${CPPFLAGS}\n"
+	cat <<-EOF
+		include ${PORTS}/mk/rules.ninja
+		srcdir=$srcdir
+		outdir=$outdir
+		ar = $AR
+		as = $AS
+		cc = $CC
+		ld = $LD
+		ranlib = $RANLIB
+		cflags = $CFLAGS
+		cppflags = $CPPFLAGS
+		ldflags  = $LDFLAGS
+	EOF
 }
 
 checksum() {
@@ -29,32 +32,33 @@ checksum() {
 }
 
 gendbfile() {
-	rm -f dbfile
 	size=`du -sk .pkgroot | awk '{printf "%u", $1*1024}'`
-	pkgsize=`du -sk $name | awk '{printf "%u", $1*1024}'`
+	pkgsize=`du -sk ${name} | awk '{printf "%u", $1*1024}'`
 	dirs=`find .pkgroot -type d -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
 	files=`find -L .pkgroot -type f -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
-	echo "name:$NAME"               >> dbfile
-	[ -z "$LONGNAME" ] && LONGNAME=$NAME
-	echo "name-long:$LONGNAME"      >> dbfile
-	echo "version:$VERSION"         >> dbfile
-	echo "license:$LICENSE"         >> dbfile
-	echo "description:$DESCRIPTION" >> dbfile
-	echo "size:$size"               >> dbfile
-	echo "pkgsize:$pkgsize"         >> dbfile
+	printf "name:${NAME}\n"
+	[ -z "$LONGNAME" ] && LONGNAME="${NAME}"
+	cat <<-EOF
+		name-long:$LONGNAME
+		version:$VERSION
+		license:$LICENSE
+		description:$DESCRIPTION
+		size:$size
+		pkgsize:$pkgsize
+	EOF
 	for d in $RUNDEPS; do
-		echo "run-dep:$d" >> dbfile
+		printf "run-dep:${d}\n"
 	done
 	for d in $MAKEDEPS; do
 		# get package version from dbfile
-		d="$d#`grep 'version' ${DBDIR}/$d | sed 's/version://g'`"
-		echo "make-dep:$d" >> dbfile
+		d="${d}#`grep 'version' ${DBDIR}/${d} | sed 's/version://g'`"
+		printf "make-dep:${d}\n"
 	done
 	for d in $dirs; do
-		echo "dir:$d" >> dbfile
+		printf "dir:${d}\n"
 	done
 	for f in $files; do
-		echo "file:$f" >> dbfile
+		printf "file:${f}\n"
 	done
 }
 
@@ -92,7 +96,7 @@ default_prepare() {
 
 default_build() {
 	cd "$SRC"
-	prepenv      1>> build.ninja
+	prepenv      1>  build.ninja
 	dash $INFILE 1>> build.ninja
 	$NINJA
 }
@@ -110,11 +114,11 @@ default_install() {
 default_package() {
 	oldpwd=`pwd`
 	rm -rf .pkgroot
-	ROOT="$oldpwd/.pkgroot" Install
-	[ -n "$VERSION" ] && NAME="$NAME#$VERSION"
-	cd $oldpwd
-	fakeroot -- tar -zcf "${NAME}.pkg.tgz" -C .pkgroot .
-	gendbfile
+	ROOT="${oldpwd}/.pkgroot" Install
+	[ -n "$VERSION" ] && PKG="${NAME}#${VERSION}" || PKG="$NAME"
+	cd "$oldpwd"
+	fakeroot -- tar -zcf "${PKG}.pkg.tgz" -C .pkgroot .
+	gendbfile 1> dbfile
 	rm -rf .pkgroot
 }
 
@@ -135,8 +139,8 @@ install_lib() {
 
 install_man() {
 	for mfile in `eval echo ${manpages}`; do
-		mdir=`echo ${ROOT}$MANDIR/man$(echo -n $mfile | tail -c 1)`
-		mfile=`echo ${mfile}.gz`
+		mdir="${ROOT}${MANDIR}/man$(printf $mfile | tail -c 1)"
+		mfile="${mfile}.gz"
 		$INSTALL -dm 755 $mdir
 		$INSTALL -cm 755 $mfile $mdir
 	done
