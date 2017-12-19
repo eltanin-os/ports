@@ -22,6 +22,10 @@ Prepare() {
 }
 
 Build() {
+	oldcpp="$CPPFLAGS"
+	CPPFLAGS="$oldcpp -include../buildext/mksh_config.h"
+	default_build
+	CPPFLAGS="$oldcpp -include../buildext/lksh_config.h"
 	default_build
 }
 
