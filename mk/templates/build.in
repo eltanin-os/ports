@@ -1,3 +1,5 @@
+# when using this template
+# remove comentaries and non-used vars
 . ${PORTS}/mk/langs/#language
 
 srcdir="."
@@ -6,8 +8,23 @@ outdir="."
 # binaries, libraries and manpages are variables
 # that define what will be installed
 
-flags=` cat <<-EOF
+# if necessary add here additional
+# flags
+cflags=` cat <<-EOF
+	\$cflags
 	#cflags
+EOF
+`
+
+cppflags=` cat <<-EOF
+	\$cppflags
+	#cppflags
+EOF
+`
+
+ldflags=` cat <<-EOF
+	\$ldflags
+	#ldflags
 EOF
 `
 
