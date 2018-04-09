@@ -10,22 +10,6 @@ SRC="${NAME}-${VERSION}"
 URL="http://www.bzip.org/1.0.6/${NAME}-${VERSION}.tar.gz"
 INFILE="../bzip2.in"
 
-. ${PORTS}/mk/default.sh
-
-Prepare() {
-	default_prepare
-}
-
-Build() {
-	default_build
-}
-
-Install() {
-	default_install
-}
-
-Package() {
-	default_package
-}
+. ${PORTS}/mk/indef.sh
 
 $@

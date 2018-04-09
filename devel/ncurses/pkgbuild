@@ -11,19 +11,6 @@ SRC="${NAME}-${VERSION}"
 URL="http://ftp.barfooze.de/pub/sabotage/tarballs/${NAME}-${VERSION}.tar.xz"
 INFILE="../ncurses.in"
 
-. ${PORTS}/mk/default.sh
-
-Prepare() {
-	default_prepare
-}
-
-Build() {
-	cd $SRC
-	make CC="$CC" CFLAGS="$CPPFLAGS $CFLAGS" LDFLAGS="$LDFLAGS" all-static
-}
-
-Install() {
-	true
-}
+. ${PORTS}/mk/autodef.sh
 
 $@

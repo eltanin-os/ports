@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NAME="pigz"
-VERSION="2.3.4"
+VERSION="2.4"
 LICENSE="zlib"
 DESCRIPTION="Parallel implementation of the gzip file compressor."
 RUNDEPS="libc zlib"
@@ -10,18 +10,6 @@ SRC="${NAME}-${VERSION}"
 URL="https://zlib.net/pigz/${NAME}-${VERSION}.tar.gz"
 INFILE="../pigz.in"
 
-. ${PORTS}/mk/default.sh
-
-Prepare() {
-	default_prepare
-}
-
-Build() {
-	default_build
-}
-
-Install() {
-	true
-}
+. ${PORTS}/mk/indef.sh
 
 $@

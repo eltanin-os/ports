@@ -5,7 +5,7 @@
 srcdir="."
 outdir="."
 
-# binaries, libraries and manpages are variables
+# "$binaries", "$libraries" and "$manpages" are variables
 # that define what will be installed
 
 # if necessary add here additional
@@ -33,9 +33,8 @@ binaries=` cat <<-EOF
 EOF
 `
 
-# only if binaries have different dependencies
-# otherwise use an internal library.
-
+# Prefer an internal library if the binaries share the same objects
+# "$biname"objs
 binnameobjs=` cat <<-EOF
 	#cfiles
 EOF
@@ -51,7 +50,8 @@ libraries=` cat <<-EOF
 EOF
 `
 
-#for each lib
+# Create one for each library
+# "$libname"
 libname=` cat <<-EOF
 	#cfiles
 EOF

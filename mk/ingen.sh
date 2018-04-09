@@ -44,7 +44,7 @@ lib() {
 	for dep in ${@}; do
 		printf "build \${outdir}/${dep}.o: cc \${srcdir}/${dep}\n"
 	done
-	printf "build \${outdir}/${library}.d: lines\${outdir}/${library}\n"
+	printf "build \${outdir}/${library}.d: lines \${outdir}/${library}\n"
 }
 
 #mans(mans...)

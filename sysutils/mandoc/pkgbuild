@@ -11,22 +11,6 @@ URL="http://mdocml.bsd.lv/snapshots/${NAME}-${VERSION}.tar.gz"
 INFILE="../mandoc.in"
 
 . ${PORTS}/mk/default.sh
-
-Prepare() {
-	default_prepare
-	cp ../buildext/config.h .
-}
-
-Build() {
-	default_build
-}
-
-Install() {
-	default_install
-}
-
-Package() {
-	default_package
-}
+. ${PORTS}/mk/indef.sh
 
 $@

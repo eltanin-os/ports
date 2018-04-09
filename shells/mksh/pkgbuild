@@ -10,7 +10,7 @@ SRC="$NAME"
 URL="https://www.mirbsd.org/MirOS/dist/mir/mksh/${NAME}-R${VERSION}.tgz"
 INFILE="../mksh.in"
 
-. ${PORTS}/mk/default.sh
+. ${PORTS}/mk/indef.sh
 
 Prepare() {
 	default_prepare
@@ -26,14 +26,6 @@ Build() {
 	default_build
 	CPPFLAGS="$oldcpp -include../buildext/lksh_config.h"
 	default_build
-}
-
-Install() {
-	default_install
-}
-
-Package() {
-	default_package
 }
 
 $@

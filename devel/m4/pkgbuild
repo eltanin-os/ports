@@ -10,22 +10,6 @@ SRC="${NAME}-${VERSION}"
 URL="http://haddonthethird.net/m4/${NAME}-${VERSION}.tar.bz2"
 INFILE="../m4.in"
 
-. ${PORTS}/mk/default.sh
-
-Prepare() {
-	default_prepare
-}
-
-Build() {
-	default_build
-}
-
-Install() {
-	default_install
-}
-
-Package() {
-	default_package
-}
+. ${PORTS}/mk/indef.sh
 
 $@

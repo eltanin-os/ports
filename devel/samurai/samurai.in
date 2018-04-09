@@ -1,4 +1,5 @@
-. ${PORTS}/langs/C
+#!/bin/sh
+. ${PORTS}/mk/ingen.sh
 
 srcdir="."
 outdir="."

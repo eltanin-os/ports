@@ -1,7 +1,8 @@
 #!/bin/sh
 
 NAME="samurai"
-VERSION="git-master"
+VERSION="0.3"
+BRANCH="$VERSION"
 LICENSE="ISC"
 DESCRIPTION="A ninja-compatible build tool written in C."
 MAKEDEPS="libc"
@@ -10,22 +11,6 @@ SRC="$NAME"
 GIT="https://github.com/michaelforney/samurai"
 INFILE="../samurai.in"
 
-. ${PORTS}/mk/default.sh
-
-Prepare() {
-	default_prepare
-}
-
-Build() {
-	default_build
-}
-
-Install() {
-	default_install
-}
-
-Package() {
-	default_package
-}
+. ${PORTS}/mk/indef.sh
 
 $@

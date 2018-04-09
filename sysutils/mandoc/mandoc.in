@@ -1,7 +1,23 @@
-. ${PORTS}/mk/langs/C
+#!/bin/sh
+. ${PORTS}/mk/ingen.sh
 
 srcdir="."
 outdir="."
+
+cppflags=` cat <<-EOF
+	\$cppflags
+	-DMAN_CONF_FILE="${ETCDIR}/man.conf"
+	-DMANPATH_BASE="${MANDIR}"
+	-DMANPATH_DEFAULT="/share/man"
+	-DUTF8_LOCALE="${LOCALE}"
+	-DBINM_APROPOS="apropos"
+	-DBINM_CATMAN="catman"
+	-DBINM_MAKEWHATIS="makewhatis"
+	-DBINM_MAN="man"
+	-DBINM_SOELIM="soelim"
+	-DBINM_WHATIS="whatis"
+EOF
+`
 
 binaries=` cat <<-EOF
 	apropos
@@ -10,7 +26,6 @@ binaries=` cat <<-EOF
 	man
 	mandoc
 	whatis
-
 EOF
 `
 
@@ -116,6 +131,7 @@ manpages=` cat <<-EOF
 EOF
 `
 
+copy config.h    ../buildext/config.h
 lib  libmandoc.a $libmandoc
 sets ldlibs      "-lz"
 bin  mandoc      $mandocobjs

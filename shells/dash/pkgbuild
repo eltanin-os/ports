@@ -2,29 +2,14 @@
 #NONDBUILD
 
 NAME="dash"
-VERSION="0.5.9"
+VERSION="0.5.9.1"
 LICENSE="BSD-3"
 DESCRIPTION="A POSIX compliant shell that aims to be as small as possible."
 MAKEDEPS="libc"
 
 SRC="${NAME}-${VERSION}"
 URL="http://gondor.apana.org.au/~herbert/dash/files/${NAME}-${VERSION}.tar.gz"
-INFILE=""
 
-. ${PORTS}/mk/default.sh
-
-Prepare() {
-	default_prepare
-}
-
-Build() {
-	cd $SRC
-	./configure --prefix="$PREFIX" --enable-static
-	make
-}
-
-Install() {
-	true
-}
+. ${PORTS}/mk/autodef.sh
 
 $@

@@ -1,77 +1,32 @@
-# file copied from https://github.com/michaelforney/oasis (rules.ninja)
-# copied in 03/11/17 | it's modified
-
-# toolchain
-rule cc
-  command = $cc -MMD -MF $out.d $cflags $cppflags -c -o $out $in
-  depfile = $out.d
-  deps = gcc
+# TOOLCHAIN
+rule ar
+  command = rm -f $out && $ar crs $out $in && $ranlib $out
 
 rule as
   command = $as $asflags -o $out $in
 
-rule link
-  command = $cc $ldflags -o $out $in $ldlibs
-
-rule ar
-  command = rm -f $out && $ar crs $out $in && $ranlib $out
+rule cc
+  command = $cc -MMD -MF $out.d $cflags $cppflags -c -o $out $in
+  depfile = $out.d
+  deps    = gcc
 
 rule ld
   command = $ld -o $out $in
+
+rule link
+  command = $cc $ldflags -o $out $in $ldlibs
 
 rule objcopy
   command = $objcopy $objcopyflags $in $out
 
 rule lines
-  command = ln -f $rspfile $out
-  rspfile = $out.tmp
+  command         = ln -f $rspfile $out
+  rspfile         = $out.tmp
   rspfile_content = $in_newline
 
-# TODO: Enable dependency-tracking for nasm when
-# https://bugzilla.nasm.us/show_bug.cgi?id=3392280#c6 is fixed.
-rule nasm
-  command = nasm $nasmflags -o $out $in
-
-rule mc
-  command = $mc $mcflags -o $out $in
-
-rule muse
-  command = muse $museflags -o $out $in
-
-# misc tools
-rule touch
-  command = touch $out
-
-rule empty
-  command = >$out
-
+#
 rule copy
   command = ln -f $in $out
 
-rule cat
-  command = cat $in >$out.tmp && mv $out.tmp $out
-
-rule mergeperms
-  command = sort -k 2 -m $in >$out.tmp && mv $out.tmp $out
-
 rule gzip
   command = gzip -c -9 -n <$in >$out.tmp && mv $out.tmp $out
-
-rule yacc
-  command = yacc $yaccflags $in
-
-rule sed
-  command = sed $expr $in >$out.tmp && mv $out.tmp $out
-
-rule awk
-  command = awk $expr $in >$out.tmp && mv $out.tmp $out
-
-rule grep
-  command = grep $expr $in >$out.tmp && mv $out.tmp $out
-
-rule tic
-  command = tic $ticflags $in
-
-rule waylandproto
-  command = wayland-scanner $type <$in >$out.tmp && mv $out.tmp $out
-

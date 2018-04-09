@@ -9,21 +9,10 @@ MAKEDEPS="libc ncurses"
 
 SRC="$NAME"
 GIT="https://github.com/eltanin-os/$NAME"
-INFILE=""
-
-. ${PORTS}/mk/default.sh
-
-Prepare() {
-	default_prepare
-}
 
 Build() {
 	cd $SRC
 	make AR=$AR CC=$CC RANLIB=$RANLIB cbase
-}
-
-Install() {
-	true
 }
 
 $@

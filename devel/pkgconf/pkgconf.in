@@ -1,5 +1,6 @@
+#!/bin/sh
 # need to gen config.h and libpkgconf/config.h
-. ${PORTS}/langs/C
+. ${PORTS}/mk/ingen.sh
 
 srcdir="."
 outdir="."

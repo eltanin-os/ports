@@ -2,7 +2,7 @@
 #NONDBUILD
 
 NAME="pkgconf"
-VERSION="1.3.10"
+VERSION="1.4.2"
 LICENSE="custom-ISC"
 DESCRIPTION="A program which helps to configure compiler and linker flags\
  for development frameworks."
@@ -12,20 +12,6 @@ SRC="${NAME}-${VERSION}"
 URL="https://distfiles.dereferenced.org/pkgconf/${NAME}-${VERSION}.tar.gz"
 INFILE="../pkgconf.in"
 
-. ${PORTS}/mk/default.sh
-
-Prepare() {
-	default_prepare
-}
-
-Build() {
-	cd $SRC
-	./configure --prefix="$PREFIX" --enable-shared=no
-	make
-}
-
-Install() {
-	true
-}
+. ${PORTS}/mk/autodef.sh
 
 $@
