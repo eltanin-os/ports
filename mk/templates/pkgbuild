@@ -13,8 +13,11 @@ GIT=""
 INFILE=""
 PATCHES=""
 
-. ${PORTS}/mk/default.sh
+# Replace "*" with the build system (in,auto)
+. ${PORTS}/mk/*def.sh
 
+# "*def.sh" includes the functions below, but for specific behaviour
+# may be necessary to redefine them.
 Prepare() {
 }
 
@@ -22,6 +25,9 @@ Build() {
 }
 
 Install() {
+}
+
+Package() {
 }
 
 $@

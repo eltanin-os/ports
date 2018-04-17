@@ -1,6 +1,5 @@
-# when using this template
-# remove comentaries and non-used vars
-. ${PORTS}/mk/langs/#language
+#!/bin/sh
+. ${PORTS}/mk/ingen.sh
 
 srcdir="."
 outdir="."
@@ -62,7 +61,7 @@ manpages=` cat <<-EOF
 EOF
 `
 
-#rules
+# Rules
 bin
 bins
 copy
