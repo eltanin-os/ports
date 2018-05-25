@@ -14,7 +14,7 @@ export RANLIB="ranlib"
 
 # COMPILE FLAGS
 export CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE ${_MK_PORTS_ENV}"
-export CFLAGS="-I${PORT}/mk/inc -Os -std=c99 -pedantic"
+export CFLAGS="-I${PORT}/mk/inc -Os"
 export LDFLAGS="-static"
 
 # ENV PATH
@@ -30,6 +30,7 @@ MANDIR="${PREFIX}/share/man"
 INCDIR="${PREFIX}/include"
 
 # TOOLS
+TAR="pax -x ustar -w"
 COMPRESS="pigz -z"
 FETCH="curl -LO"
 INSTALL="install"

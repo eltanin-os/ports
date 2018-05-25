@@ -80,7 +80,7 @@ __default_package() {
 	[ -n "$VERSION" ] && PKG="${NAME}#${VERSION}" || PKG="$NAME"
 	name="${PKG}.${PKGSUF}"
 	( cd .pkgroot
-	  fakeroot -- tar -c . | $COMPRESS > "${olddir}/${name}" )
+	  fakeroot -- $TAR . | $COMPRESS > "${olddir}/${name}" )
 	__gendbfile 1> dbfile
 	rm -rf .pkgroot
 }
