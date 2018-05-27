@@ -25,6 +25,9 @@ rule lines
   rspfile_content = $in_newline
 
 #
+rule yacc
+  command = $yacc $yccflags $in && cp -f y.tab.c $out
+
 rule copy
   command = ln -f $in $out
 

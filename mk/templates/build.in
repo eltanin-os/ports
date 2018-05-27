@@ -8,7 +8,7 @@ outdir="."
 # that define what will be installed
 
 # if necessary add here additional
-# flags
+# flags (c, cpp, ld)
 cflags=` cat <<-EOF
 	\$cflags
 	#cflags
@@ -39,6 +39,8 @@ binnameobjs=` cat <<-EOF
 EOF
 `
 
+# Libraries listed here will make the compiler try to link
+# it in every binary.
 ldlibs=` cat <<-EOF
 	#ldlibs
 EOF
@@ -62,9 +64,13 @@ EOF
 `
 
 # Rules
-bin
-bins
+# always call 'auto' first
+auto
+sets
 copy
 lib
+bin
+bins
+objs
+mbin
 mans
-sets

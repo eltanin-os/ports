@@ -1,7 +1,7 @@
 #!/bin/sh
 OUTPUT="build.ninja"
 
-#bin(bin, deps...)
+#bin(bin, num, deps...)
 bin() {
 	binary="${1}"
 	ldlibs=`echo ${ldlibs} | tr '\n' ' '`
@@ -25,6 +25,18 @@ bins() {
 		printf "build \${outdir}/${binary}.c.o:   "
 		printf "cc \${srcdir}/${binary}.c\n"
 	done
+}
+
+#mbin(bins, deps...)
+mbin() {
+	binary="${1}"
+	ldlibs=`echo ${ldlibs} | tr '\n' ' '`
+	shift
+	printf "build \${outdir}/${binary}: link"
+	for dep in ${@}; do
+		printf " \${outdir}/${dep}.o"
+	done
+	printf " ${ldlibs}\n"
 }
 
 #copy(src, dest)
@@ -54,6 +66,14 @@ mans() {
 	done
 }
 
+#objs(objs...)
+objs() {
+	objs=`printf "%s\n" ${@} | sort | uniq`
+	for obj in ${objs}; do
+		printf "build \${outdir}/${obj}.o: cc \${srcdir}/${obj}\n"
+	done
+}
+
 #sets(var, value)
 sets() {
 	var="${1}"
@@ -63,4 +83,16 @@ sets() {
 		printf " ${value}"
 	done
 	printf "\n"
+}
+
+#yacc()
+yacc() {
+	printf "build \${outdir}/${2}: yacc \${srcdir}/${1}\n"
+}
+
+#auto()
+auto() {
+	[ -n "$cflags"   ] && sets cflags   "\$cflags   $cflags"
+	[ -n "$cppflags" ] && sets cppflags "\$cppflags $cppflags"
+	[ -n "$ldflags"  ] && sets ldflags  "\$ldflags  $ldflags"
 }

@@ -36,16 +36,18 @@ __prepenv() {
 	[ -z $outdir ] && outdir="."
 	cat <<-EOF
 		include ${PORTS}/mk/rules.ninja
-		srcdir=$srcdir
-		outdir=$outdir
-		ar = $AR
-		as = $AS
-		cc = $CC
-		ld = $LD
-		ranlib = $RANLIB
-		cflags = $CFLAGS
+		srcdir   = $srcdir
+		outdir   = $outdir
+		ar       = $AR
+		as       = $AS
+		cc       = $CC
+		ld       = $LD
+		ranlib   = $RANLIB
+		cflags   = $CFLAGS
 		cppflags = $CPPFLAGS
 		ldflags  = $LDFLAGS
+		yacc     = $YACC
+		yccflags = $YCCFLAGS
 	EOF
 }
 

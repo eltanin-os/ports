@@ -13,7 +13,7 @@ export AR="ar"
 export RANLIB="ranlib"
 
 # COMPILE FLAGS
-export CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE ${_MK_PORTS_ENV}"
+export CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE ${_MK_PORTS_ENV}"
 export CFLAGS="-I${PORT}/mk/inc -Os"
 export LDFLAGS="-static"
 
@@ -30,6 +30,7 @@ MANDIR="${PREFIX}/share/man"
 INCDIR="${PREFIX}/include"
 
 # TOOLS
+YACC="yacc -d"
 TAR="pax -x ustar -w"
 COMPRESS="pigz -z"
 FETCH="curl -LO"
