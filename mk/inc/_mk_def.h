@@ -2,8 +2,12 @@
 
 /* TODO: ORGANIZE LATER */
 #if defined(_MK_LC_MUSL) || defined(_MK_LC_GLIBC)
-	#define getprogname( ) __setprogname
-	#define setprogname(x) __setprogname = (x)
+	#ifndef __progname
+	 extern char *__progname;
+	#endif
+
+	#define getprogname( ) __progname
+	#define setprogname(x) __progname = x
 	#define HAVE_GETPROGNAME 1
 	#define HAVE_SETPROGNAME 1
 	#define HAVE_STRCASESTR 1

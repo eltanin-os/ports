@@ -14,7 +14,7 @@ export RANLIB="ranlib"
 
 # COMPILE FLAGS
 export CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE ${_MK_PORTS_ENV}"
-export CFLAGS="-I${PORT}/mk/inc -Os"
+export CFLAGS="-I${PORTS}/mk/inc -Os"
 export LDFLAGS="-static"
 
 # ENV PATH
