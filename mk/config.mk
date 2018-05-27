@@ -16,6 +16,7 @@ export RANLIB="ranlib"
 export CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE ${_MK_PORTS_ENV}"
 export CFLAGS="-I${PORTS}/mk/inc -Os"
 export LDFLAGS="-static"
+export LOCALE="en_US.utf8"
 
 # ENV PATH
 DBDIR="/var/pkg/local"
@@ -41,5 +42,4 @@ NINJA="samu"
 
 # OTHERS
 PKGSUF="pkg.tzz"
-LOCALE="en_US.utf8"
 nprocs="2"
