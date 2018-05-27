@@ -4,7 +4,7 @@
 srcdir="."
 outdir="."
 
-# "$binaries", "$libraries" and "$manpages" are variables
+# "$binaries", "$libraries", "$includes" and "$manpages" are variables
 # that define what will be installed
 
 # if necessary add here additional
@@ -55,6 +55,13 @@ EOF
 # "$libname"
 libname=` cat <<-EOF
 	#cfiles
+EOF
+`
+
+# $incprefix/$includes
+incprefix=""
+includes=` cat <<-EOF
+	#hfiles
 EOF
 `
 

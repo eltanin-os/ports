@@ -4,17 +4,19 @@
 # INFILE
 # Internal Install Functions
 __install_bin() {
-	$INSTALL -dm  755 ${ROOT}$BINDIR
-	$INSTALL -csm 755 $binaries ${ROOT}$BINDIR
+	$INSTALL -dm 755           ${ROOT}$BINDIR
+	$STRIP $binaries
+	$INSTALL -cm 755 $binaries ${ROOT}$BINDIR
 }
 
 __install_inc() {
-	true
+	$INSTALL -dm 755           ${ROOT}${INCDIR}/$incprefix
+	$INSTALL -cm 644 $includes ${ROOT}${INCDIR}/$incprefix
 }
 
 __install_lib() {
-	$INSTALL -dm  755 ${ROOT}$LIBDIR
-	$INSTALL -csm 755 $libraries ${ROOT}$LIBDIR
+	$INSTALL -dm 755            ${ROOT}$LIBDIR
+	$INSTALL -cm 644 $libraries ${ROOT}$LIBDIR
 }
 
 __install_man() {
@@ -22,7 +24,7 @@ __install_man() {
 		mdir="${ROOT}${MANDIR}/man$(printf $mfile | tail -c 1)"
 		mfile="${mfile}.gz"
 		$INSTALL -dm 755 $mdir
-		$INSTALL -cm 755 $mfile $mdir
+		$INSTALL -cm 644 $mfile $mdir
 	done
 }
 

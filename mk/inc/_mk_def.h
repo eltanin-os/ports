@@ -10,6 +10,7 @@
 	#define setprogname(x) __progname = x
 	#define HAVE_PROGNAME 1
 	#define HAVE_GETPROGNAME 1
+	#define HAVE_MEMORY_H 1
 	#define HAVE_SETPROGNAME 1
 	#define HAVE_STRCASESTR 1
 	#define HAVE_STRSEP 1

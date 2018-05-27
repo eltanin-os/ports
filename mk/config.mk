@@ -36,7 +36,7 @@ TAR="pax -x ustar -w"
 COMPRESS="pigz -z"
 FETCH="curl -LO"
 INSTALL="install"
-STRIP="strip"
+STRIP="strip --strip-all"
 SUM="sha512sum"
 NINJA="samu"
 
