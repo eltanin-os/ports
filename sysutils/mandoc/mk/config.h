@@ -1,5 +1,5 @@
 #include <sys/types.h>
-#include <__mk_def.h>
+#include <_mk_def.h>
 
 #define EFTYPE          EINVAL
 #define HAVE_ENDIAN     1

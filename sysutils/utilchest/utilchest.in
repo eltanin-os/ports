@@ -4,6 +4,11 @@
 srcdir="."
 outdir="."
 
+cflags=` cat <<-EOF
+	-I inc
+EOF
+`
+
 binaries=` cat <<-EOF
 	src/basename
 	src/cat
@@ -11,43 +16,66 @@ binaries=` cat <<-EOF
 	src/chmod
 	src/chown
 	src/chroot
+	src/cksum
 	src/clear
+	src/cmp
 	src/cp
 	src/date
 	src/dirname
 	src/domainname
+	src/du
 	src/echo
 	src/env
 	src/false
+	src/flock
 	src/head
 	src/hostname
 	src/id
+	src/install
+	src/kill
 	src/link
 	src/ln
+	src/logger
+	src/logname
 	src/ls
 	src/mkdir
 	src/mkfifo
 	src/mknod
+	src/mktemp
 	src/mv
 	src/nice
+	src/nohup
+	src/pathchk
 	src/printenv
 	src/pwd
 	src/readlink
+	src/renice
+	src/rev
 	src/rm
 	src/rmdir
+	src/setsid
+	src/sha1sum
+	src/sha224sum
+	src/sha256sum
+	src/sha512sum
 	src/sleep
 	src/sync
+	src/tee
+	src/time
+	src/touch
 	src/true
 	src/tty
 	src/uname
 	src/unlink
+	src/which
 	src/whoami
 	src/yes
 EOF
 `
+
 ldlibs=` cat <<-EOF
-	${outdir}/libutf/libutf.a
-	${outdir}/libutil/libutil.a
+	lib/libutf.a
+	lib/libutil.a
 EOF
 `
 
@@ -61,13 +89,23 @@ EOF
 `
 
 libutil=` cat <<-EOF
+	lib/util/chmod.c
 	lib/util/chown.c
+	lib/util/concat.c
 	lib/util/cp.c
+	lib/util/crypto.c
 	lib/util/dir.c
 	lib/util/ealloc.c
+	lib/util/fgetline.c
+	lib/util/fshut.c
+	lib/util/genpath.c
 	lib/util/mode.c
 	lib/util/pathcat.c
-	lib/util/stoll.c
+	lib/util/sha1.c
+	lib/util/sha224.c
+	lib/util/sha256.c
+	lib/util/sha512.c
+	lib/util/strtobase.c
 EOF
 `
 
@@ -106,8 +144,8 @@ manpages=` cat <<-EOF
 EOF
 `
 
-sets cflags  "\$cflags -I\$srcdir/inc"
-lib  libutf/libutf.a   $libutf
-lib  libutil/libutil.a $libutil
+auto
+lib  lib/libutf.a  $libutf
+lib  lib/libutil.a $libutil
 bins $binaries
 mans $manpages

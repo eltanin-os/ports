@@ -5,17 +5,16 @@ srcdir="."
 outdir="."
 
 cppflags=` cat <<-EOF
-	\$cppflags
-	-DMAN_CONF_FILE="${ETCDIR}/man.conf"
-	-DMANPATH_BASE="${MANDIR}"
-	-DMANPATH_DEFAULT="/share/man"
-	-DUTF8_LOCALE="${LOCALE}"
-	-DBINM_APROPOS="apropos"
-	-DBINM_CATMAN="catman"
-	-DBINM_MAKEWHATIS="makewhatis"
-	-DBINM_MAN="man"
-	-DBINM_SOELIM="soelim"
-	-DBINM_WHATIS="whatis"
+	-DMAN_CONF_FILE=\"${ETCDIR}/man.conf\"
+	-DMANPATH_BASE=\"${MANDIR}\"
+	-DMANPATH_DEFAULT=\"/share/man\"
+	-DUTF8_LOCALE=\"${LOCALE}\"
+	-DBINM_APROPOS=\"apropos\"
+	-DBINM_CATMAN=\"catman\"
+	-DBINM_MAKEWHATIS=\"makewhatis\"
+	-DBINM_MAN=\"man\"
+	-DBINM_SOELIM=\"soelim\"
+	-DBINM_WHATIS=\"whatis\"
 EOF
 `
 
@@ -131,9 +130,10 @@ manpages=` cat <<-EOF
 EOF
 `
 
-copy config.h    ../buildext/config.h
-lib  libmandoc.a $libmandoc
+auto
 sets ldlibs      "-lz"
+copy config.h    ../mk/config.h
+lib  libmandoc.a $libmandoc
 bin  mandoc      $mandocobjs
 bin  demandoc    demandoc.c
 copy apropos     mandoc

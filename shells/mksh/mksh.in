@@ -37,10 +37,10 @@ EOF
 
 #rules
 case $CPPFLAGS in
-	*"-include../buildext/lksh_config.h"*) bname="lksh" ;;
-	*)      bname="mksh" ;;
+	*"-include../mk/lksh_config.h"*) bname="lksh" ;;
+	*)                               bname="mksh" ;;
 esac
 
-sets cppflags "\$cppflags -D_GNU_SOURCE"
-bin $bname $mkshobjs
+auto
+bin  $bname    $mkshobjs
 mans $manpages

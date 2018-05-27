@@ -1,5 +1,4 @@
 #!/bin/sh
-
 NAME="mksh"
 VERSION="56b"
 LICENSE="MIROS"
@@ -13,7 +12,7 @@ INFILE="../mksh.in"
 . ${PORTS}/mk/indef.sh
 
 Prepare() {
-	default_prepare
+	__default_prepare
 	chmod +x Build.sh
 	./Build.sh -r -M
 	env srcfile="rlimits.opt"  BUILDSH_RUN_GENOPT=1 ./Build.sh
@@ -22,10 +21,10 @@ Prepare() {
 
 Build() {
 	oldcpp="$CPPFLAGS"
-	CPPFLAGS="$oldcpp -include../buildext/mksh_config.h"
-	default_build
-	CPPFLAGS="$oldcpp -include../buildext/lksh_config.h"
-	default_build
+	CPPFLAGS="$oldcpp -include../mk/mksh_config.h"
+	( __default_build )
+	CPPFLAGS="$oldcpp -include../mk/lksh_config.h"
+	( __default_build )
 }
 
 $@

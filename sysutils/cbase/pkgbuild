@@ -1,18 +1,15 @@
 #!/bin/sh
-#NONDBUILD
 
 NAME="cbase"
-VERSION="0.0"
+VERSION="master"
 LICENSE="MULTIPLE"
 DESCRIPTION="Complementary set of unix utilities for utilchest."
 MAKEDEPS="libc ncurses"
 
 SRC="$NAME"
 GIT="https://github.com/eltanin-os/$NAME"
+INFILE="../cbase.in"
 
-Build() {
-	cd $SRC
-	make AR=$AR CC=$CC RANLIB=$RANLIB cbase
-}
+. ${PORTS}/mk/indef.sh
 
 $@

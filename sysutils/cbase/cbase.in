@@ -1,0 +1,467 @@
+#!/bin/sh
+. ${PORTS}/mk/ingen.sh
+
+srcdir="."
+outdir="."
+
+cflags=` cat <<-EOF
+	-I inc
+EOF
+`
+
+DFLDIR="${PREFIX}/etc/default"
+DLIBDIR="${PREFIX}/lib"
+cppflags=` cat <<-EOF
+	-DCCSBIN=\"/bin\"
+	-DDEFBIN=\"/bin\"
+	-DSUSBIN=\"/bin\"
+	-DSV3BIN=\"/bin\"
+	-DUCBBIN=\"/bin\"
+	-DDEFAULT=\"${DFLDIR}/ps\"
+	-DDC=\"/bin/dc\"
+	-DDIFFH=\"${DFLDIR}/diffh\"
+	-Dfunc="test"
+	-DFORMPATH=\"${DLIBDIR}/lex\"
+	-DLIBB=\"${DLIBDIR}/lib.b\"
+	-DMAGIC=\"${DLIBDIR}/magic\"
+	-DPARSER=\"${LIBDIR}/yaccpar\"
+	-DSHELL=\"/bin/sh\"
+	-DSUDFL=\"${DFLDIR}/su\"
+	-DTARDFL=\"${DFLDIR}/tar\"
+	-DUSE_ZLIB=0
+	-DUSE_BZLIB=0
+EOF
+`
+
+binaries=` cat <<-EOF
+	src/awk/awk
+	src/bc/bc
+	src/cal/cal
+	src/comm/comm
+	src/cpio/cpio
+	src/cpio/pax
+	src/csplit/csplit
+	src/cut/cut
+	src/dc/dc
+	src/dd/dd
+	src/df/df
+	src/diff/diff
+	src/ed/ed
+	src/expand/expand
+	src/expand/unexpand
+	src/expr/expr
+	src/file/file
+	src/find/find
+	src/fmt/fmt
+	src/fold/fold
+	src/getconf/getconf
+	src/grep/egrep
+	src/grep/fgrep
+	src/grep/grep
+	src/hd/hd
+	src/join/join
+	src/lex/lex
+	src/mesg/mesg
+	src/more/more
+	src/nl/nl
+	src/od/od
+	src/paste/paste
+	src/patch/patch
+	src/pgrep/pgrep
+	src/pr/pr
+	src/printf/printf
+	src/ps/ps
+	src/sed/sed
+	src/sort/sort
+	src/split/split
+	src/stty/stty
+	src/tabs/newform
+	src/tabs/tabs
+	src/tail/tail
+	src/test/test
+	src/tr/tr
+	src/tsort/tsort
+	src/uniq/uniq
+	src/wc/wc
+	src/what/what
+	src/who/who
+	src/xargs/xargs
+	src/yacc/yacc
+EOF
+`
+
+#src/more requires ncurses
+commbins=` cat <<-EOF
+	src/bc/bc
+	src/cal/cal
+	src/comm/comm
+	src/csplit/csplit
+	src/cut/cut
+	src/dd/dd
+	src/df/df
+	src/ed/ed
+	src/expr/expr
+	src/file/file
+	src/find/find
+	src/fmt/fmt
+	src/fold/fold
+	src/getconf/getconf
+	src/hd/hd
+	src/join/join
+	src/mesg/mesg
+	src/more/more
+	src/nl/nl
+	src/od/od
+	src/paste/paste
+	src/pgrep/pgrep
+	src/pr/pr
+	src/printf/printf
+	src/ps/ps
+	src/sort/sort
+	src/split/split
+	src/stty/stty
+	src/tail/tail
+	src/tr/tr
+	src/tsort/tsort
+	src/uniq/uniq
+	src/wc/wc
+	src/what/what
+	src/who/who
+	src/xargs/xargs
+EOF
+`
+
+awkobjs=` cat <<-EOF
+	src/awk/awk.c
+	src/awk/b.c
+	src/awk/lex.c
+	src/awk/lib.c
+	src/awk/parse.c
+	src/awk/proctab.c
+	src/awk/run.c
+	src/awk/tran.c
+	src/awk/ytab.c
+EOF
+`
+
+cpioobjs=` cat <<-EOF
+	src/cpio/blast.c
+	src/cpio/cpio.c
+	src/cpio/crc32.c
+	src/cpio/expand.c
+	src/cpio/explode.c
+	src/cpio/inflate.c
+	src/cpio/unshrink.c
+	src/cpio/version.c
+	src/cpio/flags.c
+	src/cpio/nonpax.c
+EOF
+`
+
+dcobjs=` cat <<-EOF
+	src/dc/dc.c
+	src/dc/version.c
+EOF
+`
+
+diffobjs=` cat <<-EOF
+	src/diff/diff.c
+	src/diff/diffdir.c
+	src/diff/diffreg.c
+	src/diff/diffver.c
+EOF
+`
+
+egrepobjs=` cat <<-EOF
+	src/grep/alloc.c
+	src/grep/grep.c
+	src/grep/grid.c
+	src/grep/svid3.c
+	src/grep/egrep.c
+	src/grep/plist.c
+EOF
+`
+
+expandobjs=` cat <<-EOF
+	src/expand/expand.c
+	src/expand/tablist.c
+EOF
+`
+
+fgrepobjs=` cat <<-EOF
+	src/grep/alloc.c
+	src/grep/grep.c
+	src/grep/grid.c
+	src/grep/svid3.c
+	src/grep/ac.c
+	src/grep/fgrep.c
+	src/grep/plist.c
+EOF
+`
+
+grepobjs=` cat <<-EOF
+	src/grep/alloc.c
+	src/grep/grep.c
+	src/grep/grid.c
+	src/grep/svid3.c
+	src/grep/ggrep.c
+EOF
+`
+
+lexobjs=` cat <<-EOF
+	src/lex/getopt.c
+	src/lex/header.c
+	src/lex/lsearch.c
+	src/lex/lex.c
+	src/lex/parser.c
+	src/lex/sub1.c
+	src/lex/sub2.c
+	src/lex/sub3.c
+	src/lex/wcio.c
+EOF
+`
+
+newformobjs=` cat <<-EOF
+	src/tabs/newform.c
+	src/tabs/tabspec.c
+EOF
+`
+
+patchobjs=` cat <<-EOF
+	src/patch/backupfile.c
+	src/patch/inp.c
+	src/patch/mkpath.c
+	src/patch/patch.c
+	src/patch/pch.c
+	src/patch/util.c
+EOF
+`
+
+paxobjs=` cat <<-EOF
+	src/cpio/blast.c
+	src/cpio/cpio.c
+	src/cpio/crc32.c
+	src/cpio/expand.c
+	src/cpio/explode.c
+	src/cpio/inflate.c
+	src/cpio/unshrink.c
+	src/cpio/version.c
+	src/cpio/pax.c
+EOF
+`
+
+sedobjs=` cat <<-EOF
+	src/sed/sed0.c
+	src/sed/sed1.c
+	src/sed/version.c
+EOF
+`
+
+tabsobjs=` cat <<-EOF
+	src/tabs/tabs.c
+	src/tabs/tabspec.c
+EOF
+`
+
+testobjs=` cat <<-EOF
+	src/test/helper.c
+	src/test/test.c
+	src/test/ttest.c
+	src/test/version.c
+EOF
+`
+
+unexpandobjs=` cat <<-EOF
+	src/expand/unexpand.c
+	src/expand/tablist.c
+EOF
+`
+
+yaccobjs=` cat <<-EOF
+	src/yacc/getopt.c
+	src/yacc/y1.c
+	src/yacc/y2.c
+	src/yacc/y3.c
+	src/yacc/y4.c
+	src/yacc/y5.c
+EOF
+`
+
+ldlibs=` cat <<-EOF
+	lib/libcommon.a
+	lib/libuxre.a
+	lib/libwchar.a
+EOF
+`
+
+libcommon=` cat <<-EOF
+	lib/common/asciitype.c
+	lib/common/getdir.c
+	lib/common/getopt.c
+	lib/common/gmatch.c
+	lib/common/ib_alloc.c
+	lib/common/ib_close.c
+	lib/common/ib_free.c
+	lib/common/ib_getlin.c
+	lib/common/ib_getw.c
+	lib/common/ib_open.c
+	lib/common/ib_popen.c
+	lib/common/ib_read.c
+	lib/common/ib_seek.c
+	lib/common/memalign.c
+	lib/common/oblok.c
+	lib/common/pathconf.c
+	lib/common/pfmt.c
+	lib/common/pfmt_label.c
+	lib/common/regexpr.c
+	lib/common/setlabel.c
+	lib/common/setuxlabel.c
+	lib/common/sfile.c
+	lib/common/sighold.c
+	lib/common/sigignore.c
+	lib/common/signal.c
+	lib/common/sigpause.c
+	lib/common/sigrelse.c
+	lib/common/sigset.c
+	lib/common/strtol.c
+	lib/common/sysv3.c
+	lib/common/utmpx.c
+	lib/common/vpfmt.c
+EOF
+`
+
+libuxre=` cat <<-EOF
+	lib/uxre/_collelem.c
+	lib/uxre/_collmult.c
+	lib/uxre/bracket.c
+	lib/uxre/onefile.c
+	lib/uxre/regcomp.c
+	lib/uxre/regdfa.c
+	lib/uxre/regerror.c
+	lib/uxre/regexec.c
+	lib/uxre/regfree.c
+	lib/uxre/regnfa.c
+	lib/uxre/regparse.c
+	lib/uxre/stubs.c
+EOF
+`
+
+libwchar=` cat <<-EOF
+	lib/wchar/mblen.c
+	lib/wchar/mbrtowc.c
+	lib/wchar/mbstowcs.c
+	lib/wchar/mbtowc.c
+	lib/wchar/wcslen.c
+	lib/wchar/wcsncmp.c
+	lib/wchar/wctfunc.c
+	lib/wchar/wctomb.c
+	lib/wchar/wctype.c
+	lib/wchar/wcwidth.c
+EOF
+`
+
+manpages=` cat <<-EOF
+	man/awk.1
+	man/bc.1
+	man/cal.1
+	man/comm.1
+	man/cpio.1
+	man/csplit.1
+	man/cut.1
+	man/dc.1
+	man/dd.1
+	man/df.1
+	man/df.1b
+	man/diff.1
+	man/ed.1
+	man/egrep.1
+	man/expand.1
+	man/expr.1
+	man/fgrep.1
+	man/file.1
+	man/find.1
+	man/fmt.1
+	man/fold.1
+	man/getconf.1
+	man/grep.1
+	man/hd.1
+	man/join.1
+	man/lex.1
+	man/mesg.1
+	man/more.1
+	man/newform.1
+	man/nl.1
+	man/od.1
+	man/paste.1
+	man/patch.1
+	man/pax.1
+	man/pgrep.1
+	man/pr.1
+	man/printf.1
+	man/ps.1
+	man/ps.1b
+	man/sed.1
+	man/sort.1
+	man/split.1
+	man/stty.1
+	man/stty.1b
+	man/tabs.1
+	man/tail.1
+	man/test.1
+	man/test.1b
+	man/tr.1
+	man/tr.1b
+	man/tsort.1
+	man/unexpand.1
+	man/uniq.1
+	man/wc.1
+	man/what.1
+	man/who.1
+	man/xargs.1
+	man/yacc.1
+EOF
+`
+
+auto
+yacc src/expr/expr.y   src/expr/expr.c
+yacc src/grep/egrep.y  src/grep/egrep.c
+yacc src/lex/parser.y  src/lex/parser.c
+sets ldlibs            "-lcurses"
+copy inc/config.h      inc/configh.bak
+copy inc/heirloom.h    inc/heirloomh.bak
+copy src/awk/ytab.c    src/awk/ytabc.bak
+copy src/awk/ytab.h    src/awk/ytabh.bak
+copy src/bc/bc.c       src/bc/bcc.bak
+lib  lib/libcommon.a   $libcommon
+lib  lib/libuxre.a     $libuxre
+lib  lib/libwchar.a    $libwchar
+bins $commbins
+bin  src/dc/dc         $dcobjs
+bin  src/diff/diff     $diffobjs
+bin  src/sed/sed       $sedobjs
+bin  src/test/test     $testobjs
+
+objs $egrepobjs $fgrepobjs $grepobjs
+mbin src/grep/egrep $egrepobjs
+mbin src/grep/fgrep $fgrepobjs
+mbin src/grep/grep  $grepobjs
+
+objs $tabsobjs $newformobjs
+mbin src/tabs/newform $newformobjs
+mbin src/tabs/tabs    $tabsobjs
+
+objs $expandobjs $unexpandobjs
+mbin src/expand/expand   $expandobjs
+mbin src/expand/unexpand $unexpandobjs
+
+objs $cpioobjs $paxobjs
+mbin src/cpio/cpio $cpioobjs
+mbin src/cpio/pax  $paxobjs
+
+unset ldlibs
+bin src/awk/awk       $awkobjs
+bin src/patch/patch   $patchobjs
+bin src/lex/lex       $lexobjs
+bin src/yacc/yacc     $yaccobjs
+
+mans $manpages

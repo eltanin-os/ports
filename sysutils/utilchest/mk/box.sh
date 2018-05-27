@@ -1,7 +1,7 @@
 #!/bin/dash
 
 prepare_box() {
-	cd $SRC
+	cd "${SRC}"
 	CFILES=`ls src/*.c`
 	mkdir -p build
 	for f in ${CFILES}; do sed "s/^main(/$(echo "$(basename $f .c)" | sed s/-/_/g)_&/" < $f > build/$(basename $f); done
