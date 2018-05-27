@@ -28,5 +28,6 @@ manpages=`cat <<-EOF
 EOF
 `
 
+auto
 lib  libbz2.a $libbz2
 mans $manpages

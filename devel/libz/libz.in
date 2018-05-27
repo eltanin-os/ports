@@ -4,6 +4,12 @@
 srcdir="."
 outdir="."
 
+cflags=` cat <<-EOF
+	-I .
+	-I -DZ_INSIDE_LIBZ
+EOF
+`
+
 libraries=` cat <<-EOF
 	libz.a
 EOF
@@ -28,5 +34,5 @@ libz=` cat <<-EOF
 EOF
 `
 
-sets cflags "\$cflags -I\$outdir -DZ_INSIDE_LIBZ"
+auto
 lib  libz.a $libz

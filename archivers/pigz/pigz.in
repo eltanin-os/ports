@@ -30,6 +30,7 @@ manpages=` cat <<-EOF
 EOF
 `
 
+auto
 sets ldlibs "-lm -lpthread -lz"
 bin  pigz $pigzobjs
 mans $manpages

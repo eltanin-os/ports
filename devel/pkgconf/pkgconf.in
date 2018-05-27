@@ -1,13 +1,11 @@
 #!/bin/sh
-# need to gen config.h and libpkgconf/config.h
 . ${PORTS}/mk/ingen.sh
 
 srcdir="."
 outdir="."
 
-flags=` cat <<-EOF
-	\$cflags
-	-I\$srcdir
+cflags=` cat <<-EOF
+	-I .
 	-DPKG_DEFAULT_PATH='"\$prefix/lib/pkgconfig:$prefix/share/pkgconfig"'
 	-DSYSTEM_INCLUDEDIR='"\$prefix/include"'
 	-DSYSTEM_LIBDIR='"\$prefix/lib"'
@@ -22,11 +20,12 @@ EOF
 pkgconfobjs=` cat <<-EOF
 	getopt_long.c
 	main.c
+	renderer-msvc.c
 EOF
 `
 
-libs=` cat <<-EOF
-	libpkgconf/libpkfconf.a
+ldlibs=` cat <<-EOF
+	libpkgconf/libpkgconf.a
 EOF
 `
 
@@ -46,7 +45,25 @@ libpkgconf=` cat <<-EOF
 EOF
 `
 
-sets cflags  $flags
-sets ldflags libpkgconf.a
-bin  pkgconf $pkgconfobjs
+incprefix="pkgconf/libpkgconf/"
+includes=` cat <<-EOF
+	libpkgconf/bsdstubs.h
+	libpkgconf/iter.h
+	libpkgconf/libpkgconf-api.h
+	libpkgconf/libpkgconf.h
+	libpkgconf/stdinc.h
+EOF
+`
+
+manpages=` cat <<-EOF
+	man/pkgconf.1
+	man/pkg.m4.7
+	man/pc.5
+EOF
+`
+
+auto
+copy libpkgconf/config.h     ../mk/config.h
+bin  pkgconf                 $pkgconfobjs
 lib  libpkgconf/libpkgconf.a $libpkgconf
+mans $manpages

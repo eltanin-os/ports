@@ -4,14 +4,13 @@
 NAME="pkgconf"
 VERSION="1.4.2"
 LICENSE="custom-ISC"
-DESCRIPTION="A program which helps to configure compiler and linker flags\
- for development frameworks."
+DESCRIPTION="A program which helps to configure compiler and linker flags for development frameworks."
 MAKEDEPS="libc"
 
 SRC="${NAME}-${VERSION}"
 URL="https://distfiles.dereferenced.org/pkgconf/${NAME}-${VERSION}.tar.gz"
 INFILE="../pkgconf.in"
 
-. ${PORTS}/mk/autodef.sh
+. ${PORTS}/mk/indef.sh
 
 $@

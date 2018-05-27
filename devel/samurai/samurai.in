@@ -24,4 +24,5 @@ samuobjs=` cat <<-EOF
 EOF
 `
 
+auto
 bin samu $samuobjs

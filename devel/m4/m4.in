@@ -6,6 +6,7 @@ outdir="."
 
 binaries=` cat <<-EOF
 	m4
+EOF
 `
 
 m4objs=` cat <<-EOF
@@ -19,4 +20,5 @@ m4objs=` cat <<-EOF
 EOF
 `
 
+auto
 bin m4 $m4objs

@@ -4,12 +4,11 @@
 srcdir="."
 outdir="."
 
-flags=` cat <<-EOF
-	\$cflags
-	-I\$srcdir/libcurses
-	-I\$srcdir/libform
-	-I\$srcdir/libpanel
-	-I\$srcdir/libterminfo
+cflags=` cat <<-EOF
+	-I libcurses
+	-I libform
+	-I libpanel
+	-I libterminfo
 EOF
 `
 
@@ -168,7 +167,7 @@ libterminfo=` cat <<-EOF
 EOF
 `
 
-sets cflags $flags
+auto
 lib  libcurses/libcurses.a     $libcurses
 lib  libform/libform.a         $libform
 lib  libpanel/libpanel.a       $libpanel
