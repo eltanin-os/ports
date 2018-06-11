@@ -8,15 +8,15 @@ MAKEDEPS="libc"
 
 SRC="$NAME"
 GIT="https://github.com/eltanin-os/$NAME"
-#INFILE="../utilchest-box.in"
-INFILE="../utilchest.in"
+INFILE="../utilchest-box.in"
+#INFILE="../utilchest.in"
 
 . ${PORTS}/mk/indef.sh
-#. mk/box.sh
+. mk/box.sh
 
 Prepare() {
-	( __default_prepare)
-#	( prepare_box )
+#	( __default_prepare)
+	( prepare_box )
 }
 
 $@
