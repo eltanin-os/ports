@@ -53,6 +53,25 @@ __prepenv() {
 	EOF
 }
 
+__prepvenv() {
+	case "$MK_PACKAGE" in
+	bin)
+		unset $includes
+		unset $libraries
+		unset $symlinks
+		;;
+	dev)
+		unset $binaries
+		;;
+	devman)
+		;;
+	man)
+		;;
+	*)
+		;;
+	esac
+}
+
 __default_prepare() {
 	test -n "$URL" && __fetch_url
 	test -n "$GIT" && __fetch_git
@@ -70,11 +89,13 @@ __default_build() {
 __default_install() {
 	cd $SRC
 	. $INFILE
+	__prepvenv
+
 	[ -n "$binaries"  ] && __install_bin
 	[ -n "$includes"  ] && __install_inc
 	[ -n "$libraries" ] && __install_lib
 	[ -n "$manpages"  ] && __install_man
-	[ -n "$syms"      ] && __install_sym
+	[ -n "$symlinks"  ] && __install_sym
 }
 
 __default_package() {
