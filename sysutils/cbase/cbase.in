@@ -90,7 +90,6 @@ binaries=` cat <<-EOF
 EOF
 `
 
-#src/more requires ncurses
 commbins=` cat <<-EOF
 	src/bc/bc
 	src/cal/cal

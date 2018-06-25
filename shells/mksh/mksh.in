@@ -36,9 +36,13 @@ EOF
 `
 
 #rules
-case $CPPFLAGS in
-	*"-include../mk/lksh_config.h"*) bname="lksh" ;;
-	*)                               bname="mksh" ;;
+case "$CPPFLAGS" in
+*"-include../mk/lksh_config.h"*)
+	bname="lksh"
+	;;
+*)
+	bname="mksh"
+	;;
 esac
 
 auto
