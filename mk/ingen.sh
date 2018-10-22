@@ -79,9 +79,7 @@ sets() {
 	var="${1}"
 	shift
 	printf "${var} ="
-	for value in ${@}; do
-		printf " ${value}"
-	done
+	printf " %s" ${@}
 	printf "\n"
 }
 
