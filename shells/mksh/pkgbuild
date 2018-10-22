@@ -1,6 +1,6 @@
 #!/bin/sh
 NAME="mksh"
-VERSION="56b"
+VERSION="56c"
 LICENSE="MIROS"
 DESCRIPTION="An enhanced version of the public domain ksh."
 MAKEDEPS="libc"

@@ -6,8 +6,8 @@ LICENSE="BSD"
 DESCRIPTION="Is a high-quality data compressor."
 MAKEDEPS="libc"
 
-SRC="${NAME}-${VERSION}"
-URL="http://www.bzip.org/1.0.6/${NAME}-${VERSION}.tar.gz"
+SRC="$NAME"
+GIT="https://github.com/eadwardus/$NAME"
 INFILE="../bzip2.in"
 
 . ${PORTS}/mk/indef.sh
