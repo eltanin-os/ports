@@ -39,6 +39,11 @@ __default_build() {
 	make
 }
 
+__default_install() {
+	[ -n "$ROOT" ] || ROOT="/"
+	env DESTDIR="$ROOT" make install
+}
+
 __default_package() {
 	rm -rf .pkgroot
 	olddir="$(pwd)"
