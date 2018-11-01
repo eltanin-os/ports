@@ -20,7 +20,7 @@ __install_lib() {
 }
 
 __install_man() {
-	for mfile in `eval echo ${manpages}`; do
+	for mfile in ${manpages}; do
 		mdir="${ROOT}${MANDIR}/man$(printf $mfile | tail -c 1)"
 		mfile="${mfile}.gz"
 		$INSTALL -dm 755 $mdir
