@@ -40,6 +40,7 @@ __default_build() {
 }
 
 __default_install() {
+	cd "${SRC}/build"
 	[ -n "$ROOT" ] || ROOT="/"
 	env DESTDIR="$ROOT" make install
 }
