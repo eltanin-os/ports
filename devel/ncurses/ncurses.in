@@ -4,14 +4,6 @@
 srcdir="."
 outdir="."
 
-cflags=` cat <<-EOF
-	-I libcurses
-	-I libform
-	-I libpanel
-	-I libterminfo
-EOF
-`
-
 libraries=` cat <<-EOF
 	libcurses/libcurses.a
 	libform/libform.a

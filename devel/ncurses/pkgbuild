@@ -1,16 +1,32 @@
 #!/bin/sh
 #NONDBUILD
 
-NAME="netbsd-ncurses"
-VERSION="0.2.1"
+NAME="ncurses"
+VERSION="0.2.2"
 LICENSE="BSD-3"
-DESCRIPTION="Netbsd curses library."
+DESCRIPTION="A NetBSD curses library."
 MAKEDEPS="libc"
 
-SRC="${NAME}-${VERSION}"
-URL="http://ftp.barfooze.de/pub/sabotage/tarballs/${NAME}-${VERSION}.tar.xz"
+SRC="netbsd-curses-${VERSION}"
+URL="http://ftp.barfooze.de/pub/sabotage/tarballs/netbsd-curses-${VERSION}.tar.xz"
 INFILE="../ncurses.in"
 
-. ${PORTS}/mk/autodef.sh
+. ${PORTS}/mk/indef.sh
+
+Build() {
+	( cd "$SRC"
+	cat <<-EOF > config.mak
+	CFLAGS=$CFLAGS
+	CPPFLAGS=$CPPFLAGS
+	LDFLAGS=$LDFLAGS
+	PREFIX=$PREFIX
+	EOF
+	make all-static )
+}
+
+Install() {
+	( cd "$SRC"
+	make DESTDIR="$ROOT" install-static )
+}
 
 $@
