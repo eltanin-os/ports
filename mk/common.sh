@@ -17,6 +17,8 @@ __gendbfile() {
 	pkgsize=`du -sk ${name} | awk '{printf "%u", $1*1024}'`
 	dirs=`find .pkgroot -type d -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
 	files=`find -L .pkgroot -type f -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
+	[ "$VERSION" == "master" ] && VERSION="$(cat ._mk_v)"
+	rm -f ._mk_v
 	cat <<-EOF
 		name:$NAME
 		version:$VERSION
@@ -43,8 +45,12 @@ __gendbfile() {
 
 # MANUAL FUNCS
 __fetch_git() {
-	test -z "$BRANCH" && BRANCH="master"
-	test -d "$SRC" || git clone --depth 1 -b "$BRANCH" "$GIT" "$SRC"
+	if [ ! -d "$SRC" ]; then
+		git clone "$GIT" "$SRC"
+		( cd "$SRC"
+		[ "$VERSION" == "master" ] || git checkout tags/v${VERSION} \
+		  && printf "git-$(git rev-parse HEAD)" > ../._mk_v )
+	fi
 }
 
 __fetch_url() {
