@@ -58,8 +58,8 @@ libname=` cat <<-EOF
 EOF
 `
 
-# $incprefix/$includes
-incprefix=""
+# $1 = directory to be stripped
+# $* = header files
 includes=` cat <<-EOF
 	#hfiles
 EOF

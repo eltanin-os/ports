@@ -10,8 +10,15 @@ __install_bin() {
 }
 
 __install_inc() {
-	$INSTALL -dm 755           ${ROOT}${INCDIR}/$incprefix
-	$INSTALL -cm 644 $includes ${ROOT}${INCDIR}/$incprefix
+	set -- $includes
+	ldir="$(printf $1 | sed 's/\//\\\//g')\/"
+	shift
+	for inc in ${@}; do
+		ifile="$(printf $inc | sed "s/${ldir}//g")"
+		idir="${ROOT}${INCDIR}/$(dirname $ifile)"
+		$INSTALL -dm 755 $idir
+		$INSTALL -cm 755 $inc $idir
+	done
 }
 
 __install_lib() {
