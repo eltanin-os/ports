@@ -1,0 +1,15 @@
+#!/bin/sh
+
+NAME="libnl-tiny"
+VERSION="1.0.1"
+LICENSE="LGPL-2.1"
+DESCRIPTION="A tiny replacement for libnl."
+MAKEDEPS="libc"
+
+SRC="${NAME}"
+GIT="https://github.com/sabotage-linux/libnl-tiny"
+INFILE="../libnl-tiny.in"
+
+. ${PORTS}/mk/indef.sh
+
+$@

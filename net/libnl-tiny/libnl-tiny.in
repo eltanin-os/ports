@@ -1,0 +1,68 @@
+#!/bin/sh
+. ${PORTS}/mk/ingen.sh
+
+srcdir="."
+outdir="."
+
+cflags=` cat <<-EOF
+	\$cflags
+	-Iinclude
+EOF
+`
+
+libraries=` cat <<-EOF
+	libnl-tiny.a
+EOF
+`
+
+libnltiny=` cat <<-EOF
+	attr.c
+	cache.c
+	cache_mngt.c
+	error.c
+	genl.c
+	genl_ctrl.c
+	genl_family.c
+	genl_mngt.c
+	handlers.c
+	msg.c
+	nl.c
+	object.c
+	socket.c
+	unl.c
+EOF
+`
+
+includes=` cat <<-EOF
+	include
+	include/netlink-generic.h
+	include/netlink-local.h
+	include/netlink-types.h
+	include/unl.h
+	include/netlink/addr.h
+	include/netlink/attr.h
+	include/netlink/cache-api.h
+	include/netlink/cache.h
+	include/netlink/data.h
+	include/netlink/errno.h
+	include/netlink/handlers.h
+	include/netlink/list.h
+	include/netlink/msg.h
+	include/netlink/netlink-compat.h
+	include/netlink/netlink-kernel.h
+	include/netlink/netlink.h
+	include/netlink/object-api.h
+	include/netlink/object.h
+	include/netlink/socket.h
+	include/netlink/types.h
+	include/netlink/utils.h
+	include/netlink/version.h
+	include/netlink/genl/ctrl.h
+	include/netlink/genl/family.h
+	include/netlink/genl/genl.h
+	include/netlink/genl/mngt.h
+EOF
+`
+
+auto
+lib libnl-tiny.a $libnltiny
