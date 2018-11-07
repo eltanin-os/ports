@@ -32,4 +32,4 @@ rule copy
   command = ln -f $in $out
 
 rule gzip
-  command = gzip -c -9 -n <$in >$out.tmp && mv $out.tmp $out
+  command = pigz -z -c -9 -n <$in >$out.tmp && mv $out.tmp $out
