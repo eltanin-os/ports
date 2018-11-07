@@ -4,7 +4,7 @@ NAME="mandoc"
 VERSION="1.14.4"
 LICENSE="ISC"
 DESCRIPTION="A suite of tools compiling mdoc from the OpenBSD project."
-MAKEDEPS="libc zlib"
+MAKEDEPS="libc libz"
 
 SRC="${NAME}-${VERSION}"
 URL="http://mdocml.bsd.lv/snapshots/${NAME}-${VERSION}.tar.gz"
