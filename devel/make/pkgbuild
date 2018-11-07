@@ -1,0 +1,21 @@
+#!/bin/sh
+
+NAME="make"
+VERSION="4.2"
+LICENSE="GPL-3"
+DESCRIPTION="A GNU tool which simplifies the build process for users."
+MAKEDEPS="libc"
+
+SRC="${NAME}-${VERSION}"
+URL="https://ftp.gnu.org/gnu/make/${NAME}-${VERSION}.tar.gz"
+INFILE="../make.in"
+PATCHES=""
+
+. ${PORTS}/mk/indef.sh
+
+Build() {
+	cp mk/config.h "$SRC"
+	( __default_build )
+}
+
+$@
