@@ -1,0 +1,24 @@
+diff -Naur a/src/crypto/crypto_openssl.c b/src/crypto/crypto_openssl.c
+--- a/src/crypto/crypto_openssl.c	2016-10-02 15:51:11.000000000 -0300
++++ b/src/crypto/crypto_openssl.c	2018-11-06 21:19:46.362294969 -0200
+@@ -33,7 +33,7 @@
+ #include "aes_wrap.h"
+ #include "crypto.h"
+ 
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER < 0x10100000L || !defined(LIBRESSL_VERSION_NUMBER)
+ /* Compatibility wrappers for older versions. */
+ 
+ static HMAC_CTX * HMAC_CTX_new(void)
+diff -Naur a/src/crypto/tls_openssl.c b/src/crypto/tls_openssl.c
+--- a/src/crypto/tls_openssl.c	2016-10-02 15:51:11.000000000 -0300
++++ b/src/crypto/tls_openssl.c	2018-11-06 21:19:29.895408160 -0200
+@@ -59,7 +59,7 @@
+ #endif /* SSL_set_tlsext_status_type */
+ 
+ #if (OPENSSL_VERSION_NUMBER < 0x10100000L || \
+-     defined(LIBRESSL_VERSION_NUMBER)) &&    \
++    !defined(LIBRESSL_VERSION_NUMBER)) &&    \
+     !defined(BORINGSSL_API_VERSION)
+ /*
+  * SSL_get_client_random() and SSL_get_server_random() were added in OpenSSL

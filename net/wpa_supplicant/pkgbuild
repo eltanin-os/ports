@@ -1,0 +1,16 @@
+#!/bin/sh
+
+NAME="wpa_supplicant"
+VERSION="2.6"
+LICENSE="BSD-3"
+DESCRIPTION="A WPA supplicant implementation."
+MAKEDEPS="libc libnl-tiny libressl"
+
+SRC="${NAME}-${VERSION}"
+URL="https://w1.fi/releases/${NAME}-${VERSION}.tar.gz"
+INFILE="../wpa_supplicant.in"
+PATCHES="../patches/wpa_supplicant-fflush.patch ../patches/wpa_supplicant26-libressl.patch ../patches/wpa_supplicant25-eloop.patch"
+
+. ${PORTS}/mk/indef.sh
+
+$@
