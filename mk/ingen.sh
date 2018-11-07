@@ -1,4 +1,6 @@
 #!/bin/sh
+. ${PORTS}/mk/config.mk
+
 OUTPUT="build.ninja"
 
 #bin(bin, num, deps...)
