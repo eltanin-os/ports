@@ -4,6 +4,11 @@
 srcdir="."
 outdir="."
 
+ldlibs=`cat <<-EOF
+	libbz2.a
+EOF
+`
+
 libraries=`cat <<-EOF
 	libbz2.a
 EOF
@@ -20,6 +25,12 @@ libbz2=`cat <<-EOF
 EOF
 `
 
+includes=` cat <<-EOF
+	/
+	bzlib.h
+EOF
+`
+
 manpages=`cat <<-EOF
 	bzdiff.1
 	bzgrep.1
@@ -30,4 +41,5 @@ EOF
 
 auto
 lib  libbz2.a $libbz2
+bins bzip2 bzip2recover
 mans $manpages
