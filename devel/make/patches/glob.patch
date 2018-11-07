@@ -1,0 +1,10 @@
+--- a/glob/glob.c
++++ b/glob/glob.c
+@@ -1330,7 +1330,7 @@
+ 		  /* If we shall match only directories use the information
+ 		     provided by the dirent call if possible.  */
+ 		  if ((flags & GLOB_ONLYDIR)
+-		      && d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
++		      && d->d_type != DT_UNKNOWN && d->d_type != DT_DIR && d->d_type != DT_LNK)
+ 		    continue;
+#endif

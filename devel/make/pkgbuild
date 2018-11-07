@@ -9,7 +9,7 @@ MAKEDEPS="libc"
 SRC="${NAME}-${VERSION}"
 URL="https://ftp.gnu.org/gnu/make/${NAME}-${VERSION}.tar.gz"
 INFILE="../make.in"
-PATCHES=""
+PATCHES="../patches/glob.patch"
 
 . ${PORTS}/mk/indef.sh
 
