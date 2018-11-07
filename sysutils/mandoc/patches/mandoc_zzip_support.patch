@@ -1,0 +1,138 @@
+diff -Naur a/read.c b/read.c
+--- a/read.c	2018-08-08 11:51:51.000000000 -0300
++++ b/read.c	2018-11-07 04:56:44.164122745 -0200
+@@ -55,6 +55,7 @@
+ 	enum mandocerr	  mmin; /* ignore messages below this */
+ 	int		  options; /* parser options */
+ 	int		  gzip; /* current input file is gzipped */
++	int		  zzip; /* current input file is zzipped */
+ 	int		  filenc; /* encoding of the current file */
+ 	int		  reparse_count; /* finite interp. stack */
+ 	int		  line; /* line number in the file */
+@@ -555,10 +556,12 @@
+ 		struct buf *fb, int *with_mmap)
+ {
+ 	struct stat	 st;
++	z_stream	 strm;
+ 	gzFile		 gz;
+ 	size_t		 off;
+-	ssize_t		 ssz;
+-	int		 gzerrnum, retval;
++	ssize_t		 ssz, zsz;
++	int		 gzerrnum, retval, zerr;
++	unsigned char	 buf[65536];
+ 
+ 	if (fstat(fd, &st) == -1) {
+ 		mandoc_vmsg(MANDOCERR_FILE, curp, 0, 0,
+@@ -573,7 +576,7 @@
+ 	 * concerned that this is going to tank any machines.
+ 	 */
+ 
+-	if (curp->gzip == 0 && S_ISREG(st.st_mode)) {
++	if (curp->gzip == 0 && curp->zzip == 0 && S_ISREG(st.st_mode)) {
+ 		if (st.st_size > 0x7fffffff) {
+ 			mandoc_msg(MANDOCERR_TOOLARGE, curp, 0, 0, NULL);
+ 			return 0;
+@@ -607,6 +610,21 @@
+ 	} else
+ 		gz = NULL;
+ 
++	if (curp->zzip) {
++		strm.zalloc   = NULL;
++		strm.zfree    = NULL;
++		strm.opaque   = NULL;
++		strm.avail_in = 0;
++		strm.next_in  = NULL;
++		zerr          = 0;
++		if (inflateInit(&strm) < 0) {
++			errno = ENOMEM;
++			mandoc_vmsg(MANDOCERR_FILE, curp, 0, 0,
++			    "inflateInit: %s", strerror(errno));
++			return 0;
++		}
++	}
++
+ 	/*
+ 	 * If this isn't a regular file (like, say, stdin), then we must
+ 	 * go the old way and just read things in bit by bit.
+@@ -625,10 +643,39 @@
+ 				break;
+ 			}
+ 			resize_buf(fb, 65536);
++
+ 		}
+-		ssz = curp->gzip ?
+-		    gzread(gz, fb->buf + (int)off, fb->sz - off) :
+-		    read(fd, fb->buf + (int)off, fb->sz - off);
++
++		if (curp->gzip) {
++			ssz = gzread(gz, fb->buf + (int)off, fb->sz - off);
++		} else if (curp->zzip) {
++			ssz = 0;
++			zsz = read(fd, buf, sizeof(buf));
++			strm.avail_in = (unsigned)zsz;
++			strm.next_in  = buf;
++			do {
++				strm.avail_out = fb->sz-off;
++				strm.next_out  = fb->buf+off;
++
++				switch (zerr = inflate(&strm, Z_NO_FLUSH)) {
++				case Z_STREAM_ERROR:
++				case Z_NEED_DICT:
++				case Z_DATA_ERROR:
++				case Z_MEM_ERROR:
++					mandoc_vmsg(MANDOCERR_FILE, curp, 0, 0,
++					    "inflate: %s",
++					    "invalid or incomplete deflate data"
++					    );
++					ssz = -1;
++					break;
++				}
++
++				ssz += fb->sz - strm.avail_out;
++			} while (!strm.avail_out);
++		} else {
++			ssz = read(fd, fb->buf + (int)off, fb->sz - off);
++		}
++
+ 		if (ssz == 0) {
+ 			fb->sz = off;
+ 			retval = 1;
+@@ -649,9 +696,11 @@
+ 		mandoc_vmsg(MANDOCERR_FILE, curp, 0, 0, "gzclose: %s",
+ 		    gzerrnum == Z_ERRNO ? strerror(errno) :
+ 		    zError(gzerrnum));
++	if (curp->zzip)
++		inflateEnd(&strm);
+ 	if (retval == 0) {
+ 		free(fb->buf);
+-		fb->buf = NULL;
++		fb->buf  = NULL;
+ 	}
+ 	return retval;
+ }
+@@ -755,6 +804,7 @@
+ 	curp->file = file;
+ 	cp = strrchr(file, '.');
+ 	curp->gzip = (cp != NULL && ! strcmp(cp + 1, "gz"));
++	curp->zzip = (cp != NULL && ! strcmp(cp + 1, "zz"));
+ 
+ 	/* First try to use the filename as it is. */
+ 
+@@ -775,6 +825,16 @@
+ 			return fd;
+ 		}
+ 	}
++
++	if ( ! curp->zzip) {
++		mandoc_asprintf(&cp, "%s.zz", file);
++		fd = open(cp, O_RDONLY);
++		free(cp);
++		if (fd != -1) {
++			curp->zzip = 1;
++			return fd;
++		}
++	}
+ 
+ 	/* Neither worked, give up. */
+ 

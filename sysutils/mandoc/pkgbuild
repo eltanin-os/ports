@@ -9,6 +9,7 @@ MAKEDEPS="libc libz"
 SRC="${NAME}-${VERSION}"
 URL="http://mdocml.bsd.lv/snapshots/${NAME}-${VERSION}.tar.gz"
 INFILE="../mandoc.in"
+PATCHES="../patches/mandoc_zzip_support.patch"
 
 . ${PORTS}/mk/indef.sh
 
