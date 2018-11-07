@@ -31,6 +31,7 @@ MANDIR="${PREFIX}/share/man"
 INCDIR="${PREFIX}/include"
 
 # TOOLS
+AWK="awk"
 YACC="yacc -d"
 TAR="pax -x ustar -w"
 COMPRESS="pigz -z"

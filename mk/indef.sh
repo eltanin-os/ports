@@ -90,6 +90,11 @@ __default_build() {
 	cd "$SRC"
 	__prepenv  1>  build.ninja
 	sh $INFILE 1>> build.ninja
+
+	# remove duplicated lines
+	$AWK '!seen[$0]++' build.ninja > build.ninja.new
+	mv build.ninja.new build.ninja
+
 	$NINJA
 }
 
