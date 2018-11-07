@@ -29,7 +29,7 @@ __install_lib() {
 __install_man() {
 	for mfile in ${manpages}; do
 		mdir="${ROOT}${MANDIR}/man$(printf $mfile | tail -c 1)"
-		mfile="${mfile}.gz"
+		mfile="${mfile}.zz"
 		$INSTALL -dm 755 $mdir
 		$INSTALL -cm 644 $mfile $mdir
 	done

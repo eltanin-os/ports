@@ -62,7 +62,7 @@ lib() {
 #mans(mans...)
 mans() {
 	for man in ${@}; do
-		printf "build \${outdir}/${man}.gz: gzip \${srcdir}/${man}\n"
+		printf "build \${outdir}/${man}.zz: compress \${srcdir}/${man}\n"
 	done
 }
 

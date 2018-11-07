@@ -31,5 +31,5 @@ rule yacc
 rule copy
   command = ln -f $in $out
 
-rule gzip
+rule compress
   command = pigz -z -c -9 -n <$in >$out.tmp && mv $out.tmp $out
