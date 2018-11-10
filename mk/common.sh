@@ -17,7 +17,7 @@ __gendbfile() {
 	pkgsize=`du -sk ${name} | awk '{printf "%u", $1*1024}'`
 	dirs=`find .pkgroot -type d -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
 	files=`find -L .pkgroot -type f -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
-	[ "$VERSION" == "master" ] && VERSION="$(cat ._mk_v)"
+	[ -f ._mk_v ] && VERSION="$(cat ._mk_v)"
 	rm -f ._mk_v
 	cat <<-EOF
 		name:$NAME

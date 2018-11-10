@@ -114,7 +114,7 @@ __default_package() {
 	rm -rf .pkgroot
 	olddir="$(pwd)"
 	ROOT="${olddir}/.pkgroot" Install
-	[ -n "$VERSION" ] && PKG="${NAME}#${VERSION}" || PKG="$NAME"
+	[ -f ._mk_v ] && PKG="${NAME}#$(cat ._mk_v)" || PKG="${NAME}#${VERSION}"
 	name="${PKG}.${PKGSUF}"
 	( cd .pkgroot
 	  fakeroot -- $TAR . | $COMPRESS > "${olddir}/${name}" )
