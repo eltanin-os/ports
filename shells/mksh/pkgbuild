@@ -1,4 +1,6 @@
 #!/bin/sh
+#NONDBUILD
+
 NAME="mksh"
 VERSION="56c"
 LICENSE="MIROS"
@@ -11,20 +13,23 @@ INFILE="../mksh.in"
 
 . ${PORTS}/mk/indef.sh
 
-Prepare() {
-	__default_prepare
+Build() {
+	( cd "$SRC"
 	chmod +x Build.sh
-	./Build.sh -r -M
-	env srcfile="rlimits.opt"  BUILDSH_RUN_GENOPT=1 ./Build.sh
-	env srcfile="sh_flags.opt" BUILDSH_RUN_GENOPT=1 ./Build.sh
+	( mkdir build_mksh
+	cd build_mksh
+	../Build.sh -r )
+	( mkdir build_lksh
+	cd build_lksh
+	env CPPFLAGS="-DMKSH_BINSHPOSIX -DMKSH_BINSHREDUCED -DMKSH_SMALL -DMKSH_LEGACY"\
+	    ../Build.sh -L -r )
+	$COMPRESS lksh.1 mksh.1 )
 }
 
-Build() {
-	oldcpp="$CPPFLAGS"
-	CPPFLAGS="$oldcpp -include../mk/mksh_config.h"
-	( __default_build )
-	CPPFLAGS="$oldcpp -include../mk/lksh_config.h"
-	( __default_build )
+Install() {
+	( binaries="build_mksh/mksh build_lksh/lksh"
+	manpages="lksh.1 mksh.1"
+	__default_install )
 }
 
 $@
