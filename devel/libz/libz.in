@@ -6,7 +6,7 @@ outdir="."
 
 cflags=` cat <<-EOF
 	-I .
-	-I -DZ_INSIDE_LIBZ
+	-DZ_INSIDE_LIBZ
 EOF
 `
 
@@ -34,5 +34,18 @@ libz=` cat <<-EOF
 EOF
 `
 
+includes=` cat <<-EOF
+	/
+	zlib.h
+	zconf.h
+EOF
+`
+
+manpages=` cat <<-EOF
+	libz.3
+EOF
+`
+
 auto
 lib  libz.a $libz
+mans $manpages
