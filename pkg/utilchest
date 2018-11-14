@@ -1,0 +1,17 @@
+[vars]
+name=utilchest
+version=master
+license=UNLICENSE
+description=A set of unix utilities written to be simple and small.
+
+[mirrors]
+https://github.com/eltanin-os/$name
+
+[mdeps]
+libc
+
+[build]
+make
+
+[install]
+make install

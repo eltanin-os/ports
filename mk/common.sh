@@ -1,72 +1,39 @@
 #!/bin/sh
 . $PORTS/mk/config.mk
 
-# BACK FUNCS
-__error() {
-	echo "${0}: $1 failed" 1>&2
-	exit 1
+__common_warning() {
+	echo "$0: <warning> $@" 1>&2
 }
 
-__checksum() {
-	test -e "$1" && cat checksums | $SUM -c && rval=0 || rval=1
-	return "$rval"
+_portsys_apply_patches()
+{
+	true
 }
 
-__gendbfile() {
-	size=`du -sk .pkgroot | awk '{printf "%u", $1*1024}'`
-	pkgsize=`du -sk ${name} | awk '{printf "%u", $1*1024}'`
-	dirs=`find .pkgroot -type d -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
-	files=`find -L .pkgroot -type f -print | sed -e 's/.pkgroot\///g' -e 's/.pkgroot//g'`
-	[ -f ._mk_v ] && VERSION="$(cat ._mk_v)"
-	rm -f ._mk_v
+_portsys_cksum()
+{
+	true
+}
+
+_portsys_fetch()
+{
+	true
+}
+
+_portsys_gendb()
+{
 	cat <<-EOF
-		name:$NAME
-		version:$VERSION
-		license:$LICENSE
-		description:$DESCRIPTION
-		size:$size
-		pkgsize:$pkgsize
+		name:$name
+		version:$version
+		license:$license
+		description:$description
+		size:size
 	EOF
-	for d in $RUNDEPS; do
-		printf "run-dep:${d}\n"
-	done
-	for d in $MAKEDEPS; do
-		# get package version from dbfile
-		d="${d}#`grep 'version' ${DBDIR}/${d} | sed 's/version://g'`"
+	printf "run-dep:%s\n" $rdeps
+	for d in $mdeps; do
+		v="$($SED -n 's/version://p' ${DBDIR}/$d 2> /dev/null)" ||\
+		  __common_warning ${name}: failed to obtain $d version
+		d="${d}#${v}"
 		printf "make-dep:${d}\n"
-	done
-	for d in $dirs; do
-		printf "dir:${d}\n"
-	done
-	for f in $files; do
-		printf "file:${f}\n"
-	done
-}
-
-# MANUAL FUNCS
-__fetch_git() {
-	if [ ! -d "$SRC" ]; then
-		git clone "$GIT" "$SRC"
-		( cd "$SRC"
-		[ "$VERSION" == "master" ] || git checkout tags/v${VERSION} \
-		  && printf "git-$(git rev-parse HEAD)" > ../._mk_v )
-	fi
-}
-
-__fetch_url() {
-	rval=1
-	pkgsrc=`basename $URL`
-	__checksum checksum "$pkgsrc" && rval=0 || rval=1
-	if test "$rval" -ne "0"; then
-		$FETCH "$URL"
-		__checksum "$pkgsrc" || __error "fetching"
-		tar -xf "$pkgsrc"
-	fi
-}
-
-__apply_patches() {
-	cd "$SRC"
-	for p in $PATCHES; do
-		patch -p1 < $p;
 	done
 }

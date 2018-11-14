@@ -1,0 +1,17 @@
+[vars]
+name=libnl-tiny
+version=1.0.1
+license=LGPL-2
+description=A tiny replacement for libnl.
+
+[mirrors]
+git://github.com/sabotage-linux/libnl-tiny
+
+[mdeps]
+libc
+
+[build]
+make
+
+[install]
+make install

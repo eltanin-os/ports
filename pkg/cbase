@@ -1,0 +1,18 @@
+[vars]
+name=cbase
+version=master
+license=multiple
+description=A complementary set of unix utilities for utilchest.
+
+[mirrors]
+git://github.com/eltanin-os/$name
+
+[mdeps]
+libc
+ncurses
+
+[build]
+make
+
+[install]
+make install

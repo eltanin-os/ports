@@ -1,0 +1,19 @@
+[vars]
+name=mksh
+version=56c
+license=MirOS
+description=An enhanced version of the public domain ksh.
+cksum=7e4cd2d24c6bca2ebad7c6b02d158188e766bd4693d93f5bed198d69238aef078d42ce911431ad4e419e4af55083047d823bfad53973db5c6d8a685482770135
+src=$name
+
+[mirrors]
+https://www.mirbsd.org/MirOS/dist/mir/mksh/${name}-${version}.tgz
+
+[mdeps]
+libc
+
+[build]
+make
+
+[install]
+make install

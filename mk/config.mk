@@ -1,22 +1,18 @@
-#!/bin/sh
-# PORTS ENVIRONMENT
-# _C_  = COMPILER
-# _LC_ = LIBC
-# _OS_ = OPERATING SYSTEM
-_MK_PORTS_ENV="-D_MK_C_CLANG -D_MK_LC_MUSL -D_MK_OS_LINUX"
+#!/bin/sh -a
+#
 
 # COMPILE
-export CC="cc"
-export CXX="c++"
-export LD="$CC"
-export AR="ar"
-export RANLIB="ranlib"
+CC="cc"
+CXX="c++"
+LD="${CC}"
+AR="ar"
+RANLIB="ranlib"
 
 # COMPILE FLAGS
-export CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE ${_MK_PORTS_ENV}"
-export CFLAGS="-I${PORTS}/mk/inc -Os"
-export LDFLAGS="-static"
-export LOCALE="en_US.utf8"
+CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE"
+CFLAGS="-Os"
+LDFLAGS="-static"
+LOCALE="en_US.utf8"
 
 # ENV PATH
 DBDIR="/var/pkg/local"
@@ -32,14 +28,11 @@ INCDIR="${PREFIX}/include"
 
 # TOOLS
 AWK="awk"
-YACC="yacc -d"
+SED="sed"
 TAR="pax -x ustar -w"
 COMPRESS="pigz -z -9"
 FETCH="curl -LO"
-INSTALL="install"
-STRIP="strip --strip-all"
-SUM="sha512sum"
-NINJA="samu"
+CKSUM="sha512sum"
 
 # OTHERS
 PKGSUF="pkg.tzz"

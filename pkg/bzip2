@@ -1,0 +1,17 @@
+[vars]
+name=bzip2
+version=1.0.6
+license=custom
+description=A high-quality data compressor.
+
+[mirrors]
+git://github.com/eadwardus/$name
+
+[mdeps]
+libc
+
+[build]
+make
+
+[install]
+make install
