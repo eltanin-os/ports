@@ -30,10 +30,19 @@ INCDIR="${PREFIX}/include"
 AWK="awk"
 SED="sed"
 TAR="pax -x ustar -w"
+UNTAR="pax -x ustar -r"
 COMPRESS="pigz -z -9"
 FETCH="curl -LO"
 CKSUM="sha512sum"
+SU="true"
+
+# UNCOMPRESSION TOOLS
+BZ2="bzip2 -dc"
+GZ="pigz -dc"
+LZ=true"
+XZ="true"
+ZZ="pigz -dc"
 
 # OTHERS
-PKGSUF="pkg.tzz"
+pkgsuf="pkg.tzz"
 nprocs="2"
