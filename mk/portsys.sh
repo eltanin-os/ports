@@ -5,6 +5,7 @@
 die()
 {
 	echo "$0: <error> $@" 1>&2
+	rm -Rf $bfile $ffile $ifile $tmpdir $tsysdir
 	exit 1
 }
 
@@ -69,6 +70,23 @@ end_f_env()
 	printf "\n\n"
 }
 
+end_i_env()
+{
+	cat <<-EOF
+	[ -z "$_PORTSYS_DB_DESTDIR" ] && DBDIR="" || DBDIR="${DESTDIR}/$DBDIR"
+	dbfile="\${_PORTSYS_DB_DESTDIR}/\${DBDIR}/\$name"
+	mkdir -p "\$(dirname \$dbfile)"
+	if [ -d ".pkgroot" ]; then
+		_portsys_gendb 1> \$dbfile
+		[ "\$_PORTSYS_PKG_GEN" -eq 1 ] &&\
+		  _portsys_pack \$_PORTSYS_PKG_DESTDIR
+	fi )
+	EOF
+	printf "\n\n"
+}
+
+unset bfile ffile ifile tmpdir tsysdir
+
 DOPKG=0
 DOLOCAL=0
 
@@ -93,9 +111,9 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
-bfile=$(mktemp -u)  || die failed to obtain temporary file path for build
-ffile=$(mktemp -u)  || die failed to obtain temporary file path for fetch
-ifile=$(mktemp -u)  || die failed to obtain temporary file path for install
+bfile=$(mktemp -u) || die failed to obtain temporary file path for build
+ffile=$(mktemp -u) || die failed to obtain temporary file path for fetch
+ifile=$(mktemp -u) || die failed to obtain temporary file path for install
 
 export bfile ffile ifile tmpdir
 
@@ -112,6 +130,10 @@ tmpdir=$(mktemp -d) || die failed to create temporary directory
 if [ "$DOLOCAL" -eq 1 ]; then
 	tsysdir=$(mktemp -d)       || die failed to create temporary directory
 	mkdir -p ${tsysdir}/$DBDIR || die failed to create temporary directory
+	cat <<-EOF 1>> $ifile
+	export CFLAGS="\$CFLAGS -I${tsysdir}/\$INCDIR"
+	export LDFLAGS="\$LDFLAGS -L${tsysdir}/\$LIBDIR"
+	EOF
 fi
 
 message generating script files
@@ -141,33 +163,38 @@ for p in $@; do
 	message ${pkg}: merging install section
 	( start_b_env $pkg 1>> $ifile
 	section ${PORTS}/pkg/$p install 1>> $ifile
-	cat <<-EOF 1>> $ifile
-	dbfile="\${name}.portsys.dbfile"
-	[ -f "\$dbfile" ] && mv \$dbfile \${DBDIR}/\${name}
-	if [ "\$_PORTSYS_LOCAL_INST" -eq 1 ]; then
-		_portsys_gendb 1> \$dbfile
-		[ "\$_PORTSYS_PKG_GEN" -eq 1 ] && _portsys_pack
-	fi
-	EOF
-	end_b_env 1>> $ifile )
+	end_i_env 1>> $ifile )
 done
 
 message starting fetch process
-( cd ${tmpdir}
-$ifile ) || die fetch process failed
+( cd $tmpdir
+$ffile ) || die fetch process failed
 message starting build process
-( cd ${tmpdir}
+( cd $tmpdir
 $bfile ) || die build process failed
 message starting install process
 if [ "$DOLOCAL" -eq 0 ]; then
 	message using real system
-	$SU '( cd ${tmpdir}
-	${ifile} )'
+	$SU '( cd $tmpdir
+	$ifile )'
 else
 	message using temporary system
-	( cd ${tmpdir}
-	env DESTDIR=${tsysdir} _PORTSYS_PKG_GEN=$DOPKG $ifile )
+	( cd $tmpdir
+	env DESTDIR="${tsysdir}" $ifile )
 fi
-message starting database file generation process
-( cd ${tmpdir}
-env DESTDIR=./.pkgroot _PORTSYS_LOCAL_INST=1 _PORTSYS_PKG_GEN=$DOPKG $ifile )
+
+if ([ "$DOPKG" -eq 1 ] && [ -z "$_PORTSYS_PKG_DESTDIR" ]); then
+	_PORTSYS_PKG_DESTDIR="$(pwd)/__portsys_packages"
+	_PORTSYS_DB_DESTDIR="$_PORTSYS_PKG_DESTDIR"
+	mkdir -p $_PORTSYS_PKG_DESTDIR
+fi
+
+message starting database files and/or packages generation process
+( cd $tmpdir
+env _PORTSYS_DB_DESTDIR="$_PORTSYS_DB_DESTDIR"\
+    _PORTSYS_PKG_DESTDIR="$_PORTSYS_PKG_DESTDIR"\
+    _PORTSYS_PKG_GEN="$DOPKG"\
+    DESTDIR="./.pkgroot" $ifile )
+
+message cleaning temporary environment
+rm -rf $bfile $ffile $ifile $tmpdir $tsysdir
