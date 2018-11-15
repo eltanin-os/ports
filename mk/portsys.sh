@@ -2,10 +2,14 @@
 . ${PORTS}/mk/config.mk
 . ${PORTS}/mk/common.sh
 
+cleanup()
+{
+	rm -Rf $bfile $ffile $ifile $tmpdir $tsysdir
+}
+
 die()
 {
 	echo "$0: <error> $@" 1>&2
-	rm -Rf $bfile $ffile $ifile $tmpdir $tsysdir
 	exit 1
 }
 
@@ -111,6 +115,8 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
+trap cleanup EXIT
+
 bfile=$(mktemp -u) || die failed to obtain temporary file path for build
 ffile=$(mktemp -u) || die failed to obtain temporary file path for fetch
 ifile=$(mktemp -u) || die failed to obtain temporary file path for install
@@ -195,6 +201,3 @@ env _PORTSYS_DB_DESTDIR="$_PORTSYS_DB_DESTDIR"\
     _PORTSYS_PKG_DESTDIR="$_PORTSYS_PKG_DESTDIR"\
     _PORTSYS_PKG_GEN="$DOPKG"\
     DESTDIR="./.pkgroot" $ifile )
-
-message cleaning temporary environment
-rm -rf $bfile $ffile $ifile $tmpdir $tsysdir
