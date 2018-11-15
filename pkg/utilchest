@@ -5,7 +5,7 @@ license=UNLICENSE
 description=A set of unix utilities written to be simple and small.
 
 [mirrors]
-https://github.com/eltanin-os/utilchest
+git://github.com/eltanin-os/utilchest
 
 [mdeps]
 libc
