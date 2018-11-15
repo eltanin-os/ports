@@ -1,15 +1,20 @@
 #!/bin/sh
 . $PORTS/mk/config.mk
 
-__common_warning()
-{
-	echo "$0: <warning> $@" 1>&2
-}
-
-__common_error()
+_portsys_io_error()
 {
 	echo "$0: <error> $@" 1>&2
 	exit 1
+}
+
+_portsys_io_message()
+{
+	echo "$0: <message> $@"
+}
+
+_portsys_io_warning()
+{
+	echo "$0: <warning> $@" 1>&2
 }
 
 _portsys_apply_patches()
@@ -21,7 +26,7 @@ _portsys_apply_patches()
 	( cd $d
 	for p in $patches; do
 		patch -p1 < ${PORTS}/patches/$p \
-		      || __common_error ${2}: failed to apply patch
+		      || _portsys_io_error failed to apply patch
 	done )
 }
 
@@ -30,9 +35,9 @@ _portsys_cksum()
 	[ "$#" -ne 2 ] && return 0
 	lsum="$1"
 	file="$2"
-	[ ! -f "$file" ] && __common_error ${2}: $file does not exist
+	[ ! -f "$file" ] && _portsys_io_error ${2}: $file does not exist
 	rsum="$(sha512sum $file | $AWK '{print $1}')"
-	[ "$rsum" != "$lsum" ] && __common_error ${2}: checksum mismatch
+	[ "$rsum" != "$lsum" ] && _portsys_io_error ${2}: checksum mismatch
 	true
 }
 
@@ -86,7 +91,7 @@ _portsys_explode()
 		UNCOMPRESS="$ZZ"
 	;;
 	*)
-		__common_warning extension $n is a unknown format
+		_portsys_io_warning extension $n is a unknown format
 		return 0
 	esac
 	$UNCOMPRESS -- "$n" | $UNTAR
@@ -107,7 +112,7 @@ _portsys_gendb()
 	printf "run-dep:%s\n" $rdeps
 	for d in $mdeps; do
 		v="$($SED -n 's/version://p' ${DBDIR}/$d 2> /dev/null)" ||\
-		  __common_warning ${name}: failed to obtain $d version
+		  _portsys_io_warning ${name}: failed to obtain $d version
 		d="${d}#${v}"
 		printf "make-dep:${d}\n"
 	done

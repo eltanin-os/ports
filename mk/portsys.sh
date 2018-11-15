@@ -7,22 +7,6 @@ cleanup()
 	rm -Rf $bfile $ffile $ifile $tmpdir $tsysdir
 }
 
-die()
-{
-	echo "$0: <error> $@" 1>&2
-	exit 1
-}
-
-warning()
-{
-	echo "$0: <warning> $@" 1>&2
-}
-
-message()
-{
-	echo "$0: <message> $@"
-}
-
 section()
 {
 	$AWK -v RS="" -v section="\\\[$2\\\]" '$0~section,/\n/' $1 |\
@@ -88,6 +72,9 @@ end_i_env()
 	EOF
 	printf "\n\n"
 }
+
+alias die=_portsys_io_error
+alias message=_portsys_io_message
 
 unset bfile ffile ifile tmpdir tsysdir
 
@@ -189,10 +176,13 @@ else
 	env DESTDIR="${tsysdir}" $ifile )
 fi
 
-if ([ "$DOPKG" -eq 1 ] && [ -z "$_PORTSYS_PKG_DESTDIR" ]); then
-	_PORTSYS_PKG_DESTDIR="$(pwd)/__portsys_packages"
-	_PORTSYS_DB_DESTDIR="$_PORTSYS_PKG_DESTDIR"
-	mkdir -p $_PORTSYS_PKG_DESTDIR
+if [ "$DOPKG" -eq 1 ]; then
+	[ -z "$_PORTSYS_PKG_DESTDIR" ] &&\
+	  _PORTSYS_PKG_DESTDIR="$(pwd)/__portsys_packages"
+	[ -z "$_PORTSYS_DB_DESTDIR" ] &&\
+	  _PORTSYS_DB_DESTDIR="$_PORTSYS_PKG_DESTDIR"
+	[ ! -d "$_PORTSYS_PKG_DESTDIR" ] &&\
+	  mkdir -p "$_PORTSYS_PKG_DESTDIR"
 fi
 
 message starting database files and/or packages generation process
