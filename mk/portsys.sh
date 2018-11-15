@@ -26,7 +26,7 @@ start_b_env()
 {
 	cat <<-EOF
 	( _PORTSYS_CURRENT_PACKAGE="$1"
-	. \${tmpdir}/\$_PORTSYS_CURRENT_PACKAGE
+	. \${tmpdir}/\${_PORTSYS_CURRENT_PACKAGE}.vrs
 	[ -z "\$src" ] && src="\${name}-\$version"
 	cd \$src
 	EOF
@@ -41,7 +41,7 @@ start_f_env()
 {
 	cat <<-EOF
 	( _PORTSYS_CURRENT_PACKAGE="$1"
-	. \${tmpdir}/\$_PORTSYS_CURRENT_PACKAGE
+	. \${tmpdir}/\${_PORTSYS_CURRENT_PACKAGE}.vrs
 	EOF
 }
 
@@ -134,11 +134,12 @@ for p in $@; do
 	pkg="$(basename $p)"
 	message ${pkg}: creating vars file
 	( section ${PORTS}/pkg/$p vars | tr '\n' '\t' |
-	          sed -e 's/\=/\=\"/g' -e 's/\t/\"\n/g' 1> "${tmpdir}/$pkg"
+	          sed -e 's/\=/\=\"/g'\
+	              -e 's/\t/\"\n/g' 1> "${tmpdir}/${pkg}.vrs"
 	patches="$(section ${PORTS}/pkg/$p patches)"
 	rdeps="$(section ${PORTS}/pkg/$p rdeps)"
 	mdeps="$(section ${PORTS}/pkg/$p mdeps)"
-	cat <<-EOF 1>> "${tmpdir}/$pkg"
+	cat <<-EOF 1>> "${tmpdir}/${pkg}.vrs"
 	patches="$patches"
 	rdeps="$rdeps"
 	mdeps="$mdeps"
