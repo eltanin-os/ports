@@ -30,18 +30,19 @@ _portsys_cksum()
 	[ "$#" -ne 2 ] && return 0
 	lsum="$1"
 	file="$2"
-	[ -f "$file" ] && __common_error ${2}: $file does not exist
+	[ ! -f "$file" ] && __common_error ${2}: $file does not exist
 	rsum="$(sha512sum $file | $AWK '{print $1}')"
 	[ "$rsum" != "$lsum" ] && __common_error ${2}: checksum mismatch
+	true
 }
 
-# don't check errors now, wait for the checksum
+# do not check errors for now, checksum will catch them later
 _portsys_fetch()
 {
 	url=$1
 	shift
 	protocol="$(printf "%.3s" $url)"
-	# for now treat git as only protocol exception
+	# for now treat only git as a exception
 	case "$protocol" in
 	"git")
 		d="${name}-$version"
@@ -68,26 +69,24 @@ _portsys_explode()
 {
 	n=$1
 	shift
-	ext="$(printf ${n#*.})"
-	[ -z "$ext" ] && return 0
-	case "$ext" in
-	"tar.bz2" | "tbz2")
+	case "$n" in
+	*".tar.bz2" | *".tbz2")
 		UNCOMPRESS="$BZ2"
 	;;
-	"tar.gz" | "tgz")
+	*".tar.gz" | *".tgz")
 		UNCOMPRESS="$GZ"
 	;;
-	"tar.lz" | "tlz")
+	*".tar.lz" | *".tlz")
 		UNCOMPRESS="$LZ"
 	;;
-	"tar.xz" | "txz")
+	*".tar.xz" | *".txz")
 		UNCOMPRESS="$XZ"
 	;;
-	"tar.zz" | "tzz")
+	*".tar.zz" | *".tzz")
 		UNCOMPRESS="$ZZ"
 	;;
 	*)
-		__common_warning extension $ext is a unknown format
+		__common_warning extension $n is a unknown format
 		return 0
 	esac
 	$UNCOMPRESS -- "$n" | $UNTAR
