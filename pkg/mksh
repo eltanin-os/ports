@@ -16,16 +16,15 @@ libc
 chmod +x Build.sh
 ( mkdir build_mksh
 cd build_mksh
-../Build )
+../Build.sh )
 ( mkdir build_lksh
 cd build_lksh
 env CPPFLAGS="-DMKSH_BINSHPOSIX -DMKSH_BINSHREDUCED -DMKSH_SMALL -DMKSH_LEGACY"\
     ../Build.sh -L )
-$COMPRESS lksh.1 mksh.1
 
 [install]
 $INSTALL -dm 0755                                 ${DESTDIR}$BINDIR
 $INSTALL -dm 0755                                 ${DESTDIR}$MANDIR
 $STRIP            build_mksh/mksh build_lksh/lksh
 $INSTALL -m  0755 build_mksh/mksh build_lksh/lksh ${DESTDIR}$BINDIR
-$INSTALL -m  0644 lksh.1.* mksh.1.*               ${DESTDIR}$MANDIR
+$INSTALL -m  0644 lksh.1 mksh.1                   ${DESTDIR}$MANDIR
