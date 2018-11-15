@@ -1,19 +1,31 @@
 [vars]
 name=mksh
-version=56c
+version=R56c
 license=MirOS
 description=An enhanced version of the public domain ksh.
 cksum=7e4cd2d24c6bca2ebad7c6b02d158188e766bd4693d93f5bed198d69238aef078d42ce911431ad4e419e4af55083047d823bfad53973db5c6d8a685482770135
 src=$name
 
 [mirrors]
-https://www.mirbsd.org/MirOS/dist/mir/mksh/${name}-${version}.tgz
+https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-${version}.tgz
 
 [mdeps]
 libc
 
 [build]
-make
+chmod +x Build.sh
+( mkdir build_mksh
+cd build_mksh
+../Build )
+( mkdir build_lksh
+cd build_lksh
+env CPPFLAGS="-DMKSH_BINSHPOSIX -DMKSH_BINSHREDUCED -DMKSH_SMALL -DMKSH_LEGACY"\
+    ../Build.sh -L )
+$COMPRESS lksh.1 mksh.1
 
 [install]
-make install
+$INSTALL -dm 0755                                 ${DESTDIR}$BINDIR
+$INSTALL -dm 0755                                 ${DESTDIR}$MANDIR
+$STRIP            build_mksh/mksh build_lksh/lksh
+$INSTALL -m  0755 build_mksh/mksh build_lksh/lksh ${DESTDIR}$BINDIR
+$INSTALL -m  0644 lksh.1.* mksh.1.*               ${DESTDIR}$MANDIR

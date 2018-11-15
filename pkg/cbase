@@ -5,14 +5,14 @@ license=multiple
 description=A complementary set of unix utilities for utilchest.
 
 [mirrors]
-git://github.com/eltanin-os/$name
+git://github.com/eltanin-os/cbase
 
 [mdeps]
 libc
 ncurses
 
 [build]
-make
+${PORTS}/mk/portsys_mk_make.sh
 
 [install]
-make install
+${PORTS}/mk/portsys_mk_make.sh install

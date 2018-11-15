@@ -1,18 +1,18 @@
 [vars]
-name="dash"
+name=dash
 version=0.5.10.2
 license=BSD-3
 description=A POSIX compliant shell that aims to be as small as possible.
-cksum=b254e6e8e7cff23b7a005da875c580cff98e50d227fa4809f899f625cb70e7f80f7f072594a1cde700359b258ff0ac2fdc03ee4a809b6dbcdf6004b2bf87c884
+cksum=0ae29be77794df0ba254967649b9728611a75fbb3acd32ab6634d76399d1ce97c7d12d31da465482a7e4f3207093415c496c39525cace9b78ab3cb9444dd7640
 
 [mirrors]
-http://gondor.apana.org.au/~herbert/dash/files/${name}-${version}.tar.gz
+http://gondor.apana.org.au/~herbert/dash/files/dash-${version}.tar.gz
 
 [mdeps]
 libc
 
 [build]
-make
+${PORTS}/mk/portsys_mk_auto.sh
 
 [install]
-make install
+${PORTS}/mk/portsys_mk_auto.sh install

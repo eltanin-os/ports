@@ -5,13 +5,13 @@ license=UNLICENSE
 description=A set of unix utilities written to be simple and small.
 
 [mirrors]
-https://github.com/eltanin-os/$name
+https://github.com/eltanin-os/utilchest
 
 [mdeps]
 libc
 
 [build]
-make
+${PORTS}/mk/portsys_mk_make.sh
 
 [install]
-make install
+${PORTS}/mk/portsys_mk_make.sh install

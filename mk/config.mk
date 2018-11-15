@@ -35,6 +35,9 @@ COMPRESS="pigz -z -9"
 FETCH="curl -LO"
 CKSUM="sha512sum"
 SU="true"
+INSTALL="install"
+STRIP="strip"
+FETCH="curl -LO"
 
 # UNCOMPRESSION TOOLS
 BZ2="bzip2 -dc"

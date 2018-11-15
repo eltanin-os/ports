@@ -9,13 +9,13 @@ cksum=c422b7dab431d0463a469ea29fa247eab09ecc5628059b9e967de4c2428a69e2c54a18d41a
 0001-make-glob_musl.patch
 
 [mirrors]
-https://ftp.gnu.org/gnu/make/${name}-${version}.tar.gz
+http://ftp.gnu.org/gnu/make/make-${version}.tar.gz
 
 [mdeps]
 libc
 
 [build]
-make
+${PORTS}/mk/portsys_mk_auto.sh
 
 [install]
-make install
+${PORTS}/mk/portsys_mk_auto.sh install

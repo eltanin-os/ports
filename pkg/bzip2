@@ -5,13 +5,16 @@ license=custom
 description=A high-quality data compressor.
 
 [mirrors]
-git://github.com/eadwardus/$name
+git://github.com/eadwardus/bzip2
 
 [mdeps]
 libc
 
 [build]
-make
+sed -e 's/$(PREFIX)/$(DESTDIR)$(PREFIX)/g'\
+    -e 's/$(PREFIX)\/man/$(PREFIX)\/share\/man/g' Makefile 1> Makefile.new
+mv Makefile.new Makefile
+${PORTS}/mk/portsys_mk_make.sh
 
 [install]
-make install
+${PORTS}/mk/portsys_mk_make.sh install

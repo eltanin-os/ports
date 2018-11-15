@@ -4,6 +4,7 @@ version=0.2.2
 license=BSD-3
 description=A NetBSD curses library.
 cksum=84287e522277ea988de3ff44b8163c1a781ee4a19f376020786ac6420871343e6cb45d4161ba42603ca2fa40d98f1c174adbd16072f47402d44ad144a2fe8d95
+src=netbsd-curses-$version
 
 [mirrors]
 http://ftp.barfooze.de/pub/sabotage/tarballs/netbsd-curses-${version}.tar.xz
@@ -12,7 +13,13 @@ http://ftp.barfooze.de/pub/sabotage/tarballs/netbsd-curses-${version}.tar.xz
 libc
 
 [build]
-make
+cat <<-EOF > config.mak
+CFLAGS="$CFLAGS"
+CPPFLAGS="$CPPFLAGS"
+LDFLAGS="$LDFLAGS"
+PREFIX="$PREFIX"
+EOF
+make all-static
 
 [install]
-make install
+make DESTDIR=$DESTDIR install-static
