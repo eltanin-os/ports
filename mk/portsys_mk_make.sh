@@ -1,12 +1,17 @@
 #!/bin/sh
+
+_C="$CFLAGS"
+_P="$CPPFLAGS"
+_L="$LDFLAGS"
+
 . ${PORTS}/mk/config.mk
 
 make -j $nprocs\
      CC="$CC"\
      CXX="$CXX"\
-     CPPFLAGS="$CPPFLAGS"\
-     CFLAGS="$CFLAGS"\
-     LDFLAGS="$LDFLAGS"\
+     CFLAGS="$_C"\
+     CPPFLAGS="$_P"\
+     LDFLAGS="$_L"\
      PREFIX="$PREFIX"\
      BINDIR="$BINDIR"\
      LIBDIR="$LIBDIR"\

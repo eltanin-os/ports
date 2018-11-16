@@ -17,10 +17,8 @@ header()
 {
 	cat <<-EOF
 	#!/bin/sh -e
-	set -a
 	. \${PORTS}/mk/config.mk
 	. \${PORTS}/mk/common.sh
-	set +a
 	EOF
 }
 
@@ -73,13 +71,9 @@ end_i_env()
 	dbfile="\${_PORTSYS_DB_DESTDIR}/\$name"
 	dbdir="\$(dirname \$dbfile)"
 	mkdir -p \$dbdir
-	if [ -d ".pkgroot" ]; then
-		_portsys_gendb \$dbdir 1> \$dbfile
-		[ "\$_PORTSYS_PKG_GEN" -eq 1 ] &&\
-		  _portsys_pack \$_PORTSYS_PKG_DESTDIR
-	fi
-	if [ -d "build/.pkgroot" ]; then
-		cd build
+	pkgroot="\$(find . -type d -name .pkgroot)"
+	if [ -d "\$pkgroot" ]; then
+		cd \$(dirname "\$pkgroot")
 		_portsys_gendb \$dbdir 1> \$dbfile
 		[ "\$_PORTSYS_PKG_GEN" -eq 1 ] &&\
 		  _portsys_pack \$_PORTSYS_PKG_DESTDIR
