@@ -52,16 +52,18 @@ _portsys_fetch()
 	"git")
 		d="${name}-$version"
 		git clone $url $d
-		( cd $d
-		v="git-$(git rev-parse HEAD)"
+		( olddir="$(pwd)"
+		cd $d
 		if [ "$version" != "master" ]; then
 			git checkout tags/v$version
 		else
-			$SED "s/version\:master/version\:$v/g"\
-			     $_PORTSYS_CURRENT_PACKAGE\
-			     1> ${_PORTSYS_CURRENT_PACKAGE}.new
-			mv ${_PORTSYS_CURRENT_PACKAGE}.new\
-			   ${_PORTSYS_CURRENT_PACKAGE}
+			v="git-$(git rev-parse HEAD)"
+			n="${_PORTSYS_CURRENT_PACKAGE}.vrs"
+			$SED "s/version\=\"master\"/version\=\"${v}\"/g"\
+			     ${olddir}/$n 1> ${olddir}/${n}.new
+			cd "$olddir"
+			mv ${n}.new $n
+			mv $d "${name}-$v"
 		fi )
 	;;
 	*)
@@ -101,6 +103,8 @@ _portsys_explode()
 # to printf, as it's a hard thing to achieve (usually)
 _portsys_gendb()
 {
+	dbdir="$1"
+	shift
 	size="$(du -sk .pkgroot | $AWK '{printf "%u", $1*1024}')"
 	cat <<-EOF
 		name:$name
@@ -109,9 +113,9 @@ _portsys_gendb()
 		description:$description
 		size:$size
 	EOF
-	printf "run-dep:%s\n" $rdeps
+	[ -n "$rdeps" ] && printf "run-dep:%s\n" $rdeps
 	for d in $mdeps; do
-		v="$($SED -n 's/version://p' ${DBDIR}/$d 2> /dev/null)" ||\
+		v="$($SED -n 's/version://p' ${dbdir}/$d 2> /dev/null)" ||\
 		  _portsys_io_warning ${name}: failed to obtain $d version
 		d="${d}#${v}"
 		printf "make-dep:${d}\n"
