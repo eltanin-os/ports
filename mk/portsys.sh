@@ -4,7 +4,7 @@
 
 cleanup()
 {
-	rm -Rf $bfile $ffile $ifile $tmpdir $tsysdir
+	rm -Rf $bfile $ffile $tmpdir $tsysdir
 }
 
 section()
@@ -17,8 +17,10 @@ header()
 {
 	cat <<-EOF
 	#!/bin/sh -e
+	set -a
 	. \${PORTS}/mk/config.mk
 	. \${PORTS}/mk/common.sh
+	set +a
 	EOF
 }
 
@@ -58,14 +60,27 @@ end_f_env()
 	printf "\n\n"
 }
 
+start_i_env()
+{
+	printf "%s "  "("
+	printf "export %s\n" $@
+}
+
 end_i_env()
 {
 	cat <<-EOF
-	[ -z "$_PORTSYS_DB_DESTDIR" ] && DBDIR="" || DBDIR="${DESTDIR}/$DBDIR"
-	dbfile="\${_PORTSYS_DB_DESTDIR}/\${DBDIR}/\$name"
-	mkdir -p "\$(dirname \$dbfile)"
+	[ -z "\$_PORTSYS_DB_DESTDIR" ] && _PORTSYS_DB_DESTDIR="\$DBDIR"
+	dbfile="\${_PORTSYS_DB_DESTDIR}/\$name"
+	dbdir="\$(dirname \$dbfile)"
+	mkdir -p \$dbdir
 	if [ -d ".pkgroot" ]; then
-		_portsys_gendb 1> \$dbfile
+		_portsys_gendb \$dbdir 1> \$dbfile
+		[ "\$_PORTSYS_PKG_GEN" -eq 1 ] &&\
+		  _portsys_pack \$_PORTSYS_PKG_DESTDIR
+	fi
+	if [ -d "build/.pkgroot" ]; then
+		cd build
+		_portsys_gendb \$dbdir 1> \$dbfile
 		[ "\$_PORTSYS_PKG_GEN" -eq 1 ] &&\
 		  _portsys_pack \$_PORTSYS_PKG_DESTDIR
 	fi )
@@ -75,8 +90,6 @@ end_i_env()
 
 alias die=_portsys_io_error
 alias message=_portsys_io_message
-
-unset bfile ffile ifile tmpdir tsysdir
 
 DOPKG=0
 DOLOCAL=0
@@ -104,29 +117,42 @@ fi
 
 trap cleanup EXIT
 
-bfile=$(mktemp -u) || die failed to obtain temporary file path for build
-ffile=$(mktemp -u) || die failed to obtain temporary file path for fetch
-ifile=$(mktemp -u) || die failed to obtain temporary file path for install
+bfile=$(mktemp) || die failed to obtain temporary file path for build
+ffile=$(mktemp) || die failed to obtain temporary file path for fetch
 
-export bfile ffile ifile tmpdir
+export bfile ffile tmpdir
 
 message creating headers for files
 header 1> $bfile
 header 1> $ffile
-header 1> $ifile
 
 message setting mode
-chmod +x $bfile $ffile $ifile
+chmod +x $bfile $ffile
 
 message creating temporary environment
 tmpdir=$(mktemp -d) || die failed to create temporary directory
 if [ "$DOLOCAL" -eq 1 ]; then
-	tsysdir=$(mktemp -d)       || die failed to create temporary directory
-	mkdir -p ${tsysdir}/$DBDIR || die failed to create temporary directory
-	cat <<-EOF 1>> $ifile
-	export CFLAGS="\$CFLAGS -I${tsysdir}/\$INCDIR"
-	export LDFLAGS="\$LDFLAGS -L${tsysdir}/\$LIBDIR"
+	tsysdir=$(mktemp -d) || die failed to create temporary directory
+	cat <<-EOF 1>> $bfile
+	export CFLAGS="\$CFLAGS -I${tsysdir}\$INCDIR"
+	export LDFLAGS="\$LDFLAGS -L${tsysdir}\$LIBDIR"
 	EOF
+fi
+
+if [ "$DOPKG" -eq 1 ]; then
+	[ -z "$_PORTSYS_PKG_DESTDIR" ] &&\
+	  _PORTSYS_PKG_DESTDIR="$(pwd)/__portsys_packages"
+	[ -z "$_PORTSYS_DB_DESTDIR" ] &&\
+	  _PORTSYS_DB_DESTDIR="$_PORTSYS_PKG_DESTDIR"
+	[ ! -d "$_PORTSYS_PKG_DESTDIR" ] &&\
+	  mkdir -p "$_PORTSYS_PKG_DESTDIR"
+	PKGVARS="$(cat <<-EOF
+	_PORTSYS_DB_DESTDIR="$_PORTSYS_DB_DESTDIR"
+	_PORTSYS_PKG_DESTDIR="$_PORTSYS_PKG_DESTDIR"
+	_PORTSYS_PKG_GEN="$DOPKG"
+	DESTDIR="./.pkgroot"
+	EOF
+	)"
 fi
 
 message generating script files
@@ -153,11 +179,15 @@ for p in $@; do
 	message ${pkg}: merging build section
 	( start_b_env $pkg 1>> $bfile
 	section ${PORTS}/pkg/$p build 1>> $bfile
+	start_i_env $PKGVARS DESTDIR="$tsysdir" 1>> $bfile
+	section ${PORTS}/pkg/$p install 1>> $bfile
+	end_i_env 1>> $bfile
+	if [ "$DOPKG" -eq 1 ]; then
+		start_i_env $PKGVARS 1>> $bfile
+		section ${PORTS}/pkg/$p install 1>> $bfile
+		end_i_env 1>> $bfile
+	fi
 	end_b_env 1>> $bfile )
-	message ${pkg}: merging install section
-	( start_b_env $pkg 1>> $ifile
-	section ${PORTS}/pkg/$p install 1>> $ifile
-	end_i_env 1>> $ifile )
 done
 
 message starting fetch process
@@ -166,29 +196,3 @@ $ffile ) || die fetch process failed
 message starting build process
 ( cd $tmpdir
 $bfile ) || die build process failed
-message starting install process
-if [ "$DOLOCAL" -eq 0 ]; then
-	message using real system
-	$SU '( cd $tmpdir
-	$ifile )'
-else
-	message using temporary system
-	( cd $tmpdir
-	env DESTDIR="${tsysdir}" $ifile )
-fi
-
-if [ "$DOPKG" -eq 1 ]; then
-	[ -z "$_PORTSYS_PKG_DESTDIR" ] &&\
-	  _PORTSYS_PKG_DESTDIR="$(pwd)/__portsys_packages"
-	[ -z "$_PORTSYS_DB_DESTDIR" ] &&\
-	  _PORTSYS_DB_DESTDIR="$_PORTSYS_PKG_DESTDIR"
-	[ ! -d "$_PORTSYS_PKG_DESTDIR" ] &&\
-	  mkdir -p "$_PORTSYS_PKG_DESTDIR"
-fi
-
-message starting database files and/or packages generation process
-( cd $tmpdir
-env _PORTSYS_DB_DESTDIR="$_PORTSYS_DB_DESTDIR"\
-    _PORTSYS_PKG_DESTDIR="$_PORTSYS_PKG_DESTDIR"\
-    _PORTSYS_PKG_GEN="$DOPKG"\
-    DESTDIR="./.pkgroot" $ifile )
