@@ -29,6 +29,7 @@ start_b_env()
 	. \${tmpdir}/\${_PORTSYS_CURRENT_PACKAGE}.vrs
 	[ -z "\$src" ] && src="\${name}-\$version"
 	cd \$src
+	export _PORTSYS_PKG_PWD="\$(pwd)"
 	EOF
 }
 
@@ -48,7 +49,7 @@ start_f_env()
 end_f_env()
 {
 	cat <<-EOF
-	u="\$(printf "%s\n" $mirrors | $AWK '{print \$1}')"
+	u="\$(printf "%s\n" $mirrors | \$AWK '{print \$1}')"
 	u="\$(basename "\$u")"
 	_portsys_cksum \$cksum \$u
 	_portsys_explode \$u
@@ -67,13 +68,17 @@ start_i_env()
 end_i_env()
 {
 	cat <<-EOF
+	[ -n "\$DESTDIR" ] &&\
+	  find \$DESTDIR/\$LIBDIR -type f -name "*.la" -exec rm -f {} + || true
 	[ -z "\$_PORTSYS_DB_DESTDIR" ] && _PORTSYS_DB_DESTDIR="\$DBDIR"
 	dbfile="\${_PORTSYS_DB_DESTDIR}/\$name"
 	dbdir="\$(dirname \$dbfile)"
 	mkdir -p \$dbdir
-	pkgroot="\$(find . -type d -name .pkgroot)"
-	if [ -d "\$pkgroot" ]; then
-		cd \$(dirname "\$pkgroot")
+	if [ -d "\$_PORTSYS_PKG_PWD/.pkgroot" ]; then
+		cd \$_PORTSYS_PKG_PWD
+		find .pkgroot/\$MANDIR -type f\
+		     \( -name \*.1 $(printf " -o -name \*.%s" $(seq 2 8)) \)\
+		     -exec \$COMPRESS {} + || true
 		_portsys_gendb \$dbdir 1> \$dbfile
 		[ "\$_PORTSYS_PKG_GEN" -eq 1 ] &&\
 		  _portsys_pack \$_PORTSYS_PKG_DESTDIR
@@ -144,7 +149,7 @@ if [ "$DOPKG" -eq 1 ]; then
 	_PORTSYS_DB_DESTDIR="$_PORTSYS_DB_DESTDIR"
 	_PORTSYS_PKG_DESTDIR="$_PORTSYS_PKG_DESTDIR"
 	_PORTSYS_PKG_GEN="$DOPKG"
-	DESTDIR="./.pkgroot"
+	DESTDIR="\${_PORTSYS_PKG_PWD}/.pkgroot"
 	EOF
 	)"
 fi
