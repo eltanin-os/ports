@@ -11,7 +11,10 @@ git://github.com/sabotage-linux/libnl-tiny
 libc
 
 [build]
-${PORTS}/mk/portsys_mk_make.sh ALL_LIBS=libnl-tiny
+sed 's/\/libnl-tiny\/%/\/%/g' Makefile 1> Makefile.new
+mv Makefile.new Makefile
+${PORTS}/mk/portsys_mk_make.sh ALL_LIBS=libnl-tiny.a all
 
 [install]
-${PORTS}/mk/portsys_mk_make.sh build
+${PORTS}/mk/portsys_mk_make.sh prefix="$PREFIX" libdir="$LIBDIR" \
+includedir="$INCDIR" ALL_LIBS=libnl-tiny.a install

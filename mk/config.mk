@@ -7,6 +7,8 @@ CXX="c++"
 LD="${CC}"
 AR="ar"
 RANLIB="ranlib"
+YACC="yacc -d"
+#YACC="byacc -d"
 
 # COMPILE FLAGS
 CPPFLAGS="-D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64"

@@ -29,17 +29,18 @@ if [ "$1" == "install" ]; then
 	make DESTDIR="$DESTDIR" $@
 else
 	[ ! -n "$PREFIX" ] && PREFIX="/"
-	env CC="$CC" CXX="$CXX" CFLAGS="$_C" CPPFLAGS="$_P" LDFLAGS="$_L" \
-	$CONFIGURE --prefix="$PREFIX"        \
-	           --bindir="$BINDIR"        \
-	           --sbindir="$BINDIR"       \
-	           --libdir="$LIBDIR"        \
-	           --includedir="$INCDIR"    \
-	           --oldincludedir="$INCDIR" \
-	           --datarootdir="$PREFIX"   \
-	           --mandir="$MANDIR"        \
-	           --enable-shared="$shared" \
-	           --enable-static="$static" \
-	           $_PORTSYS_MK_AUTO_EXTRAFLAGS
-	make CC="$CC" CXX="$CXX" DESTDIR="$DESTDIR" $@
+	env CC="$CC" CXX="$CXX" CFLAGS="$_C"          \
+	    CPPFLAGS="$_P" LDFLAGS="$_L" YACC="$YACC" \
+	    $CONFIGURE --prefix="$PREFIX"             \
+	               --bindir="$BINDIR"             \
+	               --sbindir="$BINDIR"            \
+	               --libdir="$LIBDIR"             \
+	               --includedir="$INCDIR"         \
+	               --oldincludedir="$INCDIR"      \
+	               --datarootdir="$PREFIX"        \
+	               --mandir="$MANDIR"             \
+	               --enable-shared="$shared"      \
+	               --enable-static="$static"      \
+	               $_PORTSYS_MK_AUTO_EXTRAFLAGS
+	make $@
 fi

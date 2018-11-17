@@ -16,10 +16,10 @@ libc
 chmod +x Build.sh
 ( mkdir build_mksh
 cd build_mksh
-../Build.sh )
+env CC="$CC" CFLAGS="$CFLAGS" CPPFLAGS="$CPPFLAGS" ../Build.sh )
 ( mkdir build_lksh
 cd build_lksh
-env CPPFLAGS="-DMKSH_BINSHPOSIX -DMKSH_BINSHREDUCED -DMKSH_SMALL -DMKSH_LEGACY"\
+env CC="$CC" CFLAGS="$CFLAGS" CPPFLAGS="$CPPFLAGS -DMKSH_BINSHPOSIX -DMKSH_BINSHREDUCED -DMKSH_SMALL -DMKSH_LEGACY"\
     ../Build.sh -L )
 
 [install]

@@ -16,3 +16,4 @@ ${PORTS}/mk/portsys_mk_make.sh
 
 [install]
 ${PORTS}/mk/portsys_mk_make.sh install
+${PORTS}/mk/portsys_mk_make.sh install-man

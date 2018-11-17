@@ -23,7 +23,8 @@ cd wpa_supplicant
 cp defconfig .config
 sed 's/#CONFIG_WPS=y/CONFIG_WPS=y/' .config 1> .config.new
 mv .config.new .config
-${PORTS}/mk/portsys_mk_make.sh
+CC="$CC" CFLAGS="$CFLAGS -D_GNU_SOURCE -DCONFIG_LIBNL20" CPPFLAGS="$CPPFLAGS" \
+make -j$nprocs CONFIG_LIBNL_TINY=y
 
 [install]
 ${PORTS}/mk/portsys_mk_make.sh install

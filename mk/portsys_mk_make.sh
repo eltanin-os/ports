@@ -12,6 +12,7 @@ make -j $nprocs\
      CFLAGS="$_C"\
      CPPFLAGS="$_P"\
      LDFLAGS="$_L"\
+     YACC="$YACC"\
      PREFIX="$PREFIX"\
      BINDIR="$BINDIR"\
      LIBDIR="$LIBDIR"\
@@ -19,4 +20,5 @@ make -j $nprocs\
      DFLDIR="$DFLDIR"\
      MANDIR="$MANDIR"\
      INCDIR="$INCDIR"\
+     DESTDIR="$DESTDIR"\
      $@
