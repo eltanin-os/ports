@@ -21,10 +21,9 @@ _portsys_apply_patches()
 {
 	[ "$#" -lt 2 ] && return 0
 	d="$1"
-	patches="$2"
-	shift 2
+	shift 1
 	( cd $d
-	for p in $patches; do
+	for p in $@; do
 		patch -p1 < ${PORTS}/patches/$p \
 		      || _portsys_io_error failed to apply patch
 	done )
@@ -122,7 +121,7 @@ _portsys_gendb()
 	done
 	dirs="$(find .pkgroot -type d | $SED -e 's/.pkgroot\///g' -e '/.pkgroot/d')"
 	printf "dir:%s\n" $dirs
-	files="$(find .pkgroot -type f | $SED -e 's/.pkgroot\///g' -e '/.pkgroot/d')"
+	files="$(find .pkgroot -type f -o -type l | $SED -e 's/.pkgroot\///g' -e '/.pkgroot/d')"
 	printf "file:%s\n" $files
 }
 
