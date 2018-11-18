@@ -19,7 +19,7 @@ CPPFLAGS=$CPPFLAGS
 LDFLAGS=$LDFLAGS
 PREFIX=$PREFIX
 EOF
-make all-static
+make CC=$CC all-static
 
 [install]
 make DESTDIR=$DESTDIR install-static

@@ -12,7 +12,7 @@ libc
 ncurses
 
 [build]
-${PORTS}/mk/portsys_mk_make.sh
+${PORTS}/mk/portsys_mk_make.sh MORELD="-lterminfo" TABSLD="-lterminfo"
 
 [install]
 ${PORTS}/mk/portsys_mk_make.sh install
