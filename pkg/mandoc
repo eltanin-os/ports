@@ -16,8 +16,25 @@ libc
 libz
 
 [build]
+case "$LDFLAGS" in
+*"-static"*)
+	static=1
+	;;
+*)
+	static=0
+	;;
+esac
 cat <<-EOF > configure.local
+CC="$CC"
+CFLAGS="$CFLAGS"
+LDFLAGS="$LDFLAGS"
+PREFIX="$PREFIX"
+BINDIR="$BINDIR"
 SBINDIR="$BINDIR"
+INCLUDEDIR="$INCDIR"
+LIBDIR="$LIBDIR"
+MANDIR="$MANDIR"
+STATIC="$static"
 OSNAME="$OS"
 INSTALL_PROGRAM="install -m 0755"
 UTF8_LOCALE="$LOCALE"
