@@ -20,14 +20,14 @@ diff -Naur a/read.c b/read.c
 -	int		 gzerrnum, retval;
 +	ssize_t		 ssz, zsz;
 +	int		 gzerrnum, retval, zerr;
-+	unsigned char	 buf[65536];
- 
++	unsigned char	 buf[BUFSIZ];
+
  	if (fstat(fd, &st) == -1) {
  		mandoc_vmsg(MANDOCERR_FILE, curp, 0, 0,
 @@ -573,7 +576,7 @@
  	 * concerned that this is going to tank any machines.
  	 */
- 
+
 -	if (curp->gzip == 0 && S_ISREG(st.st_mode)) {
 +	if (curp->gzip == 0 && curp->zzip == 0 && S_ISREG(st.st_mode)) {
  		if (st.st_size > 0x7fffffff) {
@@ -36,7 +36,7 @@ diff -Naur a/read.c b/read.c
 @@ -607,6 +610,21 @@
  	} else
  		gz = NULL;
- 
+
 +	if (curp->zzip) {
 +		strm.zalloc   = NULL;
 +		strm.zfree    = NULL;
@@ -98,7 +98,7 @@ diff -Naur a/read.c b/read.c
  		if (ssz == 0) {
  			fb->sz = off;
  			retval = 1;
-@@ -649,9 +696,11 @@
+@@ -649,6 +696,8 @@
  		mandoc_vmsg(MANDOCERR_FILE, curp, 0, 0, "gzclose: %s",
  		    gzerrnum == Z_ERRNO ? strerror(errno) :
  		    zError(gzerrnum));
@@ -106,19 +106,15 @@ diff -Naur a/read.c b/read.c
 +		inflateEnd(&strm);
  	if (retval == 0) {
  		free(fb->buf);
--		fb->buf = NULL;
-+		fb->buf  = NULL;
- 	}
- 	return retval;
- }
+ 		fb->buf = NULL;
 @@ -755,6 +804,7 @@
  	curp->file = file;
  	cp = strrchr(file, '.');
  	curp->gzip = (cp != NULL && ! strcmp(cp + 1, "gz"));
 +	curp->zzip = (cp != NULL && ! strcmp(cp + 1, "zz"));
- 
+
  	/* First try to use the filename as it is. */
- 
+
 @@ -775,6 +825,16 @@
  			return fd;
  		}
@@ -133,6 +129,6 @@ diff -Naur a/read.c b/read.c
 +			return fd;
 +		}
 +	}
- 
+
  	/* Neither worked, give up. */
- 
+
