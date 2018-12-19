@@ -3,10 +3,10 @@ name=pkgconf
 version=1.5.4
 license=custom
 description=A package compiler and linker metadata toolkit.
-cksum=d4c466e1d1697907bf9c0db4d5ae9b0f69e1bfc66d28e663ae46b6b51e57f0c39cb9febbcc7cf3b121435fb305c896b39f74b7bb8913d13a359ecf7ca60f057b
+cksum=c34acc3904dacc9116b3873342a7842f1a6bc3771595d869931f8ab784995da9c13d4c3d63dcba02328f5591a47e0ad95f25bb67d6eab1861571c84a6b7dff60
 
 [mirrors]
-https://distfiles.dereferenced.org/pkgconf/pkgconf-${version}.tar.gz
+http://distfiles.dereferenced.org/pkgconf/pkgconf-${version}.tar.gz
 
 [mdeps]
 libc

@@ -6,7 +6,7 @@ description=A ninja-compatible build tool written in C.
 cksum=dd851f7f12315aa28157e88e6a07a14aa8636d331ee5712dd31f80eb484be445ba78c8f234ab2d63326b5e3b5407195052598fda15409056a438d94926265496
 
 [mirrors]
-https://github.com/michaelforney/samurai/releases/download/${version}/samurai-${version}.tar.gz
+http://github.com/michaelforney/samurai/releases/download/${version}/samurai-${version}.tar.gz
 
 [mdeps]
 libc
