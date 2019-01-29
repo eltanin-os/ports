@@ -24,7 +24,7 @@ env CC="$CC" CFLAGS="$CFLAGS" CPPFLAGS="$CPPFLAGS -DMKSH_BINSHPOSIX -DMKSH_BINSH
 
 [install]
 $INSTALL -dm 0755                                 ${DESTDIR}$BINDIR
-$INSTALL -dm 0755                                 ${DESTDIR}$MANDIR
+$INSTALL -dm 0755                                 ${DESTDIR}${MANDIR}/man1
 $STRIP            build_mksh/mksh build_lksh/lksh
 $INSTALL -m  0755 build_mksh/mksh build_lksh/lksh ${DESTDIR}$BINDIR
-$INSTALL -m  0644 lksh.1 mksh.1                   ${DESTDIR}$MANDIR
+$INSTALL -m  0644 lksh.1 mksh.1                   ${DESTDIR}${MANDIR}/man1
