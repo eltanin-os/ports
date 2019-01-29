@@ -44,7 +44,7 @@ FETCH="curl -LO"
 # UNCOMPRESSION TOOLS
 BZ2="bzip2 -dc"
 GZ="pigz -dc"
-LZ=true"
+LZ="true"
 XZ="true"
 ZZ="pigz -dc"
 
