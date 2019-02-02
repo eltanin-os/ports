@@ -30,7 +30,7 @@ case "$_L" in
 esac
 
 if [ "$1" == "install" ]; then
-	make DESTDIR="$DESTDIR" $@
+	make -- DESTDIR="$DESTDIR" $@
 else
 	[ ! -n "$PREFIX" ] && PREFIX="/"
 	env AR="$AR" CC="$CC" CXX="$CXX" CFLAGS="$_C" \
@@ -47,5 +47,9 @@ else
 	               --enable-shared="$shared"      \
 	               --enable-static="$static"      \
 	               $_PORTSYS_MK_AUTO_EXTRAFLAGS
-	make $@
+	if [ -f "libtool" ]; then
+		make -- LDFLAGS="$_L -all-static" $@
+	else
+		make -- $@
+	fi
 fi
