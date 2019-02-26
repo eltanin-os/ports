@@ -6,7 +6,7 @@ description=A tool for transferring data from URLs.
 cksum=25ad69a1978de2178ac7a456e72152907203931ad895234c14781c27681ea2c5d6669794880c4ebae6e38b8014c6538bc88a6afec2c192210b6d491d60b8f691
 
 [mirrors]
-http://curl.haxx.se/download/curl-${version}.tar.gz
+http://curl.haxx.se/download/curl-$version.tar.gz
 
 [rdeps]
 ca-certificates
@@ -17,7 +17,8 @@ libressl
 libz
 
 [build]
-${PORTS}/mk/portsys_mk_auto.sh
+portsys_mk_meth autohell
+portsys_mk_exec
 
 [install]
-${PORTS}/mk/portsys_mk_auto.sh install
+portsys_mk_exec install

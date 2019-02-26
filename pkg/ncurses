@@ -7,19 +7,14 @@ cksum=84287e522277ea988de3ff44b8163c1a781ee4a19f376020786ac6420871343e6cb45d4161
 src=netbsd-curses-$version
 
 [mirrors]
-http://ftp.barfooze.de/pub/sabotage/tarballs/netbsd-curses-${version}.tar.xz
+http://ftp.barfooze.de/pub/sabotage/tarballs/netbsd-curses-$version.tar.xz
 
 [mdeps]
 libc
 
 [build]
-cat <<-EOF > config.mak
-CFLAGS=$CFLAGS
-CPPFLAGS=$CPPFLAGS
-LDFLAGS=$LDFLAGS
-PREFIX=$PREFIX
-EOF
-make CC=$CC all-static
+portsys_mk_meth make
+portsys_mk_exec all-static
 
 [install]
-make DESTDIR=$DESTDIR install-static
+portsys_mk_exec install-static

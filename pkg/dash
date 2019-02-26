@@ -6,13 +6,14 @@ description=A POSIX compliant shell that aims to be as small as possible.
 cksum=0ae29be77794df0ba254967649b9728611a75fbb3acd32ab6634d76399d1ce97c7d12d31da465482a7e4f3207093415c496c39525cace9b78ab3cb9444dd7640
 
 [mirrors]
-http://gondor.apana.org.au/~herbert/dash/files/dash-${version}.tar.gz
+http://gondor.apana.org.au/~herbert/dash/files/dash-$version.tar.gz
 
 [mdeps]
 libc
 
 [build]
-${PORTS}/mk/portsys_mk_auto.sh
+portsys_mk_meth autohell
+portsys_mk_exec
 
 [install]
-${PORTS}/mk/portsys_mk_auto.sh install
+portsys_mk_exec install

@@ -1,0 +1,206 @@
+#!/bin/rc
+. $PORTS/mk/config.rc
+. $PORTS/mk/common.rc
+
+argv0=$0
+
+fn sigexit {
+	rm -Rf $bfile $ffile $tmpdir $tsysdir
+}
+
+fn section {
+	$SED -n '/\['$"2'\]/,/^\[.*\]$/p' $"1 |\
+	     $SED '/^\[.*\]$/d'
+}
+
+fn header {
+	cat <<'EOF'
+#!/bin/rc -e
+. $PORTS/mk/config.rc
+. $PORTS/mk/common.rc
+EOF
+}
+
+fn start_b_env {
+	cat <<EOF
+# BUILD
+@{ PORTSYS_CURR_PKG=$1
+EOF
+	cat <<'EOF'
+. $"tmpdir/$"PORTSYS_CURR_PKG.vrs
+if ([ -z $"src ]) src=($name-$version)
+cd $"src
+PORTSYS_PKG_PWD=`{pwd}
+EOF
+}
+
+fn end_b_env {
+	printf '%s\n\n' '}'
+}
+
+fn start_f_env {
+	cat <<EOF
+# FETCH
+@{ PORTSYS_CURR_PKG=$1
+EOF
+	cat <<'EOF'
+. $"tmpdir/$"PORTSYS_CURR_PKG.vrs
+EOF
+}
+
+fn end_f_env {
+	cat <<EOF
+mirrors=($mirrors)
+EOF
+	cat <<'EOF'
+. $"tmpdir/$"PORTSYS_CURR_PKG.vrs
+u=`{printf '%s\n' $mirrors(1)}
+u=`{basename $"u}
+portsys_cksum $"cksum $"u
+portsys_explode $"u
+if ([ -z $"src ]) src=$"name-$"version
+portsys_patch $"src $"patches }
+EOF
+	printf '\n\n'
+}
+
+fn start_i_env {
+	printf '# INSTALL\n'
+	printf '%s '  '@{'
+	printf '%s\n' $*
+}
+
+fn end_i_env {
+	cat <<'EOF'
+if ([ -n $"DESTDIR ]) {
+	find $"DESTDIR/$"LIBDIR -type f -name '*.la' -exec rm -f '{}' + || true
+	find $"DESTDIR/$"BINDIR -type f -exec $"STRIP '{}' +            || true
+	find $"DESTDIR/$"MANDIR -type f                               \
+	    '(' -name '*.1' `{printf ' -o -name *.%s' `{seq 2 8}} ')' \
+	    -exec $COMPRESS '{}' + || true
+}
+if ([ -n $"DESTDIR ])
+	find $"DESTDIR/$"LIBDIR -type f -name '*.la' -exec rm -f '{}' + || true
+if ([ -z $"PORTSYS_DB_DESTDIR ]) PORTSYS_DB_DESTDIR=$DBDIR
+dbfile=$"PORTSYS_DB_DESTDIR/$"name
+dbdir=`{dirname $"dbfile}
+mkdir -p $"dbdir
+if ([ -d $"PORTSYS_PKG_PWD/.pkgroot ]) {
+	cd $PORTSYS_PKG_PWD
+	portsys_gendb $"dbdir 1> $"dbfile
+	if ([ $"PORTSYS_PKG_GEN ]) portsys_pack $"PORTSYS_PKG_DESTDIR
+} }
+EOF
+	printf '\n\n'
+}
+
+DOPKG=0
+DOLOCAL=0
+
+if ([ $#* -eq 0 ]) portsys_io_error missing action
+
+switch ($1) {
+case 'opackage'
+	DOPKG=1
+	DOLOCAL=1
+case 'package'
+	DOPKG=1
+case 'install'
+	true
+case *
+	portsys_io_error unknown action
+}
+
+shift
+if ([ $#* -eq 0 ]) {
+	portsys_io_message nothing to do
+	exit 0
+}
+
+# trap cleanup EXIT
+
+bfile=`{mktemp} ||\
+    portsys_io_error failed to obtain temporary file path for build
+ffile=`{mktemp} ||\
+    portsys_io_error failed to obtain temporary file path for fetch
+
+#export bfile ffile tmpdir
+
+portsys_io_message creating headers for files
+header > $"bfile
+header > $"ffile
+
+portsys_io_message setting mode
+chmod +x $"bfile $"ffile
+
+portsys_io_message creating temporary environment
+tmpdir=`{mktemp -d} ||\
+    portsys_io_error failed to create temporary directory
+if ([ $"DOLOCAL -eq 1 ]) {
+	tsysdir=`{mktemp -d} ||\
+	    portsys_io_error failed to create temporary directory
+	cat <<EOF >>$"bfile
+CFLAGS=($$CFLAGS -I$tsysdir$$INCDIR)
+LDFLAGS=($$LDFLAGS -L$tsysdir$$LIBDIR)
+EOF
+}
+
+if ([ $"DOPKG -eq 1 ]) {
+	if ([ -z $"PORTSYS_PKG_DESTDIR ])
+		PORTSYS_PKG_DESTDIR=`{pwd}^/portsys_pkgs
+	if ([ -z $"PORTSYS_DB_DESTDIR ])
+		PORTSYS_DB_DESTDIR=($PORTSYS_PKG_DESTDIR)
+	if (![ -d $"PORTSYS_PKG_DESTDIR ])
+		mkdir -p $"PORTSYS_PKG_DESTDIR
+	PKGVARS=`{cat <<EOF
+PORTSYS_DB_DESTDIR=$PORTSYS_DB_DESTDIR
+PORTSYS_PKG_DESTDIR=$PORTSYS_PKG_DESTDIR
+PORTSYS_PKG_GEN=$DOPKG
+DESTDIR=$$PORTSYS_PKG_PWD/.pkgroot
+EOF
+	}
+}
+
+
+portsys_io_message generating script files
+for (p in $*) {
+	pkg=`{basename $"p}
+	portsys_io_message $"pkg: creating vars file
+	@{ section $"PORTS/pkg/$"p vars | tr '\n' '\t' |
+	          sed -e 's/\=/\=\(/g'\
+	              -e 's/\t\t/\t/g'\
+	              -e 's/\t/\)\n/g' > $"tmpdir/$"pkg.vrs
+	patches=`{section $"PORTS/pkg/$"p patches}
+	rdeps=`{section $"PORTS/pkg/$"p rdeps}
+	mdeps=`{section $"PORTS/pkg/$"p mdeps}
+	cat <<EOF >> $"tmpdir/$"pkg.vrs
+patches=($patches)
+rdeps=($rdeps)
+mdeps=($mdeps)
+EOF
+	}
+	portsys_io_message $"pkg: merging fetch section
+	@{ start_f_env $"pkg >> $"ffile
+	mirrors=`{section $"PORTS/pkg/$"p mirrors}
+	printf 'portsys_fetch %s\n' $mirrors >> $"ffile
+	end_f_env >> $"ffile }
+	portsys_io_message $"pkg: merging build section
+	@{ start_b_env $"pkg >> $"bfile
+	section $"PORTS/pkg/$"p build >> $"bfile
+	start_i_env $PKGVARS DESTDIR'='$"tsysdir >> $bfile
+	section $"PORTS/pkg/$"p install >> $bfile
+	end_i_env >> $bfile
+	if ([ $"DOPKG -eq 1 ]) {
+		start_i_env $PKGVARS >> $bfile
+		section $"PORTS/pkg/$"p install >> $bfile
+		end_i_env >> $bfile
+	}
+	end_b_env >> $bfile }
+}
+
+portsys_io_message starting fetch process
+@{ cd $"tmpdir
+$"ffile } || portsys_io_error fetch process failed
+portsys_io_message starting build process
+@{ cd $"tmpdir
+$"bfile } || portsys_io_error build process failed

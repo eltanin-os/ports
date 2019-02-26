@@ -6,13 +6,14 @@ description=A ninja-compatible build tool written in C.
 cksum=8664c3c46d9f9a541c79906fb4264941c3226b6b9f7312275e6633c8501f8c34a8025d31b2b32163198db09eb28c9f92a2e2fd8356b18f689551ddf42bae9e5f
 
 [mirrors]
-http://github.com/michaelforney/samurai/releases/download/${version}/samurai-${version}.tar.gz
+http://github.com/michaelforney/samurai/releases/download/${version}/samurai-$version.tar.gz
 
 [mdeps]
 libc
 
 [build]
-${PORTS}/mk/portsys_mk_make.sh
+portsys_mk_meth make
+portsys_mk_exec
 
 [install]
-${PORTS}/mk/portsys_mk_make.sh install
+portsys_mk_exec install

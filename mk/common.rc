@@ -1,0 +1,216 @@
+#!/bin/rc
+. $PORTS/mk/config.rc
+
+#
+# Io routines
+#
+
+# $* : message
+fn portsys_io_error {
+	echo $argv0: '<error>' $* >[1=2]
+	exit 1
+}
+
+# $*: message
+fn portsys_io_message {
+	echo $argv0: '<message>' $*
+}
+
+# $*: message
+fn portsys_io_warning {
+	echo $argv0: '<warning>' $* >[1=2]
+}
+
+#
+# Mk routines
+#
+
+# $1 : method
+# $* : flags
+fn portsys_mk_meth {
+	PORTSYS_MK_METHOD=$1
+	shift
+	switch ($PORTSYS_MK_METHOD) {
+	case 'autohell'
+		PORTSYS_MK_FLAGS=$*
+	case 'make'
+		PORTSYS_MK_FLAGS=$*
+	case *
+		portsys_io_error unknown build method
+	}
+}
+
+# $* : flags
+fn portsys_mk_setflags {
+	switch ($PORTSYS_MK_METHOD) {
+	case 'autohell'
+		PORTSYS_MK_AUTO_FLAGS=$*
+	case 'make'
+		PORTSYS_MK_MAKE_FLAGS=$*
+	case *
+		portsys_io_error unknown build method
+	}
+}
+
+# $* : operation
+fn portsys_mk_exec {
+	switch ($PORTSYS_MK_METHOD) {
+	case 'autohell'
+		op=autohell.rc
+	case 'make'
+		op=make.rc
+	case *
+		portsys_io_error unknown build method
+	}
+	$"PORTS/mk/meth/$"op $*
+}
+
+#
+# Helper functions
+#
+
+# $1 : filename
+# $* : args
+fn portsys_hlp_sed {
+	fd=$1
+	shift
+	$SED $* <$fd >$"fd.tmp.new
+	mv $"fd.tmp.new $"fd
+}
+
+# $* : void
+fn portsys_hlp_envsh @{
+	AR=$"AR             \
+	CC=$"CC             \
+	CXX=$"CXX           \
+	CFLAGS=$"CFLAGS     \
+	CPPFLAGS=$"CPPFLAGS \
+	LDFLAGS=$"LDFLAGS   \
+	YACC=$"YACC         \
+	STRIP=$"STRIP       \
+	RANLIB=$"RANLIB     \
+	PREFIX=$"PREFIX     \
+	BINDIR=$"BINDIR     \
+	LIBDIR=$"LIBDIR     \
+	ETCDIR=$"ETCDIR     \
+	DFLDIR=$"DFLDIR     \
+	MANDIR=$"MANDIR     \
+	INCDIR=$"INCDIR     \
+	$*
+}
+
+#
+# Util routines
+#
+
+# $1 : directory
+# $* : patches
+fn portsys_patch {
+	if ([ $#* -lt 2 ]) return 0
+	d=$1
+	shift
+	@{ cd $"d
+	for (p in $*) {
+		patch -p1 < $"PORTS/patches/$"p ||\
+		    portsys_io_error failed to apply patch
+	}}
+}
+
+# $1 : sum
+# $2 : file
+fn portsys_cksum {
+	if ([ $#* -ne 2 ]) return 0
+	lsum=$1
+	file=$2
+	if (![ -f $"file ]) && portsys_io_error $"2: $"file does not exist
+	rsum=`{sha512sum $file}
+	if (! ~ $rsum(1) $"lsum ]) portsys_io_error $"2: checksum mismatch
+	true
+}
+
+# $1 : url
+fn portsys_fetch {
+	url=$1
+	shift
+	protocol=`{printf '%.3s' $"url}
+	# for now treat only git as a exception
+	switch ($protocol) {
+	case 'git'
+		d=$"name-$"version
+		git clone $"url $"d
+		@{ olddir=`{pwd}
+		cd $"d
+		if (~ $"version 'master') {
+			echo FUCK YOU 02
+			v=git-`{git rev-parse HEAD}
+			n=$PORTSYS_CURR_PKG.vrs
+			portsys_hlp_sed $"olddir/$"n\
+			    's/version=(master)/version=('$"v')/g'
+			cd $"olddir
+			mv $"d $"name-$"v
+		}
+#		if not {
+		if (! ~ $"version 'master')
+			git checkout tags/v$"version
+		}
+	case *
+		# do not check errors for now, checksum will catch them later
+		$FETCH $"url
+	}
+}
+
+# $1 : file
+fn portsys_explode {
+	n=$1
+	shift
+	switch ($n) {
+	case *'.tar.bz2' *'.tbz2'
+		UNCOMPRESS=$BZ2
+	case *'.tar.gz'  *'.tgz'
+		UNCOMPRESS=$GZ
+	case *'.tar.lz'  *'.tlz'
+		UNCOMPRESS=$LZ
+	case *'.tar.xz'  *'.txz'
+		UNCOMPRESS=$XZ
+	case *'.tar.zz'  *'.tzz'
+		UNCOMPRESS=$ZZ
+	case *
+		portsys_io_warning extension $n is a unknown format
+		return 0
+	}
+	$UNCOMPRESS -- $"n | $UNTAR
+}
+
+
+fn portsys_gendb {
+	dbdir=$1
+	shift
+	size=`{du -sk .pkgroot | $AWK '{printf "%u", $1*1024}'}
+	cat <<EOF
+name:$name
+version:$version
+license:$license
+description:$description
+size:$size
+EOF
+	if (![ $#rdeps -eq 0 ]) printf 'run-dep:%s\n' $rdeps
+	for (d in $mdeps) {
+		v=`{$SED -n 's/version://p' $"dbdir/$"d >[2]/dev/null} ||\
+		    portsys_io_warning $name: failed to obtain $d version
+		d=$d'#'$v
+		printf 'make-dep:%s\n' $"d
+	}
+	# may overflow ARG_MAX
+	dirs=`{find .pkgroot -type d | $SED -e 's/.pkgroot\///g' -e '/.pkgroot/d'}
+	printf 'dir:%s\n' $dirs
+	files=`{find .pkgroot -type f -o -type l | $SED -e 's/.pkgroot\///g' -e '/.pkgroot/d'}
+	printf 'file:%s\n' $files
+}
+
+fn portsys_pack {
+	d=$1/$name'#'$version.$pkgsuf
+	shift
+	@{ cd .pkgroot
+	fakeroot -- $TAR . | $COMPRESS > $"d }
+}
+

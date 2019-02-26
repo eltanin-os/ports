@@ -11,7 +11,7 @@ cksum=46442cddb6ca043b8b08d143908f149954c238e0f3a57a0df73ca4fab9c1acd91b078f3f26
 0003-wpa_supplicant25-eloop.patch
 
 [mirrors]
-http://w1.fi/releases/wpa_supplicant-${version}.tar.gz
+http://w1.fi/releases/wpa_supplicant-$version.tar.gz
 
 [mdeps]
 libc
@@ -21,10 +21,11 @@ libressl
 [build]
 cd wpa_supplicant
 cp defconfig .config
-sed 's/#CONFIG_WPS=y/CONFIG_WPS=y/' .config 1> .config.new
-mv .config.new .config
-CC="$CC" CFLAGS="$CFLAGS -D_GNU_SOURCE -DCONFIG_LIBNL20" CPPFLAGS="$CPPFLAGS" \
-make -j$nprocs CONFIG_LIBNL_TINY=y
+portsys_hlp_sed .config\
+    -e 's/#CONFIG_WPS=y/CONFIG_WPS=y/'\
+    -e 's/#CONFIG_LIBNL20=y/CONFIG_LIBNL20=y/'
+portsys_mk_meth make
+portsys_mk_exec 'CONFIG_LIBNL_TINY=y'
 
 [install]
-${PORTS}/mk/portsys_mk_make.sh install
+portsys_mk_exec install

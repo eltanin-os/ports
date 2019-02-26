@@ -1,0 +1,63 @@
+#!/bin/rc
+
+_C=$CFLAGS
+_P=$CPPFLAGS
+_L=$LDFLAGS
+
+. $PORTS/mk/config.rc
+. $PORTS/mk/common.rc
+
+if ([ -z $"_C ]) _C=$CFLAGS
+if ([ -z $"_P ]) _P=$CPPFLAGS
+if ([ -z $"_L ]) _L=$LDFLAGS
+
+CONFIGURE='./configure'
+
+if ([ -z $"PORTSYS_MK_AUTO_NOBUILDDIR ]) {
+	mkdir build
+	cd    build
+	CONFIGURE='../configure'
+	echo PWD: `{pwd}
+}
+
+switch ($_L) {
+case *'-static'*
+	static=yes
+	shared=no
+case *
+	static=no
+	shared=yes
+}
+
+if (~ $"1 'install') {
+	echo PWD: `{pwd}
+	make -- 'DESTDIR='$"DESTDIR $*
+}
+# if not
+if (! ~ $"1 'install') @{
+	if (![ -n $"PREFIX ]) PREFIX='/'
+	AR=$"AR
+	CC=$"CC
+	CXX=$"CXX
+	CFLAGS=$"_C
+	CPPFLAGS=$"_P
+	LDFLAGS=$"_L
+	YACC=$"YACC
+	RANLIB=$"RANLIB
+	STRIP=$"STRIP
+	$CONFIGURE\
+	    --prefix'='$"PREFIX        \
+	    --bindir'='$"BINDIR        \
+	    --sbindir'='$"BINDIR       \
+	    --libdir'='$"LIBDIR        \
+	    --includedir'='$"INCDIR    \
+	    --oldincludedir'='$"INCDIR \
+	    --datarootdir'='$"PREFIX   \
+	    --mandir'='$"MANDIR        \
+	    --enable-shared'='$"shared \
+	    --enable-static'='$"static \
+	    $_PORTSYS_MK_AUTO_FLAGS
+	if ([ -f 'libtool' ]) make -- 'LDFLAGS='$"_L' -all-static' $*
+#	if not
+	if (![ -f 'libtool' ]) make -- $*
+}

@@ -1,0 +1,40 @@
+#!/bin/rc
+
+_C=$CFLAGS
+_P=$CPPFLAGS
+_L=$LDFLAGS
+
+. $PORTS/mk/config.rc
+. $PORTS/mk/common.rc
+
+if ([ -z $"_C ]) _C=$CFLAGS
+if ([ -z $"_P ]) _P=$CPPFLAGS
+if ([ -z $"_L ]) _L=$LDFLAGS
+
+switch ($PORTSYS_MK_MAKE_FLAGS) {
+case *'replace'*
+	PORTSYS_MK_MAKE_FLAGS=($PORTSYS_MK_MAKE_FLAGS 'CFLAGS='$"_C 'CPPFLAGS='$"_P 'LDFLAGS='$"_L)
+}
+
+@{
+CFLAGS=$"_C
+CPPFLAGS=$"_P
+LDFLAGS=$"_L
+make -j $nprocs                 \
+    'AR='$"AR                   \
+    'CC='$"CC                   \
+    'CXX='$"CXX                 \
+    'YACC='$"YACC               \
+    'STRIP='$"STRIP             \
+    'RANLIB='$"RANLIB           \
+    'PREFIX='$"PREFIX           \
+    'BINDIR='$"BINDIR           \
+    'LIBDIR='$"LIBDIR           \
+    'ETCDIR='$"ETCDIR           \
+    'DFLDIR='$"DFLDIR           \
+    'MANDIR='$"MANDIR           \
+    'INCDIR='$"INCDIR           \
+    'DESTDIR='$"DESTDIR         \
+    $PORTSYS_MK_MAKE_FLAGS      \
+    $*
+}

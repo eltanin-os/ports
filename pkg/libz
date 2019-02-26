@@ -6,13 +6,14 @@ description=An ABI-compatible and API-compatible drop-in replacement for zlib.
 cksum=20398a642acef402d59301dbffb7c1864d28214f8dddcb5403ae50071b1ebd3c0dc1df5b0e567443ad3813ba9d11bd0da1eeb36db3dcafc48f098a6dd6cd5a54
 
 [mirrors]
-http://sortix.org/libz/release/libz-${version}.tar.gz
+http://sortix.org/libz/release/libz-$version.tar.gz
 
 [mdeps]
 libc
 
 [build]
-${PORTS}/mk/portsys_mk_auto.sh
+portsys_mk_meth autohell
+portsys_mk_exec
 
 [install]
-${PORTS}/mk/portsys_mk_auto.sh install
+portsys_mk_exec install

@@ -6,18 +6,19 @@ description=Parallel implementation of the gzip file compressor.
 cksum=79b2357176f93b9f3e2bc07fee393fc4d79b7bd0041808f8ddfd23eafccde72e60ca95e97595bb624a4f732fe3612bf46d57c44541c36ae62f9aa6336abe16ba
 
 [mirrors]
-http://zlib.net/pigz/pigz-${version}.tar.gz
+http://zlib.net/pigz/pigz-$version.tar.gz
 
 [mdeps]
 libc
 libz
 
 [build]
-${PORTS}/mk/portsys_mk_make.sh pigz
+portsys_mk_meth make
+portsys_mk_exec pigz
 
 [install]
-$INSTALL -dm 755        ${DESTDIR}$BINDIR
-$INSTALL -dm 755        ${DESTDIR}${MANDIR}/man1
+$INSTALL -dm 755        $DESTDIR$BINDIR
+$INSTALL -dm 755        $DESTDIR$MANDIR/man1
 $STRIP           pigz
-$INSTALL -m  755 pigz   ${DESTDIR}$BINDIR
-$INSTALL -m  644 pigz.1 ${DESTDIR}${MANDIR}/man1
+$INSTALL -m  755 pigz   $DESTDIR$BINDIR
+$INSTALL -m  644 pigz.1 $DESTDIR$MANDIR/man1

@@ -6,13 +6,14 @@ description=A package compiler and linker metadata toolkit.
 cksum=b2bb2f5b1b4e8917eb24d97c9bddcf3769160583658cba948d03b553dc412fcd8d676ea656aa81ad3ff1fc3e893e0eac45c530387b4b97225a0d07fc41ec8aac
 
 [mirrors]
-http://distfiles.dereferenced.org/pkgconf/pkgconf-${version}.tar.gz
+http://distfiles.dereferenced.org/pkgconf/pkgconf-$version.tar.gz
 
 [mdeps]
 libc
 
 [build]
-${PORTS}/mk/portsys_mk_auto.sh
+portsys_mk_meth autohell
+portsys_mk_auto
 
 [install]
-${PORTS}/mk/portsys_mk_auto.sh install
+portsys_mk_auto install

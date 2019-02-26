@@ -11,8 +11,9 @@ git://github.com/eltanin-os/utilchest
 libc
 
 [build]
-${PORTS}/mk/portsys_mk_make.sh utilchest
+portsys_mk_meth make replace
+portsys_mk_exec utilchest
 
 [install]
-${PORTS}/mk/portsys_mk_make.sh install-utilchest
-${PORTS}/mk/portsys_mk_make.sh install-man
+portsys_mk_exec install-utilchest
+portsys_mk_exec install-man
