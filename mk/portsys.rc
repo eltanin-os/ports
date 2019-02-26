@@ -59,7 +59,7 @@ u=`{basename $"u}
 portsys_cksum $"cksum $"u
 portsys_explode $"u
 if ([ -z $"src ]) src=$"name-$"version
-portsys_patch $"src $"patches }
+portsys_patch $"src $patches }
 EOF
 	printf '\n\n'
 }
