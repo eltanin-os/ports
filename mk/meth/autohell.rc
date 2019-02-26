@@ -29,10 +29,8 @@ case *
 	shared=yes
 }
 
-if (~ $"1 'install') {
-	echo PWD: `{pwd}
+if (~ $"1 'install')
 	make -- 'DESTDIR='$"DESTDIR $*
-}
 # if not
 if (! ~ $"1 'install') @{
 	if (![ -n $"PREFIX ]) PREFIX='/'

@@ -141,7 +141,6 @@ fn portsys_fetch {
 		@{ olddir=`{pwd}
 		cd $"d
 		if (~ $"version 'master') {
-			echo FUCK YOU 02
 			v=git-`{git rev-parse HEAD}
 			n=$PORTSYS_CURR_PKG.vrs
 			portsys_hlp_sed $"olddir/$"n\
