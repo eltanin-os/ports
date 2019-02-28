@@ -129,14 +129,17 @@ fn portsys_cksum {
 }
 
 # $1 : url
+# $2 : filename
 fn portsys_fetch {
 	url=$1
+	filename=$2
 	shift
 	protocol=`{printf '%.3s' $"url}
 	# for now treat only git as a exception
 	switch ($protocol) {
 	case 'git'
 		d=$"name-$"version
+		url=`{printf '%s' $"url | sed 's/.git$//' }
 		git clone $"url $"d
 		@{ olddir=`{pwd}
 		cd $"d
@@ -155,6 +158,8 @@ fn portsys_fetch {
 	case *
 		# do not check errors for now, checksum will catch them later
 		$FETCH $"url
+		u=`{basename $"url}
+		if (! ~ $"u $"filename) mv $"u $"filename
 	}
 }
 
@@ -206,6 +211,7 @@ EOF
 	printf 'file:%s\n' $files
 }
 
+# $* : void
 fn portsys_pack {
 	d=$1/$name'#'$version.$pkgsuf
 	shift
@@ -213,3 +219,9 @@ fn portsys_pack {
 	fakeroot -- $TAR . | $COMPRESS > $"d }
 }
 
+# $1 : url
+fn portsys_urltoname {
+	u=`{basename $"1}
+	if (~ $"u *'.'*) { printf '%s' $"u; return }
+	portsys_urltoname `{dirname $"1}
+}

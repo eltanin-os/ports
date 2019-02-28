@@ -54,10 +54,8 @@ mirrors=($mirrors)
 EOF
 	cat <<'EOF'
 . $"tmpdir/$"PORTSYS_CURR_PKG.vrs
-u=`{printf '%s\n' $mirrors(1)}
-u=`{basename $"u}
-portsys_cksum $"cksum $"u
-portsys_explode $"u
+portsys_cksum $"cksum $"__f
+portsys_explode $"__f
 if ([ -z $"src ]) src=$"name-$"version
 portsys_patch $"src $patches }
 EOF
@@ -182,7 +180,8 @@ EOF
 	portsys_io_message $"pkg: merging fetch section
 	@{ start_f_env $"pkg >> $"ffile
 	mirrors=`{section $"PORTS/pkg/$"p mirrors}
-	printf 'portsys_fetch %s\n' $mirrors >> $"ffile
+	printf '__f=(%s)\n' `{portsys_urltoname $mirrors(1)} >> $"ffile
+	printf 'portsys_fetch %s $"__f\n' $mirrors >> $"ffile
 	end_f_env >> $"ffile }
 	portsys_io_message $"pkg: merging build section
 	@{ start_b_env $"pkg >> $"bfile

@@ -5,7 +5,7 @@ license=multiple
 description=A complementary set of unix utilities for utilchest.
 
 [mirrors]
-git://github.com/eltanin-os/cbase
+git://github.com/eltanin-os/cbase.git
 
 [mdeps]
 libc
@@ -13,7 +13,7 @@ ncurses
 
 [build]
 portsys_mk_meth make replace
-portsys_mk_setflags 'MORELD=-lterminfo' 'TABSLD=-lterminfo'
+portsys_mk_setflags MORELD=-lterminfo TABSLD=-lterminfo
 portsys_mk_exec
 
 [install]

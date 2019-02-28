@@ -5,7 +5,7 @@ license=custom
 description=A high-quality data compressor.
 
 [mirrors]
-git://github.com/eadwardus/bzip2
+git://github.com/eadwardus/bzip2.git
 
 [mdeps]
 libc

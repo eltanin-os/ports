@@ -26,7 +26,7 @@ portsys_hlp_sed .config\
     -e 's/#CONFIG_LIBNL20=y/CONFIG_LIBNL20=y/'
 CFLAGS=($CFLAGS $CPPFLAGS -DLIBNL1_COMPAT)
 portsys_mk_meth make
-portsys_mk_exec 'CONFIG_LIBNL_TINY=y'
+portsys_mk_exec CONFIG_LIBNL_TINY=y
 
 [install]
 portsys_mk_exec install

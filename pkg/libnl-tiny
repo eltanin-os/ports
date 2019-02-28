@@ -5,7 +5,7 @@ license=LGPL-2
 description=A tiny replacement for libnl.
 
 [mirrors]
-git://github.com/sabotage-linux/libnl-tiny
+git://github.com/sabotage-linux/libnl-tiny.git
 
 [mdeps]
 libc
@@ -17,7 +17,7 @@ portsys_hlp_sed Makefile\
     -e 's/libdir/LIBDIR/g'\
     -e 's/includedir/INCDIR/g'
 portsys_mk_meth make
-portsys_mk_setflags 'ALL_LIBS=libnl-tiny.a'
+portsys_mk_setflags ALL_LIBS=libnl-tiny.a
 portsys_mk_exec all
 
 [install]
