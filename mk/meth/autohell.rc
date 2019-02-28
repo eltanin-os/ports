@@ -17,7 +17,6 @@ if ([ -z $"PORTSYS_MK_AUTO_NOBUILDDIR ]) {
 	mkdir build
 	cd    build
 	CONFIGURE='../configure'
-	echo PWD: `{pwd}
 }
 
 switch ($_L) {

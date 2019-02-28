@@ -11,7 +11,7 @@ if ([ -z $"_C ]) _C=$CFLAGS
 if ([ -z $"_P ]) _P=$CPPFLAGS
 if ([ -z $"_L ]) _L=$LDFLAGS
 
-switch ($PORTSYS_MK_MAKE_FLAGS) {
+switch ($PORTSYS_MK_FLAGS) {
 case *'replace'*
 	PORTSYS_MK_MAKE_FLAGS=($PORTSYS_MK_MAKE_FLAGS 'CFLAGS='$"_C 'CPPFLAGS='$"_P 'LDFLAGS='$"_L)
 }
