@@ -13,6 +13,7 @@ http://ftp.barfooze.de/pub/sabotage/tarballs/netbsd-curses-$version.tar.xz
 libc
 
 [build]
+portsys_hlp_sed GNUmakefile 's/INSTALL ?=/INSTALL =/'
 portsys_mk_meth make
 portsys_mk_exec all-static
 

@@ -13,7 +13,7 @@ libc
 
 [build]
 portsys_mk_meth autohell
-portsys_mk_auto
+portsys_mk_exec
 
 [install]
-portsys_mk_auto install
+portsys_mk_exec install

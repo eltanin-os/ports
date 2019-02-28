@@ -21,7 +21,6 @@ case *'-static'*
 	static=1
 case *
 	static=0
-	;;
 }
 cat <<EOF >configure.local
 CC="$CC"
@@ -39,8 +38,9 @@ INSTALL_PROGRAM="install -m 0755"
 UTF8_LOCALE="$LOCALE"
 LN="ln -sf"
 EOF
+portsys_mk_meth make
 ./configure
-make
+portsys_mk_exec
 
 [install]
-make DESTDIR="$DESTDIR" install
+portsys_mk_exec install
