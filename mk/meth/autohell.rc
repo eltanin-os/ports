@@ -13,7 +13,12 @@ if ([ -z $"_L ]) _L=$LDFLAGS
 
 CONFIGURE='./configure'
 
-if ([ -z $"PORTSYS_MK_AUTO_NOBUILDDIR ]) {
+switch ($PORTSYS_MK_FLAGS) {
+case *'nobuilddir'*
+	NOBUILDDIR=YES
+}
+
+if ([ -z $"NOBUILDDIR ]) {
 	mkdir build
 	cd    build
 	CONFIGURE='../configure'
@@ -53,7 +58,7 @@ if (! ~ $"1 'install') @{
 	    --mandir'='$"MANDIR        \
 	    --enable-shared'='$"shared \
 	    --enable-static'='$"static \
-	    $_PORTSYS_MK_AUTO_FLAGS
+	    $PORTSYS_MK_AUTO_FLAGS
 	if ([ -f 'libtool' ]) make -- 'LDFLAGS='$"_L' -all-static' $*
 #	if not
 	if (![ -f 'libtool' ]) make -- $*
