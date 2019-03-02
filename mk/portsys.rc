@@ -1,8 +1,14 @@
 #!/bin/rc
+#
+argv0=$0
+
+if (~ $"PORTS) {
+	echo $argv0: '<error>' missing PORTS environmental variable >[1=2]
+	exit 1
+}
+
 . $PORTS/mk/config.rc
 . $PORTS/mk/common.rc
-
-argv0=$0
 
 fn sigexit {
 	rm -Rf $bfile $ffile $tmpdir $tsysdir
@@ -163,6 +169,10 @@ EOF
 portsys_io_message generating script files
 for (p in $*) {
 	pkg=`{basename $"p}
+	if (![ -f $"PORTS/pkg/$"p ]) {
+		portsys_io_warning package $"pkg does not exist
+		continue
+	}
 	portsys_io_message $"pkg: creating vars file
 	@{ section $"PORTS/pkg/$"p vars | tr '\n' '\t' |
 	          sed -e 's/\=/\=\(/g'\
