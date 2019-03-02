@@ -13,7 +13,7 @@ libc
 libz
 
 [build]
-portsys_mk_meth make
+portsys_mk_meth make nocppflags replace
 portsys_mk_exec pigz
 
 [install]

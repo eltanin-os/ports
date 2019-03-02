@@ -24,8 +24,8 @@ cp defconfig .config
 portsys_hlp_sed .config\
     -e 's/#CONFIG_WPS=y/CONFIG_WPS=y/'\
     -e 's/#CONFIG_LIBNL20=y/CONFIG_LIBNL20=y/'
-CFLAGS=($CFLAGS $CPPFLAGS -DLIBNL1_COMPAT)
-portsys_mk_meth make
+CPPFLAGS=($CPPFLAGS -DLIBNL1_COMPAT)
+portsys_mk_meth make nocppflags
 portsys_mk_exec CONFIG_LIBNL_TINY=y
 
 [install]
