@@ -16,12 +16,13 @@ for (flag in $PORTSYS_MK_FLAGS) {
 	case 'nocppflags'
 		_C=($_C $_P)
 	case 'replace'
-		_A=('CFLAGS='$"_C 'CPPFLAGS='$"P 'LDFLAGS='$"_L)
+		_A=('CFLAGS='$"_C 'CPPFLAGS='$"_P 'LDFLAGS='$"_L)
 		PORTSYS_MK_MAKE_FLAGS=($PORTSYS_MK_MAKE_FLAGS $_A)
 	}
 }
 
 @{
+echo FLAGS: $PORTSYS_MK_MAKE_FLAGS
 CFLAGS=$"_C
 CPPFLAGS=$"_P
 LDFLAGS=$"_L
