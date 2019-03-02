@@ -6,9 +6,9 @@ description=A WPA supplicant implementation.
 cksum=46442cddb6ca043b8b08d143908f149954c238e0f3a57a0df73ca4fab9c1acd91b078f3f26375a1d99cd1d65625986328018c735d8705882c8f91e389cad28a6
 
 [patches]
-0001-wpa_supplicant-fflush.patch
-0002-wpa_supplicant26-libressl.patch
-0003-wpa_supplicant25-eloop.patch
+wpa_supplicant-fflush.patch
+wpa_supplicant26-libressl.patch
+wpa_supplicant25-eloop.patch
 
 [mirrors]
 http://w1.fi/releases/wpa_supplicant-$version.tar.gz
