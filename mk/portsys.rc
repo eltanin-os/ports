@@ -2,7 +2,7 @@
 #
 argv0=$0
 
-if (~ $"PORTS) {
+if ([ -z $"PORTS ]) {
 	echo $argv0: '<error>' missing PORTS environmental variable >[1=2]
 	exit 1
 }

@@ -22,7 +22,6 @@ for (flag in $PORTSYS_MK_FLAGS) {
 }
 
 @{
-echo FLAGS: $PORTSYS_MK_MAKE_FLAGS
 CFLAGS=$"_C
 CPPFLAGS=$"_P
 LDFLAGS=$"_L
