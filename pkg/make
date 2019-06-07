@@ -1,9 +1,9 @@
 [vars]
 name=make
-version=4.2
+version=4.2.1
 license=GPL-3
 description=A GNU tool which simplifies the build process for users.
-cksum=c422b7dab431d0463a469ea29fa247eab09ecc5628059b9e967de4c2428a69e2c54a18d41a95b33a75989789b95f42283db61daf0bda7a28b4c47a1950ee5051
+cksum=d5f6ce3ac7c9a55cf8c1c04afa7d967dd311c9bb3167275ebb2649cf144f3740cf08450dc010a6acdea1fd529fd528a50b3c3381f4c9a7e83ec59b761817a038
 
 [patches]
 make-glob_musl.patch

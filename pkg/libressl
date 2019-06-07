@@ -1,9 +1,9 @@
 [vars]
 name=libressl
-version=2.9.0
+version=2.9.2
 license=openssl
 description=Is a fork of, and drop in replacement for OpenSSL.
-cksum=db7fec664bef8d76204ca691c11df236abce3c85b2a51011eec5bd302e273b62fa3cfce0430980915c3f3ce34176d5ef9c187902f0b39d7fc151e69e552b499c
+cksum=b43e73e47c1f14da3c702ab42f29f1d67645a4fa425441337bd6c125b481ef78a40fd13e6b34dadb2af337e1c0c190cfb616186d4db9c9a743a37e594b9b8033
 
 [mirrors]
 http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-$version.tar.gz

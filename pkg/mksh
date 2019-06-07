@@ -1,9 +1,9 @@
 [vars]
 name=mksh
-version=R56c
+version=R57
 license=MirOS
 description=An enhanced version of the public domain ksh.
-cksum=7e4cd2d24c6bca2ebad7c6b02d158188e766bd4693d93f5bed198d69238aef078d42ce911431ad4e419e4af55083047d823bfad53973db5c6d8a685482770135
+cksum=7d7fa557c17da4f1f62f82877a136439efb6d4f9fde52b2df39214db09868982e756df6e4fe83498f9013cbcf3252dc383b00ddfafaa4c9f143ffded7cd255b3
 src=$name
 
 [mirrors]
