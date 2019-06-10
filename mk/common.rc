@@ -185,7 +185,7 @@ fn portsys_explode {
 	$UNCOMPRESS -- $"n | $UNTAR
 }
 
-
+# $1 : database path
 fn portsys_gendb {
 	dbdir=$1
 	shift
