@@ -1,9 +1,9 @@
 [vars]
 name=pkgconf
-version=1.6.0
+version=1.6.3
 license=custom
 description=A package compiler and linker metadata toolkit.
-cksum=b2bb2f5b1b4e8917eb24d97c9bddcf3769160583658cba948d03b553dc412fcd8d676ea656aa81ad3ff1fc3e893e0eac45c530387b4b97225a0d07fc41ec8aac
+cksum=9e71e6abe380c4354f68ae8e324045847d49b0c568c3887f9d9780da763027b877f1553a8f742ba49b4edb411de15f3a258f3e9ec455b326fb7dd089267cd306
 
 [mirrors]
 http://distfiles.dereferenced.org/pkgconf/pkgconf-$version.tar.gz
