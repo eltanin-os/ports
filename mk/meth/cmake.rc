@@ -1,0 +1,48 @@
+#!/bin/rc
+
+_C=$CFLAGS
+_P=$CPPFLAGS
+_L=$LDFLAGS
+
+. $PORTS/mk/config.rc
+. $PORTS/mk/common.rc
+
+if ([ -z $"_C ]) _C=$CFLAGS
+if ([ -z $"_P ]) _P=$CPPFLAGS
+if ([ -z $"_L ]) _L=$LDFLAGS
+
+dir=`{mktemp -u build.XXXXXXXXXX}
+mkdir $"dir
+cd $"dir
+
+switch ($_L) {
+case *'-static'*
+	flags=(-D BUILD_SHARED_LIBS=OFF)
+case *
+	flags=(-D BUILD_SHARED_LIBS=ON)
+}
+
+switch ($_L) {
+case *'-O3'*
+	flags=($flags -DCMAKE_BUILD_TYPE=Release)
+case *'-O2'*
+	flags=($flags -DCMAKE_BUILD_TYPE=MinSizeRel)
+case *'-Os'*
+	flags=($flags -DCMAKE_BUILD_TYPE=MinSizeRel)
+}
+
+if (~ $"1 'install')
+	cmake --build . --target $*
+if not @{
+	if (![ -n $"PREFIX ]) PREFIX='/'
+	CFLAGS=$"_C
+	CPPFLAGS=$"_P
+	LDFLAGS=$"_L
+	cmake\
+	    -GNinja                         \
+	    -DCMAKE_INSTALL_PREFIX=$"PREFIX \
+	    $flags                          \
+	    $PORTSYS_MK_CMAKE_FLAGS         \
+	    ..
+	cmake --build .
+}
