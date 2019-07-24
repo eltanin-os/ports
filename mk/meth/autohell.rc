@@ -36,8 +36,7 @@ case *
 
 if (~ $"1 'install')
 	make -- 'DESTDIR='$"DESTDIR $*
-# if not
-if (! ~ $"1 'install') @{
+if not @{
 	if (![ -n $"PREFIX ]) PREFIX='/'
 	AR=$"AR
 	CC=$"CC
@@ -49,18 +48,22 @@ if (! ~ $"1 'install') @{
 	RANLIB=$"RANLIB
 	STRIP=$"STRIP
 	$CONFIGURE\
-	    --prefix'='$"PREFIX        \
-	    --bindir'='$"BINDIR        \
-	    --sbindir'='$"BINDIR       \
-	    --libdir'='$"LIBDIR        \
-	    --includedir'='$"INCDIR    \
-	    --oldincludedir'='$"INCDIR \
-	    --datarootdir'='$"PREFIX   \
-	    --mandir'='$"MANDIR        \
-	    --enable-shared'='$"shared \
-	    --enable-static'='$"static \
+	    --prefix=$"PREFIX        \
+	    --bindir=$"BINDIR        \
+	    --sbindir=$"BINDIR       \
+	    --libdir=$"LIBDIR        \
+	    --includedir=$"INCDIR    \
+	    --oldincludedir=$"INCDIR \
+	    --datarootdir=$"PREFIX   \
+	    --mandir=$"MANDIR        \
+	    --enable-shared=$"shared \
+	    --enable-static=$"static \
 	    $PORTSYS_MK_AUTO_FLAGS
-	if ([ -f 'libtool' ]) make -- 'LDFLAGS='$"_L' -all-static' $*
-#	if not
-	if (![ -f 'libtool' ]) make -- $*
+	if ([ -f 'libtool' ] &&
+	    [ $"static = 'yes' ]) {
+		_L=($L -all-static)
+		make -- LDFLAGS=$"L $*
+	}
+	if not
+		make -- $*
 }

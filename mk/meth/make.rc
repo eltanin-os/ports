@@ -25,21 +25,21 @@ for (flag in $PORTSYS_MK_FLAGS) {
 CFLAGS=$"_C
 CPPFLAGS=$"_P
 LDFLAGS=$"_L
-make -j $nprocs                 \
-    'AR='$"AR                   \
-    'CC='$"CC                   \
-    'CXX='$"CXX                 \
-    'YACC='$"YACC               \
-    'STRIP='$"STRIP             \
-    'RANLIB='$"RANLIB           \
-    'PREFIX='$"PREFIX           \
-    'BINDIR='$"BINDIR           \
-    'LIBDIR='$"LIBDIR           \
-    'ETCDIR='$"ETCDIR           \
-    'DFLDIR='$"DFLDIR           \
-    'MANDIR='$"MANDIR           \
-    'INCDIR='$"INCDIR           \
-    'DESTDIR='$"DESTDIR         \
-    $PORTSYS_MK_MAKE_FLAGS      \
+make -j $nprocs               \
+    AR=$"AR                   \
+    CC=$"CC                   \
+    CXX=$"CXX                 \
+    YACC=$"YACC               \
+    STRIP=$"STRIP             \
+    RANLIB=$"RANLIB           \
+    PREFIX=$"PREFIX           \
+    BINDIR=$"BINDIR           \
+    LIBDIR=$"LIBDIR           \
+    ETCDIR=$"ETCDIR           \
+    DFLDIR=$"DFLDIR           \
+    MANDIR=$"MANDIR           \
+    INCDIR=$"INCDIR           \
+    DESTDIR=$"DESTDIR         \
+    $PORTSYS_MK_MAKE_FLAGS    \
     $*
 }

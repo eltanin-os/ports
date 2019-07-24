@@ -204,7 +204,7 @@ EOF
 	portsys_io_message $"pkg: merging build section
 	@{ start_b_env $"pkg >> $"bfile
 	section $"PORTS/pkg/$"p build >> $"bfile
-	start_i_env $PKGVARS DESTDIR'='$"tsysdir >> $bfile
+	start_i_env $PKGVARS DESTDIR=$"tsysdir >> $bfile
 	section $"PORTS/pkg/$"p install >> $bfile
 	end_i_env >> $bfile
 	if ([ $"DOPKG -eq 1 ]) {

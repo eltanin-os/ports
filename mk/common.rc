@@ -151,8 +151,7 @@ fn portsys_fetch {
 			cd $"olddir
 			mv $"d $"name-$"v
 		}
-#		if not {
-		if (! ~ $"version 'master')
+		if not
 			git checkout tags/v$"version
 		}
 	case *
