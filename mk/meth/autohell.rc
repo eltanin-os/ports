@@ -19,8 +19,9 @@ case *'nobuilddir'*
 }
 
 if ([ -z $"NOBUILDDIR ]) {
-	mkdir build
-	cd    build
+	dir=`{mktemp -u build.XXXXXXXXXX}
+	mkdir $"dir
+	cd $"dir
 	CONFIGURE='../configure'
 }
 
