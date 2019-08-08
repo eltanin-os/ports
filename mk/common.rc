@@ -140,6 +140,7 @@ fn portsys_fetch {
 	url=$1
 	filename=$2
 	shift
+	if ([ -f $"filename ]) return
 	protocol=`{printf '%.3s' $"url}
 	# for now treat only git as a exception
 	switch ($protocol) {
