@@ -163,9 +163,7 @@ fn portsys_fetch {
 		}
 	case *
 		# do not check errors for now, checksum will catch them later
-		$FETCH $"url
-		u=`{basename $"url}
-		if (! ~ $"u $"filename) mv $"u $"filename
+		$FETCH $"filename $"url
 	}
 }
 
