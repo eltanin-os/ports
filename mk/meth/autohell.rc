@@ -19,7 +19,7 @@ case *'nobuilddir'*
 }
 
 if ([ -z $"NOBUILDDIR ]) {
-	dir=`{mktemp -u build.XXXXXXXXXX}
+	dir=$"PORTSYS_TMP_BUILDDIR
 	mkdir $"dir
 	cd $"dir
 	CONFIGURE='../configure'
@@ -34,9 +34,9 @@ case *
 	shared=yes
 }
 
-if (~ $"1 'install')
-	make -- 'DESTDIR='$"DESTDIR $*
-if not @{
+if (~ $"1 install) {
+	make -- DESTDIR=$"DESTDIR $*
+}; if not @{
 	if (![ -n $"PREFIX ]) PREFIX='/'
 	AR=$"AR
 	CC=$"CC
@@ -59,11 +59,9 @@ if not @{
 	    --enable-shared=$"shared \
 	    --enable-static=$"static \
 	    $PORTSYS_MK_AUTO_FLAGS
-	if ([ -f 'libtool' ] &&
-	    [ $"static = 'yes' ]) {
-		_L=($L -all-static)
-		make -- LDFLAGS=$"L $*
+	if ([ -f 'libtool' ] && [ $"static == 'yes' ]) {
+		_L=($_L -all-static)
+		make -- LDFLAGS=$"_L $*
 	}
-	if not
-		make -- $*
+	if not make -- $*
 }

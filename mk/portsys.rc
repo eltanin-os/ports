@@ -31,6 +31,7 @@ fn start_b_env {
 	cat <<EOF
 # BUILD
 @{ PORTSYS_CURR_PKG=$1
+PORTSYS_TMP_BUILDDIR=`{mktemp -u build.XXXXXXXXXX}
 EOF
 	cat <<'EOF'
 . $"tmpdir/$"PORTSYS_CURR_PKG.vrs

@@ -11,7 +11,7 @@ if ([ -z $"_C ]) _C=$CFLAGS
 if ([ -z $"_P ]) _P=$CPPFLAGS
 if ([ -z $"_L ]) _L=$LDFLAGS
 
-dir=`{mktemp -u build.XXXXXXXXXX}
+dir=$"PORTSYS_TMP_BUILDDIR
 mkdir $"dir
 cd $"dir
 
@@ -31,9 +31,9 @@ case *'-Os'*
 	flags=($flags -DCMAKE_BUILD_TYPE=MinSizeRel)
 }
 
-if (~ $"1 'install')
+if (~ $"1 install) {
 	cmake --build . --target $*
-if not @{
+}; if not @{
 	if (![ -n $"PREFIX ]) PREFIX='/'
 	CFLAGS=$"_C
 	CPPFLAGS=$"_P
