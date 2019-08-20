@@ -1,0 +1,19 @@
+[vars]
+name=skalibs
+version=2.8.1.0
+license=ISC
+description=The skarnet.org C system programming library.
+cksum=d2717e6f034af22a7b2ce31b019f30cfa270f64c61549db7b60b319defc5236fc6b58d29a4dae0f740ffdf32180b1940630f4239ea40cbedfcc5861398d20d86
+
+[mirrors]
+http://skarnet.org/software/skalibs/skalibs-$version.tar.gz
+
+[mdeps]
+libc
+
+[build]
+portsys_mk_meth autohell nobuilddir
+portsys_mk_exec
+
+[install]
+portsys_mk_exec install
