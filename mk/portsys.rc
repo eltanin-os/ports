@@ -163,6 +163,8 @@ LDFLAGS=($$LDFLAGS -L$tsysdir$$LIBDIR)
 EOF
 }
 
+PORTSYS_SYSPATH=$"tsysdir
+
 if ([ $"DOPKG -eq 1 ]) {
 	if ([ -z $"PORTSYS_PKG_DESTDIR ])
 		PORTSYS_PKG_DESTDIR=`{pwd}^/portsys_pkgs
