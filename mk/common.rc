@@ -134,11 +134,11 @@ fn portsys_cksum {
 	true
 }
 
-# $1 : url
-# $2 : filename
+# $1 : filename
+# $* : url
 fn portsys_fetch {
-	url=$1
-	filename=$2
+	filename=$1
+	url=$2
 	shift
 	if ([ -f $"filename ]) return
 	protocol=`{printf '%.3s' $"url}
@@ -152,7 +152,7 @@ fn portsys_fetch {
 		cd $"d
 		if (~ $"version 'master') {
 			v=git-`{git rev-parse HEAD}
-			n=$PORTSYS_CURR_PKG.vrs
+			n=`{basename $"filename .$"protocol}^.vars
 			portsys_hlp_sed $"olddir/$"n\
 			    's/version=(master)/version=('$"v')/g'
 			cd $"olddir
@@ -184,7 +184,7 @@ fn portsys_explode {
 		UNCOMPRESS=$ZZ
 	case *
 		portsys_io_warning extension $n is a unknown format
-		return 0
+		return
 	}
 	$UNCOMPRESS -- $"n | $UNTAR
 }
@@ -208,19 +208,25 @@ EOF
 		d=$d'#'$v
 		printf 'make-dep:%s\n' $"d
 	}
-	# may overflow ARG_MAX
-	dirs=`{find .pkgroot -type d | $SED -e 's/.pkgroot\///g' -e '/.pkgroot/d'}
-	printf 'dir:%s\n' $dirs
-	files=`{find .pkgroot -type f -o -type l | $SED -e 's/.pkgroot\///g' -e '/.pkgroot/d'}
-	printf 'file:%s\n' $files
+	dirs=`{find .pkgroot -type d | cut -c 10-} # may overflow
+	for (d in $dirs) echo dir:$"d
+	files=`{find .pkgroot -type f -o -type l | cut -c 10-} # may overflow
+	for (f in $files) echo file:$"f
 }
 
-# $* : void
+# $1 : directory
 fn portsys_pack {
 	d=$1/$name'#'$version.$pkgsuf
 	shift
 	@{ cd .pkgroot
 	fakeroot -- $TAR . | $COMPRESS > $"d }
+}
+
+# $1 : directory
+fn portsys_reflectfs {
+	d=$"1
+	@{ cd .pkgroot
+	find . | pax -rw $d }
 }
 
 # $1 : url
