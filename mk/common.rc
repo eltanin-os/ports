@@ -208,9 +208,7 @@ EOF
 		d=$d'#'$v
 		printf 'make-dep:%s\n' $"d
 	}
-	dirs=`{find .pkgroot -type d | cut -c 10-} # may overflow
-	for (d in $dirs) echo dir:$"d
-	files=`{find .pkgroot -type f -o -type l | cut -c 10-} # may overflow
+	files=`{find .pkgroot | cut -c 10-} # may overflow
 	for (f in $files) echo file:$"f
 }
 
