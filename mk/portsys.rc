@@ -109,6 +109,7 @@ portsys_io_message generating script files
 }
 @{
 	OREL=false
+	if (!$OPKG) OREL=true
 	for (p in $*) genpkg $"p
 }
 
