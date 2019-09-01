@@ -73,7 +73,7 @@ if ($OTMPSYS) {
 	tmpsysdir=`{mktemp -d} ||\
 	    portsys_io_error failed to obtain temporary directory
 	cat <<EOF >>$bfile
-CFLAGS=($$CFLAGS -I$tmpsysdir$$INCDIR)
+CPPFLAGS=($$CPPFLAGS -I$tmpsysdir$$INCDIR)
 LDFLAGS=($$LDFLAGS -L$tmpsysdir$$LIBDIR)
 EOF
 }
@@ -109,7 +109,7 @@ portsys_io_message generating script files
 }
 @{
 	OREL=false
-	if (!$OPKG) OREL=true
+	if (!$OFILE || !$OPKG) OREL=true
 	for (p in $*) genpkg $"p
 }
 
