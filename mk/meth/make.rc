@@ -22,10 +22,13 @@ for (flag in $PORTSYS_MK_FLAGS) {
 }
 
 @{
-CFLAGS=$"_C
-CPPFLAGS=$"_P
-LDFLAGS=$"_L
-make -j $nprocs               \
+env -i --                     \
+    PATH=$"PATH               \
+    INSTALL=$"INSTALL         \
+    CFLAGS=$"_C               \
+    CPPFLAGS=$"_P             \
+    LDFLAGS=$"_L              \
+    make -j $nprocs           \
     AR=$"AR                   \
     CC=$"CC                   \
     CXX=$"CXX                 \

@@ -35,10 +35,12 @@ if (~ $"1 install) {
 	cmake --build . --target $*
 }; if not @{
 	if (![ -n $"PREFIX ]) PREFIX='/'
-	CFLAGS=$"_C
-	CPPFLAGS=$"_P
-	LDFLAGS=$"_L
-	cmake\
+	env -i --                           \
+	    PATH=$"PATH                     \
+	    CFLAGS=$"_C                     \
+	    CPPFLAGS=$"_P                   \
+	    LDFLAGS=$"_L                    \
+	    cmake                           \
 	    -GNinja                         \
 	    -DCMAKE_INSTALL_PREFIX=$"PREFIX \
 	    $flags                          \

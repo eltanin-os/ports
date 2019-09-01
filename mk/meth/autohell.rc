@@ -38,16 +38,19 @@ if (~ $"1 install) {
 	make -- DESTDIR=$"DESTDIR $*
 }; if not @{
 	if (![ -n $"PREFIX ]) PREFIX='/'
-	AR=$"AR
-	CC=$"CC
-	CXX=$"CXX
-	CFLAGS=$"_C
-	CPPFLAGS=$"_P
-	LDFLAGS=$"_L
-	YACC=$"YACC
-	RANLIB=$"RANLIB
-	STRIP=$"STRIP
-	$CONFIGURE\
+	chmod +x $CONFIGURE
+	env -i --                    \
+	    PATH=$"PATH              \
+	    AR=$"AR                  \
+	    CC=$"CC                  \
+	    CXX=$"CXX                \
+	    CFLAGS=$"_C              \
+	    CPPFLAGS=$"_P            \
+	    LDFLAGS=$"_L             \
+	    YACC=$"YACC              \
+	    RANLIB=$"RANLIB          \
+	    STRIP=$"STRIP            \
+	    $CONFIGURE               \
 	    --prefix=$"PREFIX        \
 	    --bindir=$"BINDIR        \
 	    --sbindir=$"BINDIR       \
