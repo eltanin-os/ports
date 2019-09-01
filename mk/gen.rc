@@ -25,8 +25,7 @@ fn genpkg @{
 	p=$1
 	pkg=`{basename $p}
 	portsys_io_message $pkg: creating vars file
-	@{ gensection $PORTS/pkg/$p vars | tr '\n' '\t' |
-	    sed -e 's/\=/\=\(/g' -e 's/\t\t/\t/g' -e 's/\t/\)\n/g'
+	@{ gensection $PORTS/pkg/$p vars | sed 's/=\(.*\)/=(\1)/g'
 	patches=`{gensection $PORTS/pkg/$p patches}
 	rdeps=`{gensection $PORTS/pkg/$p rdeps}
 	mdeps=`{gensection $PORTS/pkg/$p mdeps}
