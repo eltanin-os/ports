@@ -28,6 +28,7 @@ env -i --                     \
     CFLAGS=$"_C               \
     CPPFLAGS=$"_P             \
     LDFLAGS=$"_L              \
+    LDLIBS=$"LDLIBS           \
     make -j $nprocs           \
     AR=$"AR                   \
     CC=$"CC                   \
