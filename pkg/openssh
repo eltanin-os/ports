@@ -1,0 +1,22 @@
+[vars]
+name=openssh
+version=8.0p1
+license=BSD-2 ISC
+description=Open Source Secure shell client and server.
+cksum=e280fa2d56f550efd37c5d2477670326261aa8b94d991f9eb17aad90e0c6c9c939efa90fe87d33260d0f709485cb05c379f0fd1bd44fc0d5190298b6398c9982
+
+[mirrors]
+https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-$version.tar.gz
+
+[mdeps]
+libc
+libressl
+libz
+
+[build]
+portsys_mk_meth autohell
+portsys_mk_setflags --with-mantype=man
+portsys_mk_exec
+
+[install]
+portsys_mk_exec install-nokeys
