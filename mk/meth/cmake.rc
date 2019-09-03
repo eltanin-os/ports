@@ -31,7 +31,7 @@ case *'-Os'*
 	flags=($flags -DCMAKE_BUILD_TYPE=MinSizeRel)
 }
 
-if (~ $"1 install) {
+if (~ $"1 *install*) {
 	cmake --build . --target $*
 }; if not @{
 	if (![ -n $"PREFIX ]) PREFIX='/'

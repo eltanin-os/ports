@@ -34,7 +34,7 @@ case *
 	shared=yes
 }
 
-if (~ $"1 install) {
+if (~ $"1 *install*) {
 	make -- DESTDIR=$"DESTDIR $*
 }; if not @{
 	if (![ -n $"PREFIX ]) PREFIX='/'
