@@ -57,7 +57,7 @@ if (~ $"1 *install*) {
 	    --libdir=$"LIBDIR        \
 	    --includedir=$"INCDIR    \
 	    --oldincludedir=$"INCDIR \
-	    --datarootdir=$"PREFIX   \
+	    --datarootdir=$"DRTDIR   \
 	    --mandir=$"MANDIR        \
 	    --enable-shared=$"shared \
 	    --enable-static=$"static \
