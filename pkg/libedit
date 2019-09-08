@@ -9,8 +9,8 @@ cksum=240098989e3c5c8c5e28a61036655ad5a57f1c484e1cce2eaf3da157ff238dfb9cd81c766f
 http://thrysoee.dk/editline/libedit-$version.tar.gz
 
 [mdeps]
-libc
 ncurses
+libc
 
 [build]
 CFLAGS=($CFLAGS -D__STDC_ISO_10646__)

@@ -8,8 +8,8 @@ description=A complementary set of unix utilities for utilchest.
 git://github.com/eltanin-os/cbase.git
 
 [mdeps]
-libc
 ncurses
+libc
 
 [build]
 portsys_mk_meth make replace
