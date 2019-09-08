@@ -233,3 +233,10 @@ fn portsys_urltoname {
 	if (~ $"u *'.'*) { printf '%s' $"u; return }
 	portsys_urltoname `{dirname $"1}
 }
+
+# $* : void
+fn portsys_blacklist {
+	pattern=`{cat $"PORTS/mk/blacklist}
+	find . -type f '(' -name '' `{printf ' -o -name %s' $pattern} ')' -exec rm -f '{}' +
+	find . -type d -exec rmdir -p '{}' + >[2]/dev/null || true
+}

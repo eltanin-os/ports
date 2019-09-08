@@ -70,10 +70,10 @@ DESTDIR=$$PORTSYS_ROOTPWD/.pkgroot
 EOF
 	gensection $PORTS/pkg/$p install
 	cat <<'EOF'
-{
-find $"DESTDIR/$"LIBDIR -type f -name '*.la' -exec rm -f '{}' +
-find $"DESTDIR/$"BINDIR -type f -exec $"STRIP '{}' +
-find $"DESTDIR/$"MANDIR -type f '(' -name '*.1' `{printf ' -o -name *.%s' `{seq 2 8}} ')' -exec $COMPRESS '{}' +
+@{
+cd $"DESTDIR
+portsys_blacklist
+find $"BINDIR -type f -exec $"STRIP '{}' +
 } >[2] /dev/null || true
 if ([ -z $PORTSYS_DBDESTDIR ]) PORTSYS_DBDESTDIR=$DBDIR
 dbdir=$"PORTSYS_DBDESTDIR
