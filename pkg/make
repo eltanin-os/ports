@@ -3,13 +3,13 @@ name=make
 version=4.2.1
 license=GPL-3
 description=A GNU tool which simplifies the build process for users.
-cksum=d5f6ce3ac7c9a55cf8c1c04afa7d967dd311c9bb3167275ebb2649cf144f3740cf08450dc010a6acdea1fd529fd528a50b3c3381f4c9a7e83ec59b761817a038
+cksum=51c953368a4e2f4ec1e99cbd7f1d3e7671c52051ea213fa849ff60de9a695fe69670be92708b794ae8a7326b91a4548d82de7e0be441f073fc1f3329cfc065e0
 
 [patches]
 make-glob_musl.patch
 
 [mirrors]
-http://ftp.gnu.org/gnu/make/make-$version.tar.gz
+http://ftp.gnu.org/gnu/make/make-$version.tar.bz2
 
 [mdeps]
 libc

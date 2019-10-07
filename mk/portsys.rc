@@ -93,6 +93,9 @@ EOF
 	}
 }
 
+PORTSYS_HOSTOS=`{uname -s | awk '{print tolower($1)}'}
+PORTSYS_HOSTARCH=`{uname -m}
+
 if (![ -n $"CACHEDIR ]) CACHEDIR=`{pwd}^/portsys_cache
 if (![ -d $"CACHEDIR ]) mkdir -p $"CACHEDIR
 

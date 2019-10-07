@@ -3,10 +3,10 @@ name=rc
 version=ceb59bb2a644f4ebc1645fe15f1063029579fa7c
 license=zlib
 description=An alternative implementation of the plan 9 rc shell
-cksum=7d7af9e2539f37ea9c51c88a843ec78976a9db64b3653171d66474aa20289609471788874eb52fe75f10c19a915da130dde92cf80b88d464e56f3f021d17af3f
+cksum=15e1a8df4cac2aa31771f47bde0c873db48cf4289d1e18b4f03a0556bda683ebb206e18fcf6592059016e9981c4d02b1484ec2460b19409d01a1056549b19f38
 
 [mirrors]
-http://sourceforge.net/projects/eltanin-os/files/mirrors/rc-$version.tar.gz/download
+http://downloads.sourceforge.net/project/eltanin-os/mirrors/rc-$version.tar.gz
 
 [mdeps]
 libc

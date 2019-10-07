@@ -33,9 +33,10 @@ AWK=awk
 SED=sed
 TAR=(pax -x ustar -w)
 UNTAR=(pax -x ustar -r)
-COMPRESS=(pigz -z -9)
+PACK=(venus-ar -c)
+COMPRESS=(lzip -9)
 FETCH=(curl -Lo)
-CKSUM=sha512sum
+CKSUM=(venus-cksum -w)
 SU=true
 INSTALL=/usr/bin/install
 STRIP=strip
@@ -48,5 +49,5 @@ XZ=(xz -dc)
 ZZ=(pigz -dc)
 
 # OTHERS
-pkgsuf=pkg.tzz
+pkgsuf=pkg.vlz
 nprocs=2

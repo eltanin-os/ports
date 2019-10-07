@@ -129,8 +129,8 @@ fn portsys_cksum {
 	lsum=$1
 	file=$2
 	if (![ -f $"file ]) && portsys_io_error $"2: $"file does not exist
-	rsum=`{sha512sum $file}
-	if (! ~ $rsum(1) $"lsum ]) portsys_io_error $"2: checksum mismatch
+	rsum=`{$CKSUM $file}
+	if (! ~ $rsum(2) $"lsum ]) portsys_io_error $"2: checksum mismatch
 	true
 }
 
@@ -195,21 +195,38 @@ fn portsys_gendb {
 	shift
 	size=`{du -sk .pkgroot | $AWK '{printf "%u", $1*1024}'}
 	cat <<EOF
-name:$name
-version:$version
-license:$license
-description:$description
-size:$size
+# name: $name
+# version: $version
+# license: $license
+# description: $description
+# size: $size
+# reason: manual
 EOF
-	if (![ $#rdeps -eq 0 ]) printf 'run-dep:%s\n' $rdeps
-	for (d in $mdeps) {
-		v=`{$SED -n 's/version://p' $"dbdir/$"d >[2]/dev/null} ||\
-		    portsys_io_warning $name: failed to obtain $d version
-		d=$d'#'$v
-		printf 'make-dep:%s\n' $"d
+	if (! ~ $#mdeps 0) {
+		printf 'makedeps:\n'
+		for (d in $mdeps) {
+			v=`{$SED -n 's/# version://p' $dbdir/$d >[2]/dev/null} ||\
+			    portsys_io_warning $name: failed to obtain %d version
+			d=$"d'#'$"v
+			printf '\t%s\n' $"d
+		}
 	}
-	files=`{find .pkgroot | cut -c 10-} # may overflow
-	for (f in $files) echo file:$"f
+	if (! ~ $#rdeps 0) {
+		printf 'rundeps:\n'
+		printf '\t%s\n' $rdeps
+	}
+	@{
+		cd .pkgroot
+		files=`{find . | cut -c 3-} # may overflow
+		if (! ~ $#files 0) {
+			printf 'files:\n'
+			for (f in $files) {
+				if ([ -d $"f ]) continue
+				f=`{venus-cksum $f}
+				printf '\t%s\n' $"f
+			}
+		}
+	}
 }
 
 # $1 : directory
@@ -217,7 +234,7 @@ fn portsys_pack {
 	d=$1/$name'#'$version.$pkgsuf
 	shift
 	@{ cd .pkgroot
-	fakeroot -- $TAR . | $COMPRESS > $"d }
+	$PACK . | $COMPRESS > $"d }
 }
 
 # $1 : directory
