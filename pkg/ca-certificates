@@ -9,9 +9,9 @@ cksum=33f2ed23f2ff1cffb602d4bf05b40e32b2fca58e2aaaa05cfb0c8c4915f4efd3e9173ebe9e
 http://downloads.sourceforge.net/project/eltanin-os/mirrors/ca-certificates-$version.tar.gz
 
 [rdeps]
-coreutils
-libressl
-sh
+coreutils#*
+libressl#*
+sh#*
 
 [build]
 portsys_mk_meth make

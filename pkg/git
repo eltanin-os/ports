@@ -9,10 +9,10 @@ cksum=1d00497e7e9f8d5c3e90135da9f9e52847513aea782a8543287dc1d66c97ef88c2c716c6eb
 https://www.kernel.org/pub/software/scm/git/git-$version.tar.xz
 
 [rdeps]
-coreutils
-perl
-sh
-ssh
+coreutils#*
+perl#5.8+
+sh#*
+ssh#*
 
 [mdeps]
 curl

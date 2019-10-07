@@ -9,7 +9,7 @@ cksum=c70301c043136c43e30f9359f7dcd53147522b85f7ce3a6192e0670efa84e0515f43787808
 http://curl.haxx.se/download/curl-$version.tar.bz2
 
 [rdeps]
-ca-certificates
+ca-certificates#*
 
 [mdeps]
 libc
