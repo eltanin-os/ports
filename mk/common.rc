@@ -200,7 +200,6 @@ fn portsys_gendb {
 # license: $license
 # description: $description
 # size: $size
-# reason: manual
 EOF
 	if (! ~ $#mdeps 0) {
 		printf 'makedeps:\n'
