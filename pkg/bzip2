@@ -1,11 +1,12 @@
 [vars]
 name=bzip2
-version=1.0.6
+version=1.0.8
 license=custom
 description=A high-quality data compressor.
+cksum=109bffc8f00b9a9c676bbe4fb9bdaaf66797ace87caef566fb2a11cb02eff796032f3d1692054e167e6e1322396c90c2e83b9e341c53380a5e05a2265e60ee85
 
 [mirrors]
-git://github.com/eadwardus/bzip2.git
+http://sourceware.org/pub/bzip2/bzip2-$version.tar.gz
 
 [mdeps]
 libc

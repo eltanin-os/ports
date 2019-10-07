@@ -3,9 +3,10 @@ name=perp
 version=2.07
 license=CUSTOM
 description=A persistent process supervisor and service managment framework for un*x.
+cksum=f82041228ba839be6e0303afb4353a11778b7aa06ec6f533a415547388e2322236a51340d91a30702da1911041c673bd0b18f75d5f728f30bc0413b32f07def6
 
 [mirrors]
-git://github.com/eadwardus/perp.git
+http://b0llix.net/perp/distfiles/perp-$version.tar.gz
 
 [mdeps]
 libc

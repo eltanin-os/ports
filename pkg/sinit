@@ -3,9 +3,10 @@ name=sinit
 version=1.1
 license=MIT
 description=A suckless init.
+cksum=8ffb5903480f73961170da6a261c9efa42e3046dbd2f4ca8ff9ae68c3466730823ef69b2abba5647c146c4fa9fb788ad11f10af95950eb457ee0b4d8f656aad5
 
 [mirrors]
-git://git.suckless.org/sinit.git
+http://downloads.sourceforge.net/project/eltanin-os/mirrors/sinit-$version.tar.lz
 
 [mdeps]
 libc

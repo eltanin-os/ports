@@ -1,14 +1,15 @@
 [vars]
 name=ubase
-version=master
+version=3c88778c6c85d97fb63c41c05304519e0484b07c
 license=MIT
 description=A collection of unportable tools.
+cksum=22d7e6454eed8653960f94723636a897df5c2ad30e398c074b36277b6e8ef3f829d24e504d280efcc4a307c7532ec6a277f8c259e0ac221ce9a3454e8cd4144d
 
 [patches]
 ubase-remove_duplicated.patch
 
 [mirrors]
-git://git.suckless.org/ubase.git
+http://downloads.sourceforge.net/project/eltanin-os/mirrors/ubase-$version.tar.lz
 
 [mdeps]
 libc

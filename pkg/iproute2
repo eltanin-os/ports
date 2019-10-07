@@ -3,13 +3,14 @@ name=iproute2
 version=4.19.0
 license=GPL-2
 description=A set of utilities for Linux networking.
+cksum=98b0f69e413e1ff20f486c8d129a212a83a4c2469c3cb0ccafd551948be002bd3d8e7cc2749c664b8d4968c51efbaa758790671f086c343dc8e85b097e019de
 
 [patches]
 iproute2-fix_includes_for_musl_libc.patch
 iproute2-new_reduced_makefile.patch
 
 [mirrors]
-git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
+http://mirrors.edge.kernel.org/pub/linux/utils/net/iproute2/iproute2-$version.tar.xz
 
 [mdeps]
 libc
