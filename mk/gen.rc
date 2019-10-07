@@ -41,7 +41,7 @@ EOF
 @{ . $tmpdir/$pkg.vars
 EOF
 	mirrors=`{gensection $PORTS/pkg/$p mirrors}
-	urlname=`{portsys_urltoname $mirrors(1)}
+	urlname=`{basename $mirrors(1)}
 	cat <<EOF
 __f=($CACHEDIR/$urlname)
 portsys_fetch $$__f $mirrors

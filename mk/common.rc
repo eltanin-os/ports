@@ -227,13 +227,6 @@ fn portsys_reflectfs {
 	find . | pax -rw $d }
 }
 
-# $1 : url
-fn portsys_urltoname {
-	u=`{basename $"1}
-	if (~ $"u *'.'*) { printf '%s' $"u; return }
-	portsys_urltoname `{dirname $"1}
-}
-
 # $* : void
 fn portsys_blacklist {
 	pattern=`{cat $"PORTS/mk/blacklist}
