@@ -1,0 +1,24 @@
+[vars]
+name=tertium
+version=master
+license=UNLICENSE
+description=Eltanin system programming library.
+
+[mirrors]
+git http://git.tuxfamily.org/eltaninos/tertium
+
+[mdeps]
+libc
+
+[build]
+CFLAGS=($CFLAGS -fno-builtin)
+if ([ -d $PORTSYS_HOSTOS ] && [ -d $PORTSYS_HOSTARCH ]) {
+	portsys_hlp_sed config.mk\
+	    -e 's/^OSNAME  =.*/OSNAME='$"PORTSYS_HOSTOS'/g'\
+	    -e 's/^OBJTYPE =.*/OBJTYPE='$"PORTSYS_HOSTARCH'/g'
+}
+portsys_mk_meth make replace
+portsys_mk_exec
+
+[install]
+portsys_mk_exec install

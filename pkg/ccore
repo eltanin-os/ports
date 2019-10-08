@@ -1,0 +1,19 @@
+[vars]
+name=ccore
+version=0.1
+license=UNLICENSE
+description=Eltanin complementary core.
+
+[mirrors]
+git http://git.tuxfamily.org/eltaninos/ccore
+
+[mdeps]
+ncurses
+libc
+
+[build]
+portsys_mk_meth make replace
+portsys_mk_exec
+
+[install]
+portsys_mk_exec install

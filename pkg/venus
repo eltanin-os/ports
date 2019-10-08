@@ -1,0 +1,18 @@
+[vars]
+name=venus
+version=0.1
+license=UNLICENSE
+description=A simple package manager.
+
+[mirrors]
+git http://git.tuxfamily.org/eltaninos/venus
+
+[mdeps]
+tertium
+
+[build]
+portsys_mk_meth make replace
+portsys_mk_exec
+
+[install]
+portsys_mk_exec install
