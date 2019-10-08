@@ -139,12 +139,13 @@ fn portsys_cksum {
 fn portsys_fetch {
 	filename=$1
 	url=$2
-	shift
+	shift 2
 	if ([ -f $"filename ]) return
 	protocol=`{printf '%.3s' $"url}
 	# for now treat only git as a exception
 	switch ($protocol) {
 	case 'git'
+		url=$1
 		d=$"name-$"version
 		url=`{printf '%s' $"url | sed 's/.git$//' }
 		git clone $"url $"d
