@@ -24,7 +24,7 @@ EOF
 fn genpkg @{
 	p=$1
 	pkg=`{basename $p}
-	if (![ -f $"p ]) {
+	if (![ -f $"PORTS/pkg/$"p ]) {
 		portsys_io_warning $pkg: not found
 		return 1
 	}
