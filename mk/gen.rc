@@ -33,6 +33,8 @@ fn genpkg @{
 	patches=`{gensection $PORTS/pkg/$p patches}
 	rdeps=`{gensection $PORTS/pkg/$p rdeps}
 	mdeps=`{gensection $PORTS/pkg/$p mdeps}
+	if (! ~ $#rdeps 0) rdeps=''''^$rdeps^''''
+	if (! ~ $#mdeps 0) mdeps=''''^$mdeps^''''
 	cat <<EOF
 patches=($patches)
 rdeps=($rdeps)
