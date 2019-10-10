@@ -24,6 +24,10 @@ EOF
 fn genpkg @{
 	p=$1
 	pkg=`{basename $p}
+	if (![ -f $"p ]) {
+		portsys_io_warning $pkg: not found
+		return 1
+	}
 	portsys_io_message $pkg: creating vars file
 	@{ gensection $PORTS/pkg/$p vars | sed 's/=\(.*\)/=(\1)/g'
 	patches=`{gensection $PORTS/pkg/$p patches}
@@ -75,13 +79,13 @@ cd $"DESTDIR
 portsys_blacklist
 find $"BINDIR -type f -exec $"STRIP '{}' +
 } >[2] /dev/null || true
-if ([ -z $PORTSYS_DBDESTDIR ]) PORTSYS_DBDESTDIR=$DBDIR
 dbdir=$"PORTSYS_DBDESTDIR
 dbfile=$"PORTSYS_DBDESTDIR/$"name
-mkdir -p $"dbdir
 @{
 	cd $PORTSYS_ROOTPWD
-	portsys_gendb $"dbdir >[1] $"dbfile
+	tmp=`{mktemp}
+	portsys_gendb $"dbdir >[1] $"tmp
+	$PORTSYS_SU mv $tmp $"dbfile
 EOF
 	cat <<EOF
 	if ($OPKG) portsys_pack $$"PORTSYS_PKGDESTDIR

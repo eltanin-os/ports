@@ -78,13 +78,19 @@ LDFLAGS=($$LDFLAGS -L$tmpsysdir$$LIBDIR)
 EOF
 }
 
-PORTSYS_SYSPATH=$tmpsysdir
-if ([ -z $"PORTSYS_SYSPATH ]) PORTSYS_SYSPATH=/
+if ([ -z $"PORTSYS_SYSPATH ]) {
+	PORTSYS_SYSPATH=$tmpsysdir
+	if ([ -z $"PORTSYS_SYSPATH ]) PORTSYS_SYSPATH=/
+}
+
+if (![ -w $"PORTSYS_SYSPATH ]) {
+	if ([ -z $"SU ]) portsys_io_error failed to write to syspath.
+	PORTSYS_SU=$SU
+}
 
 if ($OPKG) {
 	if ([ -z $PORTSYS_PKGDESTDIR ]) PORTSYS_PKGDESTDIR=`{pwd}^/portsys_pkgs
 	if ([ -z $PORTSYS_DBDESTDIR ]) PORTSYS_DBDESTDIR=$PORTSYS_PKGDESTDIR
-	if (![ -d $PORTSYS_PKGDESTDIR ]) mkdir -p $PORTSYS_PKGDESTDIR
 	if (![ -d $PORTSYS_DBDESTDIR ]) mkdir -p $PORTSYS_DBDESTDIR
 	PKGVARS=`{cat <<EOF
 PORTSYS_PKGDESTDIR=$PORTSYS_PKGDESTDIR
@@ -93,10 +99,13 @@ EOF
 	}
 }
 
+if ([ -z $"PORTSYS_DBDESTDIR ]) PORTSYS_DBDESTDIR=$"DBDIR
+if (![ -d $"PORTSYS_DBDESTDIR ]) $PORTSYS_SU mkdir -p $"PORTSYS_DBDESTDIR
+
 PORTSYS_HOSTOS=`{uname -s | awk '{print tolower($1)}'}
 PORTSYS_HOSTARCH=`{uname -m}
 
-if (![ -n $"CACHEDIR ]) CACHEDIR=`{pwd}^/portsys_cache
+if ([ -z $"CACHEDIR ]) CACHEDIR=`{pwd}^/portsys_cache
 if (![ -d $"CACHEDIR ]) mkdir -p $"CACHEDIR
 
 if ($OFILE) {
@@ -112,7 +121,7 @@ portsys_io_message generating script files
 }
 @{
 	OREL=false
-	if (!$OFILE || !$OPKG) OREL=true
+	if (!$OPKG) OREL=true
 	for (p in $*) genpkg $"p
 }
 
@@ -124,7 +133,7 @@ portsys_io_message starting build process
 $"bfile } || portsys_io_error build process failed
 
 if ($OONLYALL) @{
-	portsys_io_message cleaning non necessary database files
+	portsys_io_message cleaning non-necessary database files
 	cd $PORTSYS_DBDESTDIR
 	rm -f $L
 }

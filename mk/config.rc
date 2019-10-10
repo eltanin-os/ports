@@ -37,7 +37,7 @@ PACK=(venus-ar -c)
 COMPRESS=(lzip -9)
 FETCH=(curl -Lo)
 CKSUM=(venus-cksum -w)
-SU=true
+SU=doas
 INSTALL=/usr/bin/install
 STRIP=strip
 

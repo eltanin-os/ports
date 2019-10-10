@@ -80,8 +80,9 @@ fn portsys_mk_exec {
 fn portsys_hlp_sed {
 	fd=$1
 	shift
-	$SED $* <$fd >$"fd.tmp.new
-	mv $"fd.tmp.new $"fd
+	tmp=`{mktemp}
+	$SED $* <$fd >$"tmp
+	mv $"tmp $"fd
 }
 
 # $* : void
@@ -241,7 +242,7 @@ fn portsys_pack {
 fn portsys_reflectfs {
 	d=$"1
 	@{ cd .pkgroot
-	find . | pax -rw $d }
+	find . | $PORTSYS_SU pax -rw $d }
 }
 
 # $* : void
