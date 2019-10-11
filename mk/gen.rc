@@ -16,6 +16,8 @@ fn gentmpfile {
 #!/bin/rc -e
 . $PORTS/mk/config.rc
 . $PORTS/mk/common.rc
+CPPFLAGS=($CPPFLAGS -I$PORTSYS_SYSPATH$INCDIR)
+LDFLAGS=($LDFLAGS -L$PORTSYS_SYSPATH$LIBDIR)
 EOF
 	echo $"tmpfile
 }
