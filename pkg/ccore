@@ -1,6 +1,6 @@
 [vars]
 name=ccore
-version=0.1
+version=0.2
 license=UNLICENSE
 description=Eltanin complementary core.
 
