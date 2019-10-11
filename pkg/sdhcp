@@ -1,7 +1,7 @@
 [vars]
 name=sdhcp
-version=master
-license=0.1
+version=0.1
+license=MIT
 description=A suckless dhcp client.
 cksum=d7fd3e1a831e01481e7b776ae9b3220139083f953a975a00c72c0d045340483fe082cfc97f09b502a0d31ad3eafc6757b0d7fe99318c211a4e08557183b6740e
 

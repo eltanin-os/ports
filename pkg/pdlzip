@@ -13,7 +13,9 @@ libc
 
 [build]
 portsys_mk_meth autohell
+portsys_mk_setflags CC=$"CC CFLAGS=$"CFLAGS CPPFLAGS=$"CPFLAGS LDFLAGS=$"LDFLAGS
 portsys_mk_exec
 
 [install]
 portsys_mk_exec install
+ln -s pdlzip $DESTDIR/$BINDIR/lzip

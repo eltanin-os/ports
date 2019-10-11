@@ -3,7 +3,7 @@ name=sinit
 version=1.1
 license=MIT
 description=A suckless init.
-cksum=8ffb5903480f73961170da6a261c9efa42e3046dbd2f4ca8ff9ae68c3466730823ef69b2abba5647c146c4fa9fb788ad11f10af95950eb457ee0b4d8f656aad5
+cksum=02750ae83829051382cc44ec0d2168e3e2b95679354b0358b9f083c04cf6a4e0eb37c192da0c2221a77584ba53b80527852d222accab82be40d87a7f6a1c5b8d
 
 [mirrors]
 http://downloads.sourceforge.net/project/eltanin-os/mirrors/sinit-$version.tar.lz

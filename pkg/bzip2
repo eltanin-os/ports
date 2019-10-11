@@ -15,7 +15,7 @@ libc
 portsys_hlp_sed Makefile\
     -e 's/$(PREFIX)/$(DESTDIR)$(PREFIX)/g'\
     -e 's/$(PREFIX)\/man/$(PREFIX)\/share\/man/g'
-portsys_mk_meth make
+portsys_mk_meth make replace
 portsys_mk_exec
 
 [install]
