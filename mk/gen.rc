@@ -55,7 +55,7 @@ __f=($CACHEDIR/$urlname)
 portsys_fetch $$__f $mirrors
 . $tmpdir/$pkg.vars
 portsys_cksum $$cksum $$__f
-portsys_explode $$__f
+if ([ -f $$__f ]) portsys_explode $$__f
 if ([ -z $$"src ]) src=$$name-$$version
 portsys_patch $$"src $$patches }
 EOF

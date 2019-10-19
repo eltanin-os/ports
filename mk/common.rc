@@ -185,8 +185,7 @@ fn portsys_explode {
 	case *'.tar.zz'  *'.tzz'
 		UNCOMPRESS=$ZZ
 	case *
-		portsys_io_warning extension $n is a unknown format
-		return
+		portsys_io_error extension $n is a unknown format
 	}
 	$UNCOMPRESS -- $"n | $UNTAR
 }
