@@ -6,7 +6,7 @@ description=A suckless init.
 cksum=02750ae83829051382cc44ec0d2168e3e2b95679354b0358b9f083c04cf6a4e0eb37c192da0c2221a77584ba53b80527852d222accab82be40d87a7f6a1c5b8d
 
 [mirrors]
-http://downloads.sourceforge.net/project/eltanin-os/mirrors/sinit-$version.tar.lz
+http://downloads.eltan.in.net/mirrors/sinit-$version.tar.lz
 
 [mdeps]
 libc

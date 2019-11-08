@@ -6,7 +6,7 @@ description=An alternative implementation of the plan 9 rc shell
 cksum=15e1a8df4cac2aa31771f47bde0c873db48cf4289d1e18b4f03a0556bda683ebb206e18fcf6592059016e9981c4d02b1484ec2460b19409d01a1056549b19f38
 
 [mirrors]
-http://downloads.sourceforge.net/project/eltanin-os/mirrors/rc-$version.tar.gz
+http://downloads.eltan.in.net/mirrors/rc-$version.tar.gz
 
 [mdeps]
 libc

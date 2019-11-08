@@ -9,7 +9,7 @@ cksum=66f82e6020a194c4e8ff064c3d446922383a8f9a21553db1b5871db5795b40197a44a21aa8
 ubase-remove_duplicated.patch
 
 [mirrors]
-http://downloads.sourceforge.net/project/eltanin-os/mirrors/ubase-$version.tar.lz
+http://downloads.eltan.in.net/mirrors/ubase-$version.tar.lz
 
 [mdeps]
 libc

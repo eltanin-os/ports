@@ -1,16 +1,21 @@
 [vars]
 name=venus
-version=0.1
+version=0.2
 license=UNLICENSE
 description=A simple package manager.
+cksum=7d59f30409c6a503c02529128a8cef8302e8a648f5cf4c8528d11315f58f78db8630d98ff20986831b5adb2c42554def7c888104e7993e3a83b736dc8e55c976
+
+[patches]
+venus-master.patch
 
 [mirrors]
-git http://git.tuxfamily.org/eltaninos/venus
+http://downloads.eltan.in.net/files/venus-$version.tar.lz
 
 [mdeps]
 tertium
 
 [build]
+CFLAGS=($CFLAGS -fno-builtin)
 portsys_mk_meth make replace
 portsys_mk_exec
 

@@ -1,9 +1,9 @@
 [vars]
 name=openssh
-version=8.0p1
+version=8.1p1
 license=BSD-2 ISC
 description=Open Source Secure shell client and server.
-cksum=2d70e1e404a9003cc9dd30a7b393e5ab3e999141f5e317fd1f999b973b8bbcf53d2440e1e1ba69c99a6c5a1de02cc327d02a264637360ea931d3a339ad77af95
+cksum=0bed9f0531cebd828591bc5017be21c85a3ba144e639f783127bf7f5171b2e7fc53752664dcdde9cc08846a751b243c074038de4a4b8b50e562babdf57a1260d
 
 [mirrors]
 https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-$version.tar.gz

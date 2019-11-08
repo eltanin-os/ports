@@ -1,11 +1,15 @@
 [vars]
 name=ccore
-version=0.2
+version=0.3
 license=UNLICENSE
 description=Eltanin complementary core.
+cksum=cc8c2eea3dd50891aac0b355bf791df51d3e1952b0b719fd68578349f2e568471983fcc1d2f13c0386908df58e254955d65050665d606e4903f34c155000de3b
+
+[patches]
+ccore-master.patch
 
 [mirrors]
-git http://git.tuxfamily.org/eltaninos/ccore
+http://downloads.eltan.in.net/files/ccore-$version.tar.lz
 
 [mdeps]
 ncurses

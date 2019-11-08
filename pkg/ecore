@@ -1,18 +1,20 @@
 [vars]
 name=ecore
-version=0.1
+version=0.2
 license=UNLICENSE
 description=Eltanin core utilities.
+cksum=a0e882579ed19de92493846cf288aa0bf23a57bbe54cd6365a90d7f5a347b94af5e57819f33988def8511da5ec406f93eb09e1fe269c467449a6b94519ac7ebc
 
 [mirrors]
-git http://git.tuxfamily.org/eltaninos/ecore
+http://downloads.eltan.in.net/files/ecore-$version.tar.lz
 
 [mdeps]
 tertium
 
 [build]
+CFLAGS=($CFLAGS -fno-builtin)
 portsys_mk_meth make replace
-portsys_mk_exec
+portsys_mk_exec ecore
 
 [install]
-portsys_mk_exec install
+portsys_mk_exec install-ecore

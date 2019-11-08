@@ -1,0 +1,21 @@
+diff --git a/Makefile b/Makefile
+index c3abc7d..df1185a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -97,6 +97,8 @@ EBIN=\
+ 	src/diff/diff\
+ 	src/expand/expand\
+ 	src/expand/unexpand\
++	src/grep/egrep\
++	src/grep/fgrep\
+ 	src/grep/grep\
+ 	src/kill/kill\
+ 	src/ls/ls\
+@@ -547,6 +549,7 @@ install-man:
+ install: all install-extra install-man
+ 	$(INSTALL) -dm 755 $(DESTDIR)/$(BINDIR)
+ 	$(INSTALL) -cm 755 $(BIN) $(EBIN) $(DESTDIR)/$(BINDIR)
++	ln -s test $(DESTDIR)/$(BINDIR)/[
+ 
+ clean:
+ 	rm -f $(BIN) $(EBIN) $(OBJ) $(LIB) inc/heirloom.h src/awk/proctab.c src/awk/ytab.h src/awk/ytab.c src/bc/bc.c src/expr/expr.c src/grep/egrep.c src/lex/parser.c y.tab.h
