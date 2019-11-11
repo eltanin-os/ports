@@ -5,6 +5,9 @@ license=UNLICENSE
 description=Eltanin system programming library.
 cksum=9fe39c3573cee64277df3564829bd26ba61aa7d94514d32ffffd3f56b38703e63dd8f26215a9c99952009f0ed371db2ea00f595007974ea81fec3034a3fea42f
 
+[patches]
+tertium-master.patch
+
 [mirrors]
 http://downloads.eltan.in.net/files/tertium-$version.tar.lz
 
