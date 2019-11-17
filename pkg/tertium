@@ -1,12 +1,9 @@
 [vars]
 name=tertium
-version=0.1
+version=0.2
 license=UNLICENSE
 description=Eltanin system programming library.
-cksum=9fe39c3573cee64277df3564829bd26ba61aa7d94514d32ffffd3f56b38703e63dd8f26215a9c99952009f0ed371db2ea00f595007974ea81fec3034a3fea42f
-
-[patches]
-tertium-master.patch
+cksum=a30c1ba41561a42ca9d14b9c5673fe16d785fd2415d5e803e2fae89bcc213542e0006bea1944f683714c2c3f12d5bf0f654a675f2a7920fe52e8e68f28db5568
 
 [mirrors]
 http://downloads.eltan.in.net/files/tertium-$version.tar.lz
@@ -16,7 +13,9 @@ libc
 
 [build]
 CFLAGS=($CFLAGS -fno-builtin)
-if ([ -d $PORTSYS_HOSTOS ] && [ -d $PORTSYS_HOSTARCH ]) {
+if ([ -d sys/$PORTSYS_HOSTOS ] && \
+    [ -f sys/$PORTSYS_HOSTOS/$PORTSYS_HOSTARCH.h.in ] && \
+    [ -f sys/$PORTSYS_HOSTOS/$PORTSYS_HOSTARCH.s]) {
 	portsys_hlp_sed config.mk\
 	    -e 's/^OSNAME  =.*/OSNAME='$"PORTSYS_HOSTOS'/g'\
 	    -e 's/^OBJTYPE =.*/OBJTYPE='$"PORTSYS_HOSTARCH'/g'
