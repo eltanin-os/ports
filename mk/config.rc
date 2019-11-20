@@ -10,7 +10,7 @@ YACC=(yacc -d)
 #YACC=(byacc -d)
 
 # COMPILE FLAGS
-CPPFLAGS=(-D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE -D_FILE_OFFSET_BITS'='64)
+CPPFLAGS=(-D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64)
 CFLAGS=-Os
 LDFLAGS=-static
 LOCALE=en_US.utf8
@@ -42,11 +42,11 @@ INSTALL=/usr/bin/install
 STRIP=strip
 
 # UNCOMPRESSION TOOLS
-BZ2=(bzip2 -dc)
-GZ=(pigz -dc)
+BZ2=(bzcat)
+GZ=(unpigz -c)
 LZ=(lzip -dc)
-XZ=(xz -dc)
-ZZ=(pigz -dc)
+XZ=(xzcat)
+ZZ=(unpigz -c)
 
 # OTHERS
 pkgsuf=pkg.vlz
