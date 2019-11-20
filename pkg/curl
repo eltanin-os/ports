@@ -5,6 +5,9 @@ license=MIT
 description=A tool for transferring data from URLs.
 cksum=c70301c043136c43e30f9359f7dcd53147522b85f7ce3a6192e0670efa84e0515f437878082fe3ac30943801b491c531f3a77ba2b2da3ff39d1538af2221c747
 
+[patches]
+curl-tools_check.patch
+
 [mirrors]
 http://curl.haxx.se/download/curl-$version.tar.bz2
 

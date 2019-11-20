@@ -1,0 +1,180 @@
+diff -Naur a/configure b/configure
+--- a/configure	Wed Nov  6 03:38:18 2019
++++ b/configure	Sun Nov 17 12:23:11 2019
+@@ -51,159 +51,31 @@
+ xc_msg_abrt='Can not continue.'
+ xc_msg_err='configure: error:'
+ 
+-#
+-# Verify that 'echo' command is available, otherwise abort.
+-#
+ 
+-xc_tst_str='unknown'
+-(`echo "$xc_tst_str" >/dev/null 2>&1`) && xc_tst_str='success'
+-case "x$xc_tst_str" in # ((
+-  xsuccess)
+-    :
+-    ;;
+-  *)
+-    # Try built-in echo, and fail.
+-    echo "$xc_msg_err 'echo' command not found. $xc_msg_abrt" >&2
+-    exit 1
+-    ;;
+-esac
+-
+ #
+-# Verify that 'test' command is available, otherwise abort.
++# Verify if necessary tools exist, otherwise abort
+ #
+ 
+-xc_tst_str='unknown'
+-(`test -n "$xc_tst_str" >/dev/null 2>&1`) && xc_tst_str='success'
+-case "x$xc_tst_str" in # ((
+-  xsuccess)
+-    :
+-    ;;
+-  *)
+-    echo "$xc_msg_err 'test' command not found. $xc_msg_abrt" >&2
+-    exit 1
+-    ;;
+-esac
++cat_ok='false'
++echo_ok='false'
++expr_ok='false'
++grep_ok='false'
+ 
+-#
+-# Verify that 'PATH' variable is set, otherwise abort.
+-#
++dirs="$(echo $PATH | tr ':' ' ')" # use tr, instead of checking for it
+ 
+-xc_tst_str='unknown'
+-(`test -n "$PATH" >/dev/null 2>&1`) && xc_tst_str='success'
+-case "x$xc_tst_str" in # ((
+-  xsuccess)
+-    :
+-    ;;
+-  *)
+-    echo "$xc_msg_err 'PATH' variable not set. $xc_msg_abrt" >&2
+-    exit 1
+-    ;;
+-esac
++for d in $dirs; do
++    for t in $tools; do
++        test -f $d/$t && { eval ${t}_ok='true'; }
++    done
++done
+ 
+-#
+-# Verify that 'expr' command is available, otherwise abort.
+-#
++for t in $tools; do
++    eval ${t}_ok || {
++    	echo "$xc_msg_err 'echo' command not found. $xc_msg_abrt" >&2
++        exit 1
++    }
++done
+ 
+-xc_tst_str='unknown'
+-xc_tst_str=`expr "$xc_tst_str" : '.*' 2>/dev/null`
+-case "x$xc_tst_str" in # ((
+-  x7)
+-    :
+-    ;;
+-  *)
+-    echo "$xc_msg_err 'expr' command not found. $xc_msg_abrt" >&2
+-    exit 1
+-    ;;
+-esac
+-
+-#
+-# Verify that 'sed' utility is found within 'PATH', otherwise abort.
+-#
+-
+-xc_tst_str='unknown'
+-xc_tst_str=`echo "$xc_tst_str" 2>/dev/null \
+-  | sed -e 's:unknown:success:' 2>/dev/null`
+-case "x$xc_tst_str" in # ((
+-  xsuccess)
+-    :
+-    ;;
+-  *)
+-    echo "$xc_msg_err 'sed' utility not found in 'PATH'. $xc_msg_abrt" >&2
+-    exit 1
+-    ;;
+-esac
+-
+-#
+-# Verify that 'grep' utility is found within 'PATH', otherwise abort.
+-#
+-
+-xc_tst_str='unknown'
+-(`echo "$xc_tst_str" 2>/dev/null \
+-  | grep 'unknown' >/dev/null 2>&1`) && xc_tst_str='success'
+-case "x$xc_tst_str" in # ((
+-  xsuccess)
+-    :
+-    ;;
+-  *)
+-    echo "$xc_msg_err 'grep' utility not found in 'PATH'. $xc_msg_abrt" >&2
+-    exit 1
+-    ;;
+-esac
+-
+-#
+-# Verify that 'tr' utility is found within 'PATH', otherwise abort.
+-#
+-
+-xc_tst_str="${xc_tab}98s7u6c5c4e3s2s10"
+-xc_tst_str=`echo "$xc_tst_str" 2>/dev/null \
+-  | tr -d "0123456789$xc_tab" 2>/dev/null`
+-case "x$xc_tst_str" in # ((
+-  xsuccess)
+-    :
+-    ;;
+-  *)
+-    echo "$xc_msg_err 'tr' utility not found in 'PATH'. $xc_msg_abrt" >&2
+-    exit 1
+-    ;;
+-esac
+-
+-#
+-# Verify that 'wc' utility is found within 'PATH', otherwise abort.
+-#
+-
+-xc_tst_str='unknown unknown unknown unknown'
+-xc_tst_str=`echo "$xc_tst_str" 2>/dev/null \
+-  | wc -w 2>/dev/null | tr -d "$xc_space$xc_tab" 2>/dev/null`
+-case "x$xc_tst_str" in # ((
+-  x4)
+-    :
+-    ;;
+-  *)
+-    echo "$xc_msg_err 'wc' utility not found in 'PATH'. $xc_msg_abrt" >&2
+-    exit 1
+-    ;;
+-esac
+-
+-#
+-# Verify that 'cat' utility is found within 'PATH', otherwise abort.
+-#
+-
+-xc_tst_str='unknown'
+-xc_tst_str=`cat <<_EOT 2>/dev/null \
+-  | wc -l 2>/dev/null | tr -d "$xc_space$xc_tab" 2>/dev/null
+-unknown
+-unknown
+-unknown
+-_EOT`
+-case "x$xc_tst_str" in # ((
+-  x3)
+-    :
+-    ;;
+-  *)
+-    echo "$xc_msg_err 'cat' utility not found in 'PATH'. $xc_msg_abrt" >&2
+-    exit 1
+-    ;;
+-esac
+ 
+ #
+ # Auto-detect and set 'PATH_SEPARATOR', unless it is already non-empty set.
