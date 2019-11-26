@@ -19,6 +19,10 @@ fn gentmpfile {
 CPPFLAGS=($CPPFLAGS -I$PORTSYS_SYSPATH$INCDIR)
 LDFLAGS=($LDFLAGS -L$PORTSYS_SYSPATH$LIBDIR)
 EOF
+	if (test -n $PORTSYS_EXTRAPATH) cat <<'EOF' >>$tmpfile
+CPPFLAGS=($CPPFLAGS -I$PORTSYS_EXTRAPATH$INCDIR)
+LDFLAGS=($LDFLAGS -L$PORTSYS_EXTRAPATH$LIBDIR)
+EOF
 	echo $"tmpfile
 }
 
@@ -55,8 +59,8 @@ __f=($CACHEDIR/$urlname)
 portsys_fetch $$__f $mirrors
 . $tmpdir/$pkg.vars
 portsys_cksum $$cksum $$__f
-if ([ -f $$__f ]) portsys_explode $$__f
-if ([ -z $$"src ]) src=$$name-$$version
+if (test -f $$__f) portsys_explode $$__f
+if (test -z $$"src) src=$$name-$$version
 portsys_patch $$"src $$patches }
 EOF
 	} >> $ffile
@@ -65,7 +69,7 @@ EOF
 # BUILD
 @{ . $tmpdir/$pkg.vars
 PORTSYS_TMP_BUILDDIR=`{mktemp -u build.XXXXXXXXXX}
-if ([ -z $$"src ]) src=$$name-$$version
+if (test -z $$"src) src=$$name-$$version
 cd $$"src
 PORTSYS_ROOTPWD=`{pwd}
 EOF
@@ -87,14 +91,37 @@ dbdir=$"PORTSYS_DBDESTDIR
 dbfile=$"PORTSYS_DBDESTDIR/$"name
 @{
 	cd $PORTSYS_ROOTPWD
-	tmp=`{mktemp}
-	portsys_gendb $"dbdir >[1] $"tmp
-	$PORTSYS_SU mv $tmp $"dbfile
+	portsys_prepare
+	portsys_split
 EOF
 	cat <<EOF
-	if ($OPKG) portsys_pack $$"PORTSYS_PKGDESTDIR
-	if ($OREL) portsys_reflectfs $$"PORTSYS_SYSPATH
-}}}
+	OREL=$OREL
+	ODREL=$ODREL
+	OPKG=$OPKG
 EOF
+	if ($ODEF) cat <<'EOF'
+	if (test -d '.pkgroot') @{
+		tmp=`{mktemp}
+		portsys_gendb .pkgroot $"dbdir >[1] $"tmp
+		$PORTSYS_SU mv $tmp $"dbfile
+		if ($OPKG) portsys_pack .pkgroot $"PORTSYS_PKGDESTDIR
+		if ($OREL) portsys_reflectfs .pkgroot $"PORTSYS_SYSPATH
+	}
+EOF
+	if ($ODEV) cat <<'EOF'
+	if (test -d '.pkgroot_dev') @{
+		description=$"description^' <DEVELOPMENT>'
+		name=$"name^'-dev'
+		tmp=`{mktemp}
+		portsys_gendb .pkgroot_dev $"dbdir >[1] $"tmp
+		$PORTSYS_SU mv $tmp $"dbfile-dev
+		if ($OPKG) portsys_pack .pkgroot_dev $"PORTSYS_PKGDESTDIR
+		if ($ODREL) {
+			if ($ONODREL) portsys_reflectfs .pkgroot_dev $PORTSYS_TMPSYSPATH
+			if not portsys_reflectfs .pkgroot_dev $"PORTSYS_SYSPATH
+		}
+	}
+EOF
+	printf '}}}'
 	} >> $bfile
 }

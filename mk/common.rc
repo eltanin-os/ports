@@ -113,7 +113,7 @@ fn portsys_hlp_envsh @{
 # $1 : directory
 # $* : patches
 fn portsys_patch {
-	if ([ $#* -lt 2 ]) return 0
+	if (test $#* -lt 2) return 0
 	d=$1
 	shift
 	@{ cd $"d
@@ -126,13 +126,15 @@ fn portsys_patch {
 # $1 : sum
 # $2 : file
 fn portsys_cksum {
-	if ([ $#* -ne 2 ]) return 0
+	if (test $#* -ne 2) return 0
 	lsum=$1
 	file=$2
-	if (![ -f $"file ]) && portsys_io_error $"2: $"file does not exist
+	if (! test -f $"file) portsys_io_error $"2: $"file does not exist
 	rsum=`{$CKSUM $file}
-	if (! ~ $rsum(2) $"lsum ]) portsys_io_error $"2: checksum mismatch
-	true
+	if (! ~ $rsum(2) $"lsum) {
+		rm -f $"file
+		portsys_io_error $"2: checksum mismatch
+	}
 }
 
 # $1 : filename
@@ -141,7 +143,7 @@ fn portsys_fetch {
 	filename=$1
 	url=$2
 	shift 2
-	if ([ -f $"filename ]) return
+	if (test -f $"filename) return
 	protocol=`{printf '%.3s' $"url}
 	# for now treat only git as a exception
 	switch ($protocol) {
@@ -175,26 +177,28 @@ fn portsys_explode {
 	shift
 	switch ($n) {
 	case *'.tar.bz2' *'.tbz2'
-		UNCOMPRESS=$BZ2
+		UNCOMPRESS=$UBZ2
 	case *'.tar.gz'  *'.tgz'
-		UNCOMPRESS=$GZ
+		UNCOMPRESS=$UGZ
 	case *'.tar.lz'  *'.tlz'
-		UNCOMPRESS=$LZ
+		UNCOMPRESS=$ULZ
 	case *'.tar.xz'  *'.txz'
-		UNCOMPRESS=$XZ
+		UNCOMPRESS=$UXZ
 	case *'.tar.zz'  *'.tzz'
-		UNCOMPRESS=$ZZ
+		UNCOMPRESS=$UZZ
 	case *
 		portsys_io_error extension $n is a unknown format
 	}
 	$UNCOMPRESS -- $"n | $UNTAR
 }
 
-# $1 : database path
+# $1 : source directory
+# $2 : database path
 fn portsys_gendb {
-	dbdir=$1
+	src=$"1
+	dbdir=$"2
 	shift
-	size=`{du -sk .pkgroot | $AWK '{printf "%u", $1*1024}'}
+	size=`{du -sk $src | $AWK '{printf "%u", $1*1024}'}
 	cat <<EOF
 # name: $name
 # version: $version
@@ -216,12 +220,12 @@ EOF
 		printf '\t%s\n' $rdeps
 	}
 	@{
-		cd .pkgroot
+		cd $src
 		files=`{find . | cut -c 3-} # may overflow
 		if (! ~ $#files 0) {
 			printf 'files:\n'
 			for (f in $files) {
-				if ([ -d $"f ]) continue
+				if (test -d $"f) continue
 				f=`{venus-cksum $f}
 				printf '\t%s\n' $"f
 			}
@@ -229,19 +233,23 @@ EOF
 	}
 }
 
-# $1 : directory
+# $1 : source directory
+# $2 : target directory
 fn portsys_pack {
-	d=$1/$name'#'$version.$pkgsuf
+	src=$"1
+	dest=$"2/$name'#'$version.$pkgsuf
 	shift
-	@{ cd .pkgroot
-	$PACK . | $COMPRESS > $"d }
+	@{ cd $src
+	$PACK . | $COMPRESS > $dest }
 }
 
-# $1 : directory
+# $1 : source directory
+# $2 : target directory
 fn portsys_reflectfs {
-	d=$"1
-	@{ cd .pkgroot
-	find . | $PORTSYS_SU pax -rw $d }
+	src=$"1
+	dest=$"2
+	@{ cd $src
+	find . | $PORTSYS_SU pax -rw $dest }
 }
 
 # $* : void
@@ -249,4 +257,34 @@ fn portsys_blacklist {
 	pattern=`{cat $"PORTS/mk/blacklist}
 	find . -type f '(' -name '' `{printf ' -o -name %s' $pattern} ')' -exec rm -f '{}' +
 	find . -type d -exec rmdir -p '{}' + >[2]/dev/null || true
+}
+
+# $* : void
+fn portsys_prepare {
+	@{ cd .pkgroot
+	if (test -d .$BINDIR)
+		find .$"BINDIR -type f -exec $STRIP --strip-all  '{}' + || true
+	if (test -d .$MANDIR) {
+		find .$"MANDIR -type f -name '*.[0-9]' -exec $ZZ '{}' + || true
+		# fix broken symbolic links
+		MLINKS=`{find ./$"MANDIR -type l}
+		for (l in $MLINKS) {
+			dir=`{dirname $"l}
+			file=`{basename $"l}
+			lp=`{basename `{readlink $"l}}
+			@{ cd $"dir
+			ln -sf $"lp $"file }
+		}
+	}}
+}
+
+# $* : void
+fn portsys_split {
+	mkdir -p .pkgroot_dev$MANDIR
+	@{ cd .pkgroot
+	if (test -d .$"LIBDIR) mv .$"LIBDIR ../.pkgroot_dev
+	if (test -d .$"INCDIR) mv .$"INCDIR ../.pkgroot_dev
+	if (test -d .$"MANDIR/man2) mv .$"MANDIR/man2 ../.pkgroot_dev$"MANDIR
+	if (test -d .$"MANDIR/man3) mv .$"MANDIR/man3 ../.pkgroot_dev$"MANDIR }
+	if (~ `{du -sk .pkgroot_dev} 0) rm -Rf .pkgroot_dev
 }

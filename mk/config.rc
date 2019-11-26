@@ -41,12 +41,19 @@ SU=doas
 INSTALL=/usr/bin/install
 STRIP=strip
 
+# COMPRESSION TOOLS
+BZ2=(bzip2 -9)
+GZ=(pigz -9)
+LZ=(lzip -9)
+XZ=(xz -9)
+ZZ=(pigz -z9)
+
 # UNCOMPRESSION TOOLS
-BZ2=(bzcat)
-GZ=(unpigz -c)
-LZ=(lzip -dc)
-XZ=(xzcat)
-ZZ=(unpigz -c)
+UBZ2=(bzcat)
+UGZ=(unpigz -c)
+ULZ=(lzip -dc)
+UXZ=(xzcat)
+UZZ=(unpigz -c)
 
 # OTHERS
 pkgsuf=pkg.vlz
