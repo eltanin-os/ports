@@ -1,15 +1,15 @@
 [vars]
 name=curl
-version=7.66.0
+version=7.67.0
 license=MIT
 description=A tool for transferring data from URLs.
-cksum=c70301c043136c43e30f9359f7dcd53147522b85f7ce3a6192e0670efa84e0515f437878082fe3ac30943801b491c531f3a77ba2b2da3ff39d1538af2221c747
+cksum=851fe3fdd191301dc10b731490260fde66dff4821a6e31d96c41b95ab0d80d8794b0a2639f299e78a77002a16fac63ee9986faa42a0fae280cb9829534b4782d
 
 [patches]
 curl-tools_check.patch
 
 [mirrors]
-http://curl.haxx.se/download/curl-$version.tar.bz2
+http://curl.haxx.se/download/curl-$version.tar.gz
 
 [rdeps]
 ca-certificates#*
