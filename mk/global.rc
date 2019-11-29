@@ -1,0 +1,94 @@
+#!/bin/rc
+
+#
+# Mk routines
+#
+
+# $1 : method
+# $* : flags
+fn portsys_mk_meth {
+	PORTSYS_MK_METHOD=$1
+	shift
+	switch ($PORTSYS_MK_METHOD) {
+	case 'autohell'
+		PORTSYS_MK_FLAGS=$*
+	case 'cmake'
+		PORTSYS_MK_FLAGS=$*
+	case 'make'
+		PORTSYS_MK_FLAGS=$*
+	case *
+		portsys_io_error unknown build method
+	}
+}
+
+# $* : flags
+fn portsys_mk_setflags {
+	switch ($PORTSYS_MK_METHOD) {
+	case 'autohell'
+		PORTSYS_MK_AUTO_FLAGS=$*
+	case 'cmake'
+		PORTSYS_MK_CMAKE_FLAGS=$*
+	case 'make'
+		PORTSYS_MK_MAKE_FLAGS=$*
+	case *
+		portsys_io_error unknown build method
+	}
+}
+
+# $* : operation
+fn portsys_mk_exec {
+	switch ($PORTSYS_MK_METHOD) {
+	case 'autohell'
+		op=autohell.rc
+	case 'cmake'
+		op=cmake.rc
+	case 'make'
+		op=make.rc
+	case *
+		portsys_io_error unknown build method
+	}
+	$"PORTS/mk/meth/$"op $*
+}
+
+#
+# Helper functions
+#
+
+# $1 : filename
+# $* : args
+fn portsys_hlp_sed {
+	fd=$1
+	shift
+	tmp=`{mktemp}
+	$SED $* <$fd >$"tmp
+	mv $"tmp $"fd
+}
+
+# $* : void
+fn portsys_hlp_envsh @{
+	AR=$"AR             \
+	CC=$"CC             \
+	CXX=$"CXX           \
+	CFLAGS=$"CFLAGS     \
+	CPPFLAGS=$"CPPFLAGS \
+	LDFLAGS=$"LDFLAGS   \
+	YACC=$"YACC         \
+	STRIP=$"STRIP       \
+	RANLIB=$"RANLIB     \
+	PREFIX=$"PREFIX     \
+	BINDIR=$"BINDIR     \
+	LIBDIR=$"LIBDIR     \
+	ETCDIR=$"ETCDIR     \
+	DFLDIR=$"DFLDIR     \
+	MANDIR=$"MANDIR     \
+	INCDIR=$"INCDIR     \
+	$*
+}
+
+# $1 : directory
+# $2 : pattern
+fn portsys_hlp_findpattern {
+	dir=$"1
+	shift
+	find $dir -type f '(' -name '' `{printf ' -o -name %s' $*} ')'
+}

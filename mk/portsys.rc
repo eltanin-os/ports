@@ -8,142 +8,150 @@ if (test -z $"PORTS) {
 }
 
 . $PORTS/mk/config.rc
-. $PORTS/mk/common.rc
+. $PORTS/mk/global.rc
+. $PORTS/mk/local.rc
 
 fn sigexit {
-	rm -Rf $bfile $ffile $tmpdir $tmpsysdir
+	rm -Rf $tmpbuild $tmpdir
 }
-
-OPKG=false
-OTMPSYS=false
-OCACHE=false
-OFILE=false
-ONODREL=false
-OREL=false
-ODREL=false
-CACHEDIR=''
-BUILDFILE=''
 
 if (~ $#* 0) portsys_io_error missing action
 
+DI=false
+DP=false
+
 switch ($1) {
 case package
-	ODREL=true
-	ONODREL=true
-	OPKG=true
+	OBP=true
+	ODP=true
 case install
-	ODREL=true
-	OREL=true
+	OBI=true
+	ODI=true
 case *
 	portsys_io_error unknown action
 }
 
-shift
+AAV=()
+DAV=()
+KP=false
+CACHEDIR=''
+EXTRAINC=''
+EXTRALIB=''
+PKGPATH=''
+SYSPATH=''
 
+shift
 while (~ $1 -*) {
-	switch($1) {
-	case '-B'
-		portsys_io_message not installing development files
-		ONODREL=true
-	case '-L'
-		portsys_io_message using local environment
-		OTMPSYS=true
-	case '-d'
+	for (opt in `{printf '%s' $1 | fold -w1}) switch($opt) {
+	case 'A':
+		if (test -z $"2) portsys_io_error no packages given
+		AAV=(`{echo $2})
+		shift
+	case 'D':
+		if (test -z $"2) portsys_io_error no packages given
+		DAV=(`{echo $2})
+		shift
+	case 'd'
 		if (test -z $"2) portsys_io_error no cache directory given
 		portsys_io_message using cache directory
-		OCACHE=true
-		CACHEDIR=$2
+		CACHEDIR=$"2
 		shift
-	case '-f'
-		if (test -z $"2) portsys_io_error no file given
-		portsys_io_message using build file
-		OFILE=true
-		BUILDFILE=$2
-	case '-*'
+	case 'e'
+		if (test -z $"2) portsys_io_error no directory given
+		portsys_io_message using a extra directory
+		EXTRAINC=-I$"2$"INCDIR
+		EXTRALIB=-L$"2$"LIBDIR
+		shift
+	case 'k'
+		portsys_io_message keeping dependencies
+		KP=true
+	case 'p'
+		portsys_io_message portsys_io_error no directory given
+		PKGPATH=$"2
+		shift
+	case 'r'
+		if (test -z $"2) portsys_io_error no directory given
+		portsys_io_message alternative root directory set
+		SYSPATH=$"2
+		shift
+	case '-'
+		;
+	case *
 		portsys_io_error unknown flag
 	}
 	shift
 }
 
 if (~ $#* 0) portsys_io_error no arguments given
+if (test $#* -gt 1) portsys_io_error too much arguments
+BAV=(`{echo $1})
 
-. $PORTS/mk/gen.rc
+tmpbuild=`{mktemp} || portsys_io_error failed to obtain a temporary file.
+chmod +x $"tmpbuild
+tmpdir=`{mktemp -d} || portsys_io_error failed to obtain a temporary directory.
 
-bfile=`{gentmpfile}
-ffile=`{gentmpfile}
-vdir=`{mktemp -d} || portsys_io_error failed to obtain temporary directory
-tmpdir=$vdir
-
-if ($OTMPSYS) {
-	PORTSYS_TMPSYSPATH=`{mktemp -d} ||\
-	    portsys_io_error failed to obtain temporary directory
-	cat <<EOF >>$bfile
-CPPFLAGS=($$CPPFLAGS -I$PORTSYS_TMPSYSPATH$$INCDIR)
-LDFLAGS=($$LDFLAGS -L$PORTSYS_TMPSYSPATH$$LIBDIR)
+cat <<EOF >$tmpbuild
+#!/bin/rc
+. $PORTS/mk/config.rc
+. $PORTS/mk/global.rc
+CPPFLAGS=($CPPFLAGS -I$tmpdir$INCDIR -I$PORTSYS_SYSPATH$INCDIR $EXTRAINC)
+LDFLAGS=($LDFLAGS -L$tmpdir$LIBDIR -L$PORTSYS_SYSPATH$LIBDIR $EXTRALIB)
+PORTSYS_ROOTPWD=`{pwd}
 EOF
+
+CURDIR=`{pwd}
+if ($ODP) {
+	if (test -z $"PKGPATH) PKGPATH=$"CURDIR'/portsys_pkgs'
+	if (! test -d $"PKGPATH) mkdir -p $"PKGPATH
+	TDBDIR=$"PKGPATH
 }
 
-if (test -z $"PORTSYS_SYSPATH) PORTSYS_SYSPATH=/
-
-if ($OREL && ! test -w $"PORTSYS_SYSPATH) {
-	if (test -z $"SU) portsys_io_error failed to write to syspath.
-	PORTSYS_SU=$SU
-}
-
-if ($OPKG) {
-	if (test -z $PORTSYS_PKGDESTDIR) PORTSYS_PKGDESTDIR=`{pwd}^/portsys_pkgs
-	if (test -z $PORTSYS_DBDESTDIR) PORTSYS_DBDESTDIR=$PORTSYS_PKGDESTDIR
-	if (! test -d $PORTSYS_DBDESTDIR) mkdir -p $PORTSYS_DBDESTDIR
-	PKGVARS=`{cat <<EOF
-PORTSYS_PKGDESTDIR=$PORTSYS_PKGDESTDIR
-PORTSYS_DBDESTDIR=$PORTSYS_DBDESTDIR
-EOF
-	}
-}
-
-if (test -z $"PORTSYS_DBDESTDIR) PORTSYS_DBDESTDIR=$"DBDIR
-if (! test -d $"PORTSYS_DBDESTDIR) $PORTSYS_SU mkdir -p $"PORTSYS_DBDESTDIR
-
-PORTSYS_HOSTOS=`{uname -s | awk '{print tolower($1)}'}
-PORTSYS_HOSTARCH=`{uname -m}
-
-if (test -z $"CACHEDIR) CACHEDIR=`{pwd}^/portsys_cache
+if (test -z $"CACHEDIR) CACHEDIR=$"CURDIR'/portsys_cache'
 if (! test -d $"CACHEDIR) mkdir -p $"CACHEDIR
+if (test -z $"SYSPATH) SYSPATH=/
+if (test -z $"TDBDIR) TDBDIR=$"DBDIR
+DEVPATH=$SYSPATH
+DEVDBDIR=$DBDIR
 
-if ($OFILE) {
-	L=(`{gensection $"1}^'-dev' `{gensection $"1 all}^'-dev')
-	*=(`{gensection $"1 dev}^':dev' `{gensection $"1 all} `{gensection $"1 bin}^':bin')
-}
-
-portsys_io_message generating script files
+DPAV=`{portsys_arg_deps $"DAV' '$"AAV $BAV}
 @{
-	ODEF=false
-	ODEV=false
-	for (p in $*) @{
-		av=(`{echo $p | tr ':' ' '})
-		if (~ $#av 1) {
-			ODEF=true
-			ODEV=true
-			ODREL=true
-		}
-		if (~ $av(2) 'dev') {
-			ODEV=true
-			ODREL=true
-		}
-		if (~ $av(2) 'bin') ODEF=true
-		genpkg $av(1)
+	if (!$KP) {
+		DEVPATH=$tmpdir
+		DEVDBDIR=$"tmpdir$"DBDIR
+		mkdir -p $DEVDBDIR
+		ODP=false
+	}
+	if (~ $#DAV 0) DAV=' '
+	DEV=true
+	ODI=true
+	for (dep in $DPAV) {
+		BIN=false
+		if (~ ' '$"BAV' ' *' '$"dep' '*) BIN=true
+		portsys_gen_pkg $dep
 	}
 }
 
-portsys_io_message starting fetch process
-@{ cd $"tmpdir
-$"ffile } || portsys_io_error fetch process failed
-portsys_io_message starting build process
-@{ cd $"tmpdir
-$"bfile } || portsys_io_error build process failed
-
-if ($ONODREL) @{
-	portsys_io_message cleaning non-necessary database files
-	cd $PORTSYS_DBDESTDIR
-	rm -f -- $L
+@{
+	BIN=true
+	DEV=true
+	for (pkg in $AAV) portsys_gen_pkg $pkg
 }
+
+@{
+	BIN=false
+	DEV=true
+	for (pkg in $DAV) portsys_gen_pkg $pkg
+}
+
+@{
+	BIN=true
+	DEV=false
+	for (pkg in $BAV) {
+		if (~ ' '$"DPAV' ' *' '$"pkg' '*) continue
+		portsys_gen_pkg $pkg
+	}
+}
+
+portsys_io_message executing the build script
+@{ cd $tmpdir
+$tmpbuild }

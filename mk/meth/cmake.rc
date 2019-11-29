@@ -5,11 +5,10 @@ _P=$CPPFLAGS
 _L=$LDFLAGS
 
 . $PORTS/mk/config.rc
-. $PORTS/mk/common.rc
 
-if ([ -z $"_C ]) _C=$CFLAGS
-if ([ -z $"_P ]) _P=$CPPFLAGS
-if ([ -z $"_L ]) _L=$LDFLAGS
+if (test -z $"_C) _C=$CFLAGS
+if (test -z $"_P) _P=$CPPFLAGS
+if (test -z $"_L) _L=$LDFLAGS
 
 dir=$"PORTSYS_TMP_BUILDDIR
 mkdir $"dir
@@ -34,7 +33,7 @@ case *'-Os'*
 if (~ $"1 *install*) {
 	cmake --build . --target $*
 }; if not @{
-	if (![ -n $"PREFIX ]) PREFIX='/'
+	if (! test -n $"PREFIX) PREFIX='/'
 	env -i --                           \
 	    PATH=$"PATH                     \
 	    CFLAGS=$"_C                     \

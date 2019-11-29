@@ -5,45 +5,44 @@ _P=$CPPFLAGS
 _L=$LDFLAGS
 
 . $PORTS/mk/config.rc
-. $PORTS/mk/common.rc
 
-if ([ -z $"_C ]) _C=$CFLAGS
-if ([ -z $"_P ]) _P=$CPPFLAGS
-if ([ -z $"_L ]) _L=$LDFLAGS
+if (test -z $"_C) _C=$CFLAGS
+if (test -z $"_P) _P=$CPPFLAGS
+if (test -z $"_L) _L=$LDFLAGS
 
 for (flag in $PORTSYS_MK_FLAGS) {
 	switch ($flag) {
 	case 'nocppflags'
 		_C=($_C $_P)
 	case 'replace'
-		_A=('CFLAGS='$"_C 'CPPFLAGS='$"_P 'LDFLAGS='$"_L)
+		_A=(CFLAGS=$"_C CPPFLAGS=$"_P LDFLAGS=$"_L)
 		PORTSYS_MK_MAKE_FLAGS=($PORTSYS_MK_MAKE_FLAGS $_A)
 	}
 }
 
 @{
-env -i --                     \
-    PATH=$"PATH               \
-    INSTALL=$"INSTALL         \
-    CFLAGS=$"_C               \
-    CPPFLAGS=$"_P             \
-    LDFLAGS=$"_L              \
-    LDLIBS=$"LDLIBS           \
-    make -j $nprocs           \
-    AR=$"AR                   \
-    CC=$"CC                   \
-    CXX=$"CXX                 \
-    YACC=$"YACC               \
-    STRIP=$"STRIP             \
-    RANLIB=$"RANLIB           \
-    PREFIX=$"PREFIX           \
-    BINDIR=$"BINDIR           \
-    LIBDIR=$"LIBDIR           \
-    ETCDIR=$"ETCDIR           \
-    DFLDIR=$"DFLDIR           \
-    MANDIR=$"MANDIR           \
-    INCDIR=$"INCDIR           \
-    DESTDIR=$"DESTDIR         \
-    $PORTSYS_MK_MAKE_FLAGS    \
+env -i --                  \
+    PATH=$"PATH            \
+    INSTALL=$"INSTALL      \
+    CFLAGS=$"_C            \
+    CPPFLAGS=$"_P          \
+    LDFLAGS=$"_L           \
+    LDLIBS=$"LDLIBS        \
+    make -j $nprocs        \
+    AR=$"AR                \
+    CC=$"CC                \
+    CXX=$"CXX              \
+    YACC=$"YACC            \
+    STRIP=$"STRIP          \
+    RANLIB=$"RANLIB        \
+    PREFIX=$"PREFIX        \
+    BINDIR=$"BINDIR        \
+    LIBDIR=$"LIBDIR        \
+    ETCDIR=$"ETCDIR        \
+    DFLDIR=$"DFLDIR        \
+    MANDIR=$"MANDIR        \
+    INCDIR=$"INCDIR        \
+    DESTDIR=$"DESTDIR      \
+    $PORTSYS_MK_MAKE_FLAGS \
     $*
 }

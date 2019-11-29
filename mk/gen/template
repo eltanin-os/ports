@@ -1,0 +1,52 @@
+# PACKAGE: %package%
+@{
+	%vars%
+	if (test -z $"src) src=$name-$version
+	# FETCH
+	@{
+		portsys_utils_fetch %file% %mirrors%
+		portsys_utils_cksum $cksum %file%
+		if (test -f %file%) portsys_utils_explode %file%
+		portsys_utils_patch $src %patches%
+	}
+	# BUILD
+	@{
+		cd $src
+		PORTSYS_TMP_BUILDDIR=`{mktemp -u build.XXXXXXXXXX}
+		ROOTPWD=`{pwd}
+		%build%
+		# INSTALL
+		@{
+			DESTDIR=$ROOTPWD/.pkgroot
+			%install%
+			@{
+				cd $DESTDIR
+				portsys_pkg_blacklist
+			}
+		}
+		portsys_pkg_prepare
+		portsys_pkg_split
+%IFBLK BIN
+		@{
+			tmp=`{mktemp}
+			portsys_pkg_createdb .pkgroot >[1] $"tmp
+			@{ portsys_utils_perm %dbdir%
+			$PORTSYS_SU mv $tmp %dbdir%/$"name }
+%IF OBP			portsys_pkg_pack .pkgroot %pkgdir%
+%IF OBI			portsys_pkg_install .pkgroot %syspath%
+		}
+%END
+%IFBLK DEV
+		@{
+			description=$"description' <DEVELOPMENT>'
+			name=$"name'-dev'
+			tmp=`{mktemp}
+			portsys_pkg_createdb .pkgroot_dev >[1] $"tmp
+			@{ portsys_utils_perm %dev_dbdir%
+			$PORTSYS_SU mv $tmp %dev_dbdir%/$"name }
+%IF ODP			portsys_pkg_pack .pkgroot_dev %pkgdir%
+%IF ODI			portsys_pkg_install .pkgroot_dev %dev_syspath%
+		}
+%END
+	}
+}

@@ -1,0 +1,285 @@
+#!/bin/rc
+. $PORTS/mk/config.rc
+
+#
+# Arg routines
+#
+
+# $1: list
+# $2: package
+# $3: explicit (true/false)
+fn portsys_arg_dep {
+	if (~ ' '$"1' ' *' '$"2' '*) return
+	if (test -e $"DBDIR/$"2'-dev' || test -e $"PORTSYS_ROOTPWD/$"2'-dev') return
+	list=(' ')
+	deps=(`{portsys_gen_section $PORTS/pkg/$"2 mdeps})
+	for (dep in $deps) list=($list `{portsys_arg_dep $"1' '$"list $"dep false})
+	echo $"list
+	if (!$"3) echo $"2
+}
+
+# $1: list
+# $*: packages
+fn portsys_arg_deps {
+	list=($1)
+	shift
+	for (dep in $*) list=($list `{portsys_arg_dep $"list $"dep true})
+	echo $list
+}
+
+#
+# Io routines
+#
+
+# $* : message
+fn portsys_io_error {
+	echo $argv0: '<error>' $* >[1=2]
+	exit 1
+}
+
+# $*: message
+fn portsys_io_message {
+	echo $argv0: '<message>' $*
+}
+
+# $*: message
+fn portsys_io_warning {
+	echo $argv0: '<warning>' $* >[1=2]
+}
+
+#
+# Util routines
+#
+
+# $1 : directory
+# $* : patches
+fn portsys_utils_patch {
+	if (test $#* -lt 2) return 0
+	d=$1
+	shift
+	@{ cd $"d
+	for (p in $*) {
+		patch -p1 < $"PORTS/patches/$"p ||\
+		    portsys_io_error failed to apply patch
+	}}
+}
+
+# $1 : sum
+# $2 : file
+fn portsys_utils_cksum {
+	if (test $#* -ne 2) return 0
+	lsum=$1
+	file=$2
+	if (! test -f $"file) portsys_io_error $"2: $"file does not exist
+	rsum=`{$CKSUM $file}
+	if (! ~ $rsum(2) $"lsum) {
+		rm -f $"file
+		portsys_io_error $"2: checksum mismatch
+	}
+}
+
+# $1 : filename
+# $* : url
+fn portsys_utils_fetch {
+	filename=$1
+	url=$2
+	shift 2
+	if (test -f $"filename) return
+	protocol=`{printf '%.3s' $"url}
+	# for now treat only git as a exception
+	switch ($protocol) {
+	case 'git'
+		url=$1
+		d=$"name-$"version
+		url=`{printf '%s' $"url | sed 's/.git$//' }
+		git clone $"url $"d
+		@{ olddir=`{pwd}
+		cd $"d
+		git checkout tags/v$"version }
+	case *
+		# do not check errors for now, checksum will catch them later
+		$FETCH $"filename $"url
+	}
+}
+
+# $1 : file
+fn portsys_utils_explode {
+	n=$1
+	shift
+	switch ($n) {
+	case *'.tar.bz2' *'.tbz2'
+		UNCOMPRESS=$UBZ2
+	case *'.tar.gz'  *'.tgz'
+		UNCOMPRESS=$UGZ
+	case *'.tar.lz'  *'.tlz'
+		UNCOMPRESS=$ULZ
+	case *'.tar.xz'  *'.txz'
+		UNCOMPRESS=$UXZ
+	case *'.tar.zz'  *'.tzz'
+		UNCOMPRESS=$UZZ
+	case *
+		portsys_io_error extension $n is a unknown format
+	}
+	$UNCOMPRESS -- $"n | $UNTAR
+}
+
+# $1: directory
+fn portsys_utils_perm {
+	if (! test -w $"1) PORTSYS_SU=$"SU
+	if not PORTSYS_SU='exec'
+}
+
+#
+# Pkg Routines
+#
+
+# $1 : source directory
+# $2 : database path
+fn portsys_pkg_createdb {
+	src=$"1
+	shift
+	size=`{du -sk $src | $AWK '{printf "%u", $1*1024}'}
+	printf '# %s: %s\n'           \
+	    name $"name               \
+	    version $"version         \
+	    license $"license         \
+	    description $"description \
+	    size $"size
+	if (! ~ $#mdeps 0) {
+		echo makedeps:
+		for (d in $mdeps) {
+			d=$"d'-dev'
+			if (test -e $"DBDIR/$"d) dbdir=$"DBDIR
+			if not dbdir=$"PORTSYS_ROOTPWD$"DBDIR
+			v=`{$SED -n 's/# version://p' $"dbdir/$"d}
+			d=$"d'#'$"v
+			printf '\t%s\n' $"d
+		}
+	}
+	if (! ~ $#rdeps 0) {
+		echo rundeps:
+		printf '\t%s\n' $rdeps
+	}
+	@{
+		cd $src
+		files=`{find . | cut -c 3-} # may overflow
+		if (! ~ $#files 0) {
+			echo files:
+			for (f in $files) {
+				if (test -d $"f) continue
+				f=`{venus-cksum $f}
+				printf '\t%s\n' $"f
+			}
+		}
+	}
+}
+
+# $1 : source directory
+# $2 : target directory
+fn portsys_pkg_pack {
+	src=$"1
+	dest=$"2/$name'#'$version.$pkgsuf
+	shift
+	@{ cd $src
+	$PACK . | $COMPRESS > $dest }
+}
+
+# $1 : source directory
+# $2 : target directory
+fn portsys_pkg_install {
+	src=$"1
+	dest=$"2
+	@{ cd $src
+	portsys_utils_perm $dest
+	find . | $PORTSYS_SU pax -rw $dest }
+}
+
+
+
+# $* : void
+fn portsys_pkg_blacklist {
+	rm -f `{portsys_hlp_findpattern . `{cat $"PORTS/mk/blacklist}}
+	find . -type d -exec rmdir -p '{}' + >[2]/dev/null || true
+}
+
+# $* : void
+fn portsys_pkg_prepare {
+	@{ cd .pkgroot
+	if (test -d .$BINDIR)
+		find .$"BINDIR -type f -exec $STRIP --strip-all '{}' + || true
+	if (test -d .$MANDIR) {
+		mf=`{portsys_hlp_findpattern .$"MANDIR '*.'^(1 2 3 4 5 6 7 8)}
+		if (test -n $"mf) $ZZ $mf
+		# fix broken symbolic links
+		MLINKS=`{find ./$"MANDIR -type l}
+		for (l in $MLINKS) {
+			dir=`{dirname $"l}
+			file=`{basename $"l}
+			lp=`{basename `{readlink $"l}}
+			@{ cd $"dir
+			ln -sf $"lp $"file }
+		}
+	}}
+}
+
+# $* : void
+fn portsys_pkg_split {
+	mkdir -p .pkgroot_dev$MANDIR
+	@{ cd .pkgroot
+	if (test -d .$"LIBDIR) mv .$"LIBDIR ../.pkgroot_dev
+	if (test -d .$"INCDIR) mv .$"INCDIR ../.pkgroot_dev
+	if (test -d .$"MANDIR/man2) mv .$"MANDIR/man2 ../.pkgroot_dev$"MANDIR
+	if (test -d .$"MANDIR/man3) mv .$"MANDIR/man3 ../.pkgroot_dev$"MANDIR }
+	if (~ `{du -sk .pkgroot_dev} 0) rm -Rf .pkgroot_dev
+}
+
+#
+# Gen Routines
+#
+
+# $1: file
+# $2: section
+fn portsys_gen_section {
+	$SED -n '/\['$"2'\]/,/^\[.*\]$/p' $"1 |\
+	    $SED -e '/^\[.*\]$/d'
+}
+
+fn portsys_gen_codesec {
+	portsys_gen_section $"1 $"2 |\
+	    tr '\n' ';' | $SED -e 's/\\;//g' -e 's/&/\\\\&/g' -e 's/\\/\\\\/g'
+}
+
+# $1: package
+fn portsys_gen_pkg @{
+	p=`{basename $"1}
+	file=$"PORTS/pkg/$"p
+	if (! test -f $file) portsys_io_error $p: not found
+
+	portsys_io_message $p: obtaining sections
+	build=`{portsys_gen_codesec $file build}
+	install=`{portsys_gen_codesec $file install}
+	mdeps=`{portsys_gen_section $file mdeps}
+	mirrors=`{portsys_gen_section $file mirrors}
+	patches=`{portsys_gen_section $file patches}
+	rdeps=`{portsys_gen_section $file rdeps}
+	tfile=$"CACHEDIR/`{basename $mirrors($#mirrors)}
+	vars=`{portsys_gen_section $file vars | sed 's/=\(.*\)/=(\1);/g'}
+
+	portsys_io_message $p: generating build file
+	$AWK -v build=$"build         \
+	     -v dev_dbdir=$"DEVDBDIR  \
+	     -v dev_syspath=$"DEVPATH \
+	     -v dbdir=$"TDBDIR        \
+	     -v file=$"tfile          \
+	     -v install=$"install     \
+	     -v mdeps=$"mdeps         \
+	     -v mirrors=$"mirrors     \
+	     -v patches=$"patches     \
+	     -v package=$"p           \
+	     -v pkgdir=$PKGPATH       \
+	     -v rdeps=$"rdeps         \
+	     -v syspath=$"SYSPATH     \
+	     -v vars=$"vars           \
+	     -f $PORTS/mk/gen/build.awk \
+	     $PORTS/mk/gen/template >> $tmpbuild
+}

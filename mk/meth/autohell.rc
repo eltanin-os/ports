@@ -5,11 +5,10 @@ _P=$CPPFLAGS
 _L=$LDFLAGS
 
 . $PORTS/mk/config.rc
-. $PORTS/mk/common.rc
 
-if ([ -z $"_C ]) _C=$CFLAGS
-if ([ -z $"_P ]) _P=$CPPFLAGS
-if ([ -z $"_L ]) _L=$LDFLAGS
+if (test -z $"_C) _C=$CFLAGS
+if (test -z $"_P) _P=$CPPFLAGS
+if (test -z $"_L) _L=$LDFLAGS
 
 CONFIGURE='./configure'
 
@@ -18,7 +17,7 @@ case *'nobuilddir'*
 	NOBUILDDIR=YES
 }
 
-if ([ -z $"NOBUILDDIR ]) {
+if (test -z $"NOBUILDDIR) {
 	dir=$"PORTSYS_TMP_BUILDDIR
 	mkdir $"dir
 	cd $"dir
@@ -37,7 +36,7 @@ case *
 if (~ $"1 *install*) {
 	make -- DESTDIR=$"DESTDIR $*
 }; if not @{
-	if (![ -n $"PREFIX ]) PREFIX='/'
+	if (! test -n $"PREFIX) PREFIX='/'
 	chmod +x $CONFIGURE
 	env -i --                    \
 	    PATH=$"PATH              \
@@ -62,7 +61,7 @@ if (~ $"1 *install*) {
 	    --enable-shared=$"shared \
 	    --enable-static=$"static \
 	    $PORTSYS_MK_AUTO_FLAGS
-	if ([ -f 'libtool' ] && [ $"static == 'yes' ]) {
+	if (test -f 'libtool' && ~ $"static 'yes') {
 		_L=($_L -all-static)
 		make -- LDFLAGS=$"_L $*
 	}
