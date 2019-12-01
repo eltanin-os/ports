@@ -8,9 +8,6 @@ cksum=ce85bb5ef733e9a3aba7b1856348c6319bd2e1d4348488237c0bcfc7c21009026ad44d5036
 [mirrors]
 http://downloads.eltan.in.net/files/tertium-$version.tar.lz
 
-[mdeps]
-libc
-
 [build]
 CFLAGS=($CFLAGS -fno-builtin)
 if (test -d sys/$PORTSYS_HOSTOS && \
