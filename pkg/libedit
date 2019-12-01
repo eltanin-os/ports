@@ -19,3 +19,8 @@ portsys_mk_exec
 
 [install]
 portsys_mk_exec install
+ln -s libedit.a $"DESTDIR$"LIBDIR
+$INSTALL -dm 0755 $"DESTDIR$"INCDIR/readline
+ln -s ../editline/readline.h $"DESTDIR/$"INCDIR/readline
+touch $"DESTDIR$"INCDIR/readline/history.h
+touch $"DESTDIR$"INCDIR/readline/tilde.h
