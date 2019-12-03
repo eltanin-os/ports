@@ -1,40 +1,8 @@
 BEGIN {
 	flag=1
-	if (length(rdeps) > 0) gsub(/ |^|$/, "'", rdeps)
-	if (length(mdeps) > 0) gsub(/ |^|$/, "'", mdeps)
 }
 
-# PREPARE SECTIONS
-{
-	gsub(/;*$/, "", build)
-	gsub(/;/, "\n\t\t", build)
-	gsub(/;*$/, "", install)
-	gsub(/;/, "\n\t\t\t", install)
-	gsub(/;*$/, "", vars)
-	gsub(/; /, "\n\t", vars)
-}
-
-# SECTIONS
-{
-	gsub(/%build%/, build)
-	gsub(/%install%/, install)
-	gsub(/%vars%/, vars)
-}
-
-# VARIABLES
-{
-	gsub(/%dbdir%/, dbdir)
-	gsub(/%dev_dbdir%/, dev_dbdir)
-	gsub(/%dev_syspath%/, dev_syspath)
-	gsub(/%file%/, file)
-	gsub(/%mirrors%/, mirrors)
-	gsub(/%package%/, toupper(package))
-	gsub(/%patches%/, patches)
-	gsub(/%pkgdir%/, pkgdir)
-	gsub(/%syspath%/, syspath)
-}
-
-# RULES
+# OUTPUT RULES
 /%IFBLK/ {
 	if (ENVIRON[$2] == "true") {
 		flag=1
@@ -50,6 +18,34 @@ BEGIN {
 /%END/ {
 	flag=1
 	next
+}
+
+# REPLACE RULES
+
+/%%.*%%/ {
+	idx=match($0, "%%.*%%")
+	x=""
+	for (i = 1; i < idx; i++) x= x "\t"
+	gsub(/%/, "", $1)
+	v= x ENVIRON[$1]
+	gsub(/;*$/, "", v)
+	gsub(/;EOF/, "\nEOF", v)
+	gsub(/; |;/, "\n" x, v)
+	$0=v
+}
+
+/%.*%/ {
+	r=$0
+	do {
+		s=index(r, "%")
+		d=substr(r, s+1)
+		n=index(d, "%") - 1
+		t=sprintf("%.*s", n, d)
+		# VAL
+		v=ENVIRON[t]
+		r=sprintf("%.*s%s%s", s - 1, r, v, substr(r, s + n + 2))
+	} while (index(r, "%"))
+	$0=r
 }
 
 flag

@@ -12,10 +12,10 @@ http://ftp.barfooze.de/pub/sabotage/tarballs/libnl-tiny-$version.tar.xz
 libc
 
 [build]
-portsys_hlp_sed Makefile\
-    -e 's/\/libnl-tiny\/%/\/%/g'\
-    -e 's/prefix/PREFIX/g'\
-    -e 's/libdir/LIBDIR/g'\
+portsys_hlp_sed Makefile \
+    -e 's/\/libnl-tiny\/%/\/%/g' \
+    -e 's/prefix/PREFIX/g' \
+    -e 's/libdir/LIBDIR/g' \
     -e 's/includedir/INCDIR/g'
 portsys_mk_meth make
 portsys_mk_setflags ALL_LIBS=libnl-tiny.a

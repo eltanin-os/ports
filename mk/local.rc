@@ -1,5 +1,4 @@
 #!/bin/rc
-. $PORTS/mk/config.rc
 
 #
 # Arg routines
@@ -245,8 +244,11 @@ fn portsys_gen_section {
 }
 
 fn portsys_gen_codesec {
-	portsys_gen_section $"1 $"2 |\
-	    tr '\n' ';' | $SED -e 's/\\;//g' -e 's/&/\\\\&/g' -e 's/\\/\\\\/g'
+	portsys_gen_section $"1 $"2 | tr '\n' ';'
+}
+
+fn portsys_gen_varsec {
+	portsys_gen_section $"1 $"2 | sed 's/=\(.*\)/=(\1);/g'
 }
 
 # $1: package
@@ -255,31 +257,33 @@ fn portsys_gen_pkg @{
 	file=$"PORTS/pkg/$"p
 	if (! test -f $file) portsys_io_error $p: not found
 
-	portsys_io_message $p: obtaining sections
+	# sections
 	build=`{portsys_gen_codesec $file build}
 	install=`{portsys_gen_codesec $file install}
 	mdeps=`{portsys_gen_section $file mdeps}
 	mirrors=`{portsys_gen_section $file mirrors}
 	patches=`{portsys_gen_section $file patches}
 	rdeps=`{portsys_gen_section $file rdeps}
-	tfile=$"CACHEDIR/`{basename $mirrors($#mirrors)}
-	vars=`{portsys_gen_section $file vars | sed 's/=\(.*\)/=(\1);/g'}
+	vars=`{portsys_gen_varsec $file vars}
+
+	# variables
+	dev_dbdir=$"DEVDBDIR
+	dev_syspath=$"DEVPATH
+	dbdir=$"TDBDIR
+	file=$"CACHEDIR/`{basename $mirrors($#mirrors)}
+	package=$"p
+	pkgdir=$PKGPATH
+	syspath=$"SYSPATH
+
+	# list to string
+	build=$"build
+	install=$"install
+	mdeps=$"mdeps
+	mirrors=$"mirrors
+	patches=$"patches
+	rdeps=$"rdeps
+	vars=$"vars
 
 	portsys_io_message $p: generating build file
-	$AWK -v build=$"build         \
-	     -v dev_dbdir=$"DEVDBDIR  \
-	     -v dev_syspath=$"DEVPATH \
-	     -v dbdir=$"TDBDIR        \
-	     -v file=$"tfile          \
-	     -v install=$"install     \
-	     -v mdeps=$"mdeps         \
-	     -v mirrors=$"mirrors     \
-	     -v patches=$"patches     \
-	     -v package=$"p           \
-	     -v pkgdir=$PKGPATH       \
-	     -v rdeps=$"rdeps         \
-	     -v syspath=$"SYSPATH     \
-	     -v vars=$"vars           \
-	     -f $PORTS/mk/gen/build.awk \
-	     $PORTS/mk/gen/template >> $tmpbuild
+	$AWK -f $PORTS/mk/gen/build.awk $PORTS/mk/gen/template >> $tmpbuild
 }

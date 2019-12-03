@@ -1,6 +1,6 @@
 # PACKAGE: %package%
 @{
-	%vars%
+	%%vars%%
 	if (test -z $"src) src=$name-$version
 	# FETCH
 	@{
@@ -14,11 +14,11 @@
 		cd $src
 		PORTSYS_TMP_BUILDDIR=`{mktemp -u build.XXXXXXXXXX}
 		ROOTPWD=`{pwd}
-		%build%
+		%%build%%
 		# INSTALL
 		@{
 			DESTDIR=$ROOTPWD/.pkgroot
-			%install%
+			%%install%%
 			@{
 				cd $DESTDIR
 				portsys_pkg_blacklist
