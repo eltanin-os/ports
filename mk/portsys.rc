@@ -94,6 +94,7 @@ cat <<EOF >$tmpbuild
 #!/bin/rc
 . $PORTS/mk/config.rc
 . $PORTS/mk/global.rc
+. $PORTS/mk/local.rc
 CPPFLAGS=($CPPFLAGS -I$tmpdir$INCDIR -I$PORTSYS_SYSPATH$INCDIR $EXTRAINC)
 LDFLAGS=($LDFLAGS -L$tmpdir$LIBDIR -L$PORTSYS_SYSPATH$LIBDIR $EXTRALIB)
 PORTSYS_ROOTPWD=`{pwd}
@@ -154,4 +155,4 @@ DPAV=`{portsys_arg_deps $"DAV' '$"AAV $BAV}
 
 portsys_io_message executing the build script
 @{ cd $tmpdir
-$tmpbuild }
+exec env -i PATH=$"PATH PORTS=$"PORTS $tmpbuild }
