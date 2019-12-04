@@ -15,6 +15,9 @@ CFLAGS=-Os
 LDFLAGS=-static
 LOCALE=en_US.utf8
 
+# COMPILE TOOLS
+PKG_CONFIG='pkgconf'
+
 # ENV PATH
 DBDIR=/var/pkg/local
 

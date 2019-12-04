@@ -1,23 +1,14 @@
 #!/bin/rc
-
-_C=$CFLAGS
-_P=$CPPFLAGS
-_L=$LDFLAGS
-
-. $PORTS/mk/config.rc
-
-if (test -z $"_C) _C=$CFLAGS
-if (test -z $"_P) _P=$CPPFLAGS
-if (test -z $"_L) _L=$LDFLAGS
+#
+. $PORTS/mk/meth/cfg.rc
 
 dir=$"PORTSYS_TMP_BUILDDIR
 mkdir $"dir
 cd $"dir
 
-switch ($_L) {
-case *'-static'*
+if ($static) {
 	flags=(-D BUILD_SHARED_LIBS=OFF)
-case *
+}; if not {
 	flags=(-D BUILD_SHARED_LIBS=ON)
 }
 
@@ -34,11 +25,7 @@ if (~ $"1 *install*) {
 	cmake --build . --target $*
 }; if not @{
 	if (! test -n $"PREFIX) PREFIX='/'
-	env -i --                           \
-	    PATH=$"PATH                     \
-	    CFLAGS=$"_C                     \
-	    CPPFLAGS=$"_P                   \
-	    LDFLAGS=$"_L                    \
+	env -i -- $PORTSYS_METH_ENV         \
 	    cmake                           \
 	    -GNinja                         \
 	    -DCMAKE_INSTALL_PREFIX=$"PREFIX \

@@ -1,34 +1,26 @@
 #!/bin/rc
-
-_C=$CFLAGS
-_P=$CPPFLAGS
-_L=$LDFLAGS
-
-. $PORTS/mk/config.rc
-
-if (test -z $"_C) _C=$CFLAGS
-if (test -z $"_P) _P=$CPPFLAGS
-if (test -z $"_L) _L=$LDFLAGS
+#
+. $PORTS/mk/meth/cfg.rc
 
 CONFIGURE='./configure'
+OBDIR=true
 
 switch ($PORTSYS_MK_FLAGS) {
 case *'nobuilddir'*
-	NOBUILDDIR=YES
+	OBDIR=false
 }
 
-if (test -z $"NOBUILDDIR) {
+if ($ONODIR) {
 	dir=$"PORTSYS_TMP_BUILDDIR
 	mkdir $"dir
 	cd $"dir
 	CONFIGURE='../configure'
 }
 
-switch ($_L) {
-case *'-static'*
+if ($static) {
 	static=yes
 	shared=no
-case *
+}; if not {
 	static=no
 	shared=yes
 }
@@ -38,17 +30,7 @@ if (~ $"1 *install*) {
 }; if not @{
 	if (! test -n $"PREFIX) PREFIX='/'
 	chmod +x $CONFIGURE
-	env -i --                    \
-	    PATH=$"PATH              \
-	    AR=$"AR                  \
-	    CC=$"CC                  \
-	    CXX=$"CXX                \
-	    CFLAGS=$"_C              \
-	    CPPFLAGS=$"_P            \
-	    LDFLAGS=$"_L             \
-	    YACC=$"YACC              \
-	    RANLIB=$"RANLIB          \
-	    STRIP=$"STRIP            \
+	env -i -- $PORTSYS_METH_ENV  \
 	    $CONFIGURE               \
 	    --prefix=$"PREFIX        \
 	    --bindir=$"BINDIR        \

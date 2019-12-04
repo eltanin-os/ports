@@ -128,6 +128,20 @@ fn portsys_utils_perm {
 	if not PORTSYS_SU='exec'
 }
 
+# $1: source
+# $2: target
+fn portsys_utils_movedir {
+	if (test -e $"1) {
+		s=`{basename $"1}
+		if (test -d $"2/$"s) {
+			mv $"1/* $"2/$"s
+		}; if not {
+			mkdir -p $"2
+			mv $"1 $"2
+		}
+	}
+}
+
 #
 # Pkg Routines
 #
@@ -223,12 +237,15 @@ fn portsys_pkg_prepare {
 
 # $* : void
 fn portsys_pkg_split {
-	mkdir -p .pkgroot_dev$MANDIR
+	mkdir .pkgroot_dev
 	@{ cd .pkgroot
-	if (test -d .$"LIBDIR) mv .$"LIBDIR ../.pkgroot_dev
-	if (test -d .$"INCDIR) mv .$"INCDIR ../.pkgroot_dev
-	if (test -d .$"MANDIR/man2) mv .$"MANDIR/man2 ../.pkgroot_dev$"MANDIR
-	if (test -d .$"MANDIR/man3) mv .$"MANDIR/man3 ../.pkgroot_dev$"MANDIR }
+	portsys_utils_movedir .$"DRTDIR/aclocal ../.pkgroot_dev$"DRTDIR
+	portsys_utils_movedir .$"DRTDIR/xcb ../.pkgroot_dev$"DRTDIR
+	portsys_utils_movedir .$"DRTDIR/pkgconfig ../.pkgroot_dev$"LIBDIR
+	portsys_utils_movedir .$"LIBDIR ../.pkgroot_dev
+	portsys_utils_movedir .$"INCDIR ../.pkgroot_dev
+	portsys_utils_movedir .$"MANDIR/man2 ../.pkgroot_dev$"MANDIR
+	portsys_utils_movedir .$"MANDIR/man3 ../.pkgroot_dev$"MANDIR }
 	if (~ `{du -sk .pkgroot_dev} 0) rm -Rf .pkgroot_dev
 }
 

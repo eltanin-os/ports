@@ -1,14 +1,6 @@
 #!/bin/rc
-
-_C=$CFLAGS
-_P=$CPPFLAGS
-_L=$LDFLAGS
-
-. $PORTS/mk/config.rc
-
-if (test -z $"_C) _C=$CFLAGS
-if (test -z $"_P) _P=$CPPFLAGS
-if (test -z $"_L) _L=$LDFLAGS
+#
+. $PORTS/mk/meth/cfg.rc
 
 for (flag in $PORTSYS_MK_FLAGS) {
 	switch ($flag) {
@@ -21,28 +13,22 @@ for (flag in $PORTSYS_MK_FLAGS) {
 }
 
 @{
-env -i --                  \
-    PATH=$"PATH            \
-    INSTALL=$"INSTALL      \
-    CFLAGS=$"_C            \
-    CPPFLAGS=$"_P          \
-    LDFLAGS=$"_L           \
-    LDLIBS=$"LDLIBS        \
-    make -j $nprocs        \
-    AR=$"AR                \
-    CC=$"CC                \
-    CXX=$"CXX              \
-    YACC=$"YACC            \
-    STRIP=$"STRIP          \
-    RANLIB=$"RANLIB        \
-    PREFIX=$"PREFIX        \
-    BINDIR=$"BINDIR        \
-    LIBDIR=$"LIBDIR        \
-    ETCDIR=$"ETCDIR        \
-    DFLDIR=$"DFLDIR        \
-    MANDIR=$"MANDIR        \
-    INCDIR=$"INCDIR        \
-    DESTDIR=$"DESTDIR      \
-    $PORTSYS_MK_MAKE_FLAGS \
+env -i -- $PORTSYS_METH_ENV \
+    make -j $nprocs         \
+    AR=$"AR                 \
+    CC=$"CC                 \
+    CXX=$"CXX               \
+    YACC=$"YACC             \
+    STRIP=$"STRIP           \
+    RANLIB=$"RANLIB         \
+    PREFIX=$"PREFIX         \
+    BINDIR=$"BINDIR         \
+    LIBDIR=$"LIBDIR         \
+    ETCDIR=$"ETCDIR         \
+    DFLDIR=$"DFLDIR         \
+    MANDIR=$"MANDIR         \
+    INCDIR=$"INCDIR         \
+    DESTDIR=$"DESTDIR       \
+    $PORTSYS_MK_MAKE_FLAGS  \
     $*
 }
