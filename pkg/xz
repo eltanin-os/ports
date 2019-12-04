@@ -1,0 +1,19 @@
+[vars]
+name=xz
+version=5.2.4
+license=GPL-2+ PUBLIC_DOMAIN
+description=Library and CLI tools for XZ and LZMA compressed files.
+cksum=d9f466075e6bfefaf9094cd115ee6ac7e2c174d8be99e8734c33caad0398e0a42ccc649f4dad63f2f213e3fbd87642d2c9f227e961a00489020a754c7e3fdf0e
+
+[mirrors]
+https://tukaani.org/xz/xz-$version.tar.xz
+
+[mdeps]
+libc
+
+[build]
+portsys_mk_meth autohell
+portsys_mk_exec
+
+[install]
+portsys_mk_exec install
