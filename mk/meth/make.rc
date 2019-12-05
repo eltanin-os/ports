@@ -29,6 +29,6 @@ env -i -- $PORTSYS_METH_ENV \
     MANDIR=$"MANDIR         \
     INCDIR=$"INCDIR         \
     DESTDIR=$"DESTDIR       \
-    $PORTSYS_MK_MAKE_FLAGS  \
+    $PORTSYS_METH_FLAGS     \
     $*
 }

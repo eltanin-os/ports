@@ -30,7 +30,7 @@ if (~ $"1 *install*) {
 	    -GNinja                         \
 	    -DCMAKE_INSTALL_PREFIX=$"PREFIX \
 	    $flags                          \
-	    $PORTSYS_MK_CMAKE_FLAGS         \
+	    $PORTSYS_METH_FLAGS             \
 	    ..
 	cmake --build .
 }

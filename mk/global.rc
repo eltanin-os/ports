@@ -10,43 +10,40 @@ fn portsys_mk_meth {
 	PORTSYS_MK_METHOD=$1
 	shift
 	switch ($PORTSYS_MK_METHOD) {
-	case 'autohell'
-		PORTSYS_MK_FLAGS=$*
-	case 'cmake'
-		PORTSYS_MK_FLAGS=$*
-	case 'make'
-		PORTSYS_MK_FLAGS=$*
+	case autohell
+	case cmake
+	case make
+	case meson
 	case *
 		portsys_io_error unknown build method
 	}
+	PORTSYS_MK_FLAGS=$*
 }
 
 # $* : flags
 fn portsys_mk_setflags {
 	switch ($PORTSYS_MK_METHOD) {
-	case 'autohell'
-		PORTSYS_MK_AUTO_FLAGS=$*
-	case 'cmake'
-		PORTSYS_MK_CMAKE_FLAGS=$*
-	case 'make'
-		PORTSYS_MK_MAKE_FLAGS=$*
+	case autohell
+	case cmake
+	case make
+	case meson
 	case *
 		portsys_io_error unknown build method
 	}
+	PORTSYS_METH_FLAGS=$*
 }
 
 # $* : operation
 fn portsys_mk_exec {
 	switch ($PORTSYS_MK_METHOD) {
-	case 'autohell'
-		op=autohell.rc
-	case 'cmake'
-		op=cmake.rc
-	case 'make'
-		op=make.rc
+	case autohell
+	case cmake
+	case make
+	case meson
 	case *
 		portsys_io_error unknown build method
 	}
+	op=$"PORTSYS_MK_METHOD.rc
 	$"PORTS/mk/meth/$"op $*
 }
 

@@ -43,38 +43,38 @@ SYSPATH=''
 shift
 while (~ $1 -*) {
 	for (opt in `{printf '%s' $1 | fold -w1}) switch($opt) {
-	case 'A':
+	case A
 		if (test -z $"2) portsys_io_error no packages given
 		AAV=(`{echo $2})
 		shift
-	case 'D':
+	case D
 		if (test -z $"2) portsys_io_error no packages given
 		DAV=(`{echo $2})
 		shift
-	case 'd'
+	case d
 		if (test -z $"2) portsys_io_error no cache directory given
 		portsys_io_message using cache directory
 		CACHEDIR=$"2
 		shift
-	case 'e'
+	case e
 		if (test -z $"2) portsys_io_error no directory given
 		portsys_io_message using a extra directory
 		EXTRAINC=-I$"2$"INCDIR
 		EXTRALIB=-L$"2$"LIBDIR
 		shift
-	case 'k'
+	case k
 		portsys_io_message keeping dependencies
 		KP=true
-	case 'p'
+	case p
 		portsys_io_message portsys_io_error no directory given
 		PKGPATH=$"2
 		shift
-	case 'r'
+	case r
 		if (test -z $"2) portsys_io_error no directory given
 		portsys_io_message alternative root directory set
 		SYSPATH=$"2
 		shift
-	case '-'
+	case -
 		;
 	case *
 		portsys_io_error unknown flag
@@ -117,10 +117,14 @@ DEVDBDIR=$DBDIR
 DPAV=`{portsys_arg_deps $"DAV' '$"AAV $BAV}
 @{
 	if (!$KP) {
+		ODP=false
 		DEVPATH=$tmpdir
 		DEVDBDIR=$"tmpdir$"DBDIR
 		mkdir -p $DEVDBDIR
-		ODP=false
+	}
+	if ($ODP) {
+		DEVPATH=$tmpdir
+		DEVDBDIR=$"TDBDIR
 	}
 	if (~ $#DAV 0) DAV=' '
 	DEV=true

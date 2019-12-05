@@ -42,7 +42,7 @@ if (~ $"1 *install*) {
 	    --mandir=$"MANDIR        \
 	    --enable-shared=$"shared \
 	    --enable-static=$"static \
-	    $PORTSYS_MK_AUTO_FLAGS
+	    $PORTSYS_METH_FLAGS
 	if (test -f 'libtool' && ~ $"static 'yes') {
 		_L=($_L -all-static)
 		make -- LDFLAGS=$"_L $*

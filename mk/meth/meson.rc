@@ -1,0 +1,15 @@
+#!/bin/rc
+#
+PC=$"PKG_CONFIG
+. $PORTS/mk/meth/cfg.rc
+
+if (! test -d $PORTSYS_TMP_BUILDDIR) {
+	env -i $PORTSYS_METH_ENV  \
+	    PKG_CONFIG=$"PC       \
+	    meson                 \
+	    $PORTSYS_METH_FLAGS   \
+	    --                    \
+	    $PORTSYS_TMP_BUILDDIR \
+}
+
+$NINJA -C $PORTSYS_TMP_BUILDDIR $*
