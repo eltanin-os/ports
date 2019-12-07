@@ -1,4 +1,4 @@
-#!/bin/rc
+#!/bin/rc -e
 #
 argv0=$0
 
@@ -91,7 +91,7 @@ chmod +x $"tmpbuild
 tmpdir=`{mktemp -d} || portsys_io_error failed to obtain a temporary directory.
 
 cat <<EOF >$tmpbuild
-#!/bin/rc
+#!/bin/rc -e
 . $PORTS/mk/config.rc
 . $PORTS/mk/global.rc
 . $PORTS/mk/local.rc
