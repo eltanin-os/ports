@@ -13,7 +13,8 @@ libc
 
 [build]
 portsys_mk_meth autohell
-portsys_mk_setflags CC=$"CC CFLAGS=$"CFLAGS CPPFLAGS=$"CPFLAGS LDFLAGS=$"LDFLAGS
+portsys_mk_setflags \
+    CC=$"CC CFLAGS=$"CFLAGS CPPFLAGS=$"CPPFLAGS LDFLAGS=$"LDFLAGS
 portsys_mk_exec
 
 [install]
