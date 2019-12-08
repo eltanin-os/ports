@@ -8,7 +8,7 @@ for (flag in $PORTSYS_MK_FLAGS) {
 		_C=($_C $_P)
 	case 'replace'
 		_A=(CFLAGS=$"_C CPPFLAGS=$"_P LDFLAGS=$"_L)
-		PORTSYS_MK_MAKE_FLAGS=($PORTSYS_MK_MAKE_FLAGS $_A)
+		PORTSYS_METH_FLAGS=($PORTSYS_METH_FLAGS $_A)
 	}
 }
 
