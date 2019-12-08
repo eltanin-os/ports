@@ -10,7 +10,7 @@ case *'nobuilddir'*
 	OBDIR=false
 }
 
-if ($ONODIR) {
+if ($OBDIR) {
 	dir=$"PORTSYS_TMP_BUILDDIR
 	mkdir $"dir
 	cd $"dir
