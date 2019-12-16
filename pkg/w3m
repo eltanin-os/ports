@@ -1,0 +1,21 @@
+[vars]
+name=w3m
+version=0.5.3+git20190105
+license=MIT UCD
+description=WWW browsable pager.
+cksum=5d71a4e7b493b21f5ccfbeae0b882eb827cceafd9c723c2cb9851baa5254bf31f05dc3fba1ee9a7c32f19cb880f41ea9fadba1e375d7fa9b5fbecda8b0aa073b
+
+[mirrors]
+https://github.com/tats/w3m/archive/v$version.tar.gz
+
+[mdeps]
+gc
+libc
+libressl
+
+[build]
+portsys_mk_meth autohell
+portsys_mk_exec
+
+[install]
+portsys_mk_exec install
