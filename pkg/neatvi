@@ -1,0 +1,21 @@
+[vars]
+name=neatvi
+version=07
+license=ISC
+description=vi/ex editor with small footprint.
+cksum=dc0f35541f7f84ee28db4a15162c1f4ea553a5e398336fc9c584f8713f5b818439d6ec1159bc8150de28619457ede0ceeebeeb69c853f2ee8c1048eec029cae7
+
+[mirrors]
+https://github.com/aligrudi/neatvi/archive/$version.tar.gz
+
+[mdeps]
+libc
+
+[build]
+portsys_mk_meth make replace
+portsys_mk_exec
+
+[install]
+$INSTALL -dm 0755 $DESTDIR$BINDIR
+$STRIP vi
+$INSTALL -cm 0755 vi $DESTDIR$BINDIR
