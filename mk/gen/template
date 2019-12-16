@@ -24,7 +24,7 @@
 				portsys_pkg_blacklist
 			}
 		}
-		portsys_pkg_prepare
+%IF ODR		portsys_pkg_prepare
 		portsys_pkg_split
 %IFBLK BIN
 		@{

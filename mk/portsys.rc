@@ -19,6 +19,7 @@ if (~ $#* 0) portsys_io_error missing action
 
 ODI=false
 ODP=false
+ODR=true
 
 switch ($1) {
 case package
@@ -129,6 +130,7 @@ DPAV=`{portsys_arg_deps $"DAV' '$"AAV $BAV}
 	if (~ $#DAV 0) DAV=' '
 	DEV=true
 	ODI=true
+	ODR=false
 	for (dep in $DPAV) {
 		BIN=false
 		if (~ ' '$"BAV' ' *' '$"dep' '*) BIN=true
