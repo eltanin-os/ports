@@ -9,7 +9,7 @@
 # $3: explicit (true/false)
 fn portsys_arg_dep {
 	if (~ ' '$"1' ' *' '$"2' '*) return
-	if (test -e $"TDBDIR/$"2'-dev') return
+	if (test -e $"SYSPATH$"DBDIR/$"2'-dev') return
 	list=(' ')
 	deps=(`{portsys_gen_section $PORTS/pkg/$"2 mdeps})
 	for (dep in $deps) list=($list `{portsys_arg_dep $"1' '$"list $"dep false})
