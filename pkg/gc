@@ -1,0 +1,19 @@
+[vars]
+name=gc
+version=8.0.4
+license=MIT
+description=A garbage collector for C and C++.
+cksum=5f821912f8a5ed241191c5b0cfa060b47b7cc3c6ea47dba88b4b751dd4c1a83dba7435c3ab8b0ba0334da16f4045916cf58550d2bac219b58dea9f7811f3085e
+
+[mirrors]
+https://www.hboehm.info/gc/gc_source/gc-$version.tar.gz
+
+[mdeps]
+libc
+
+[build]
+portsys_mk_meth autohell
+portsys_mk_exec
+
+[install]
+portsys_mk_exec install
