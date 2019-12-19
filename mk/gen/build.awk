@@ -43,6 +43,8 @@ BEGIN {
 		t=sprintf("%.*s", n, d)
 		# VAL
 		v=ENVIRON[t]
+		# Ignore lines with invalid variables
+		if (length(v) == 0) break
 		r=sprintf("%.*s%s%s", s - 1, r, v, substr(r, s + n + 2))
 	} while (index(r, "%"))
 	$0=r
