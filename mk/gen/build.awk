@@ -21,6 +21,19 @@ BEGIN {
 }
 
 # REPLACE RULES
+/%.*%/ {
+	r=$0
+	s=index(r, "%")
+	if (s && substr(r, s + 1, 1) != "%") do {
+		d=substr(r, s+1)
+		n=index(d, "%") - 1
+		t=sprintf("%.*s", n, d)
+		# VAL
+		v=ENVIRON[t]
+		r=sprintf("%.*s%s%s", s - 1, r, v, substr(r, s + n + 2))
+	} while (s=index(r, "%"))
+	$0=r
+}
 
 /%%.*%%/ {
 	idx=match($0, "%%.*%%")
@@ -32,22 +45,6 @@ BEGIN {
 	gsub(/;EOF/, "\nEOF", v)
 	gsub(/; |;/, "\n" x, v)
 	$0=v
-}
-
-/%.*%/ {
-	r=$0
-	do {
-		s=index(r, "%")
-		d=substr(r, s+1)
-		n=index(d, "%") - 1
-		t=sprintf("%.*s", n, d)
-		# VAL
-		v=ENVIRON[t]
-		# Ignore lines with invalid variables
-		if (length(v) == 0) break
-		r=sprintf("%.*s%s%s", s - 1, r, v, substr(r, s + n + 2))
-	} while (index(r, "%"))
-	$0=r
 }
 
 flag
