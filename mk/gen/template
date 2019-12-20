@@ -14,14 +14,16 @@
 		cd $src
 		PORTSYS_TMP_BUILDDIR=`{mktemp -u build.XXXXXXXXXX}
 		ROOTPWD=`{pwd}
-		%%build%%
-		# INSTALL
 		@{
-			DESTDIR=$ROOTPWD/.pkgroot
-			%%install%%
+			%%build%%
+			# INSTALL
 			@{
-				cd $DESTDIR
-				portsys_pkg_blacklist
+				DESTDIR=$ROOTPWD/.pkgroot
+				%%install%%
+				@{
+					cd $DESTDIR
+					portsys_pkg_blacklist
+				}
 			}
 		}
 %IF ODR		portsys_pkg_prepare
