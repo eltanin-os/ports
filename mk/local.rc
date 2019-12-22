@@ -151,13 +151,14 @@ fn portsys_utils_movedir {
 fn portsys_pkg_createdb {
 	src=$"1
 	shift
-	size=`{du -sk $src | $AWK '{printf "%u", $1*1024}'}
-	printf '# %s: %s\n'           \
-	    name $"name               \
-	    version $"version         \
-	    license $"license         \
-	    description $"description \
-	    size $"size
+	size=`{find $src -type f -exec wc -c '{}' + | tail -n1 | $AWK '{printf "%o", $1}'}
+	cat <<EOF
+name: $name
+version: $version
+license: $license
+description: $description
+size: $size
+EOF
 	if (! ~ $#mdeps 0) {
 		echo makedeps:
 		for (d in $mdeps) {
