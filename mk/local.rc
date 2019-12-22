@@ -153,11 +153,11 @@ fn portsys_pkg_createdb {
 	shift
 	size=`{find $src -type f -exec wc -c '{}' + | tail -n1 | $AWK '{printf "%o", $1}'}
 	cat <<EOF
-name: $name
-version: $version
-license: $license
-description: $description
-size: $size
+# name: $name
+# version: $version
+# license: $license
+# description: $description
+# size: $size
 EOF
 	if (! ~ $#mdeps 0) {
 		echo makedeps:
