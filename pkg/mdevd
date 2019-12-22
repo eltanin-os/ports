@@ -1,0 +1,23 @@
+[vars]
+name=mdevd
+version=0.1.1.1
+license=ISC
+description=A mdev-compatible hotplug manager daemon.
+cksum=5306583c80c8d649eb3ba7ce038ead581550f19505a392d384b2f9dde6bf8a6ea73e94df6fdced8dcb656c58b3c813347e402244cc53e29ede3d90eeab703f1c
+
+[mirrors]
+https://skarnet.org/software/mdevd/mdevd-$version.tar.gz
+
+[mdeps]
+libc
+skalibs
+
+[build]
+SYSDEPSPATH=$"PORTSYS_SYSPATH/lib/skalibs/sysdeps
+if (! test -e $"SYSDEPSPATH) SYSDEPSPATH=$"PORTSYS_ROOTPWD/lib/skalibs/sysdeps
+portsys_mk_meth autohell nobuilddir
+portsys_mk_setflags --with-sysdeps=$"SYSDEPSPATH
+portsys_mk_exec
+
+[install]
+portsys_mk_exec install
