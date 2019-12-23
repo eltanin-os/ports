@@ -92,6 +92,8 @@ tmpbuild=`{mktemp} || portsys_io_error failed to obtain a temporary file.
 chmod +x $"tmpbuild
 tmpdir=`{mktemp -d} || portsys_io_error failed to obtain a temporary directory.
 
+if (test -z $"SYSPATH) SYSPATH=/
+
 cat <<EOF >$tmpbuild
 #!/bin/rc -e
 . $PORTS/mk/config.rc
@@ -99,7 +101,7 @@ cat <<EOF >$tmpbuild
 . $PORTS/mk/local.rc
 CPPFLAGS=($CPPFLAGS -I$tmpdir$INCDIR -I$SYSPATH$INCDIR $EXTRAINC)
 LDFLAGS=($LDFLAGS -L$tmpdir$LIBDIR -L$SYSPATH$LIBDIR $EXTRALIB)
-PORTSYS_SYSPATH=$"SYSPATH
+PORTSYS_SYSPATH='$SYSPATH'
 PORTSYS_ROOTPWD=`{pwd}
 EOF
 
@@ -112,7 +114,6 @@ if ($ODP) {
 
 if (test -z $"CACHEDIR) CACHEDIR=$"CURDIR/portsys_cache
 if (! test -d $"CACHEDIR) mkdir -p $"CACHEDIR
-if (test -z $"SYSPATH) SYSPATH=/
 if (test -z $"TDBDIR) TDBDIR=$SYSPATH$"DBDIR
 DEVPATH=$SYSPATH
 DEVDBDIR=$DBDIR
@@ -163,4 +164,5 @@ DPAV=`{portsys_arg_deps $"DAV' '$"AAV $BAV}
 
 portsys_io_message executing the build script
 @{ cd $tmpdir
-exec env -i PATH=$"PATH PORTS=$"PORTS $tmpbuild }
+#exec env -i PATH=$"PATH PORTS=$"PORTS $tmpbuild }
+cat $tmpbuild }
