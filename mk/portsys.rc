@@ -164,5 +164,4 @@ DPAV=`{portsys_arg_deps $"DAV' '$"AAV $BAV}
 
 portsys_io_message executing the build script
 @{ cd $tmpdir
-#exec env -i PATH=$"PATH PORTS=$"PORTS $tmpbuild }
-cat $tmpbuild }
+exec env -i PATH=$"PATH PORTS=$"PORTS $tmpbuild }
