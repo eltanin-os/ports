@@ -6,6 +6,7 @@ description=A suite of tools compiling mdoc from the OpenBSD project.
 cksum=6b2d49b182b01a6b57b891cc59db01c396bc7091e81f0aa89573feb87df8ea140a307998587256f6dbdf448ae3a1d05bc1a100960d1434d46bceff272e0422a3
 
 [patches]
+mandoc-add_posix_cor.patch
 mandoc-zzip_support.patch
 
 [mirrors]

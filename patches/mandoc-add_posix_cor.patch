@@ -1,0 +1,13 @@
+diff -Naur a/st.c b/st.c
+--- a/st.c	2019-03-10 06:56:43.000000000 -0300
++++ b/st.c	2019-12-29 06:20:20.790329460 -0300
+@@ -37,6 +37,9 @@
+ LINE("-p1003.1-2001",	"IEEE Std 1003.1-2001 (\\(lqPOSIX.1\\(rq)")
+ LINE("-p1003.1-2004",	"IEEE Std 1003.1-2004 (\\(lqPOSIX.1\\(rq)")
+ LINE("-p1003.1-2008",	"IEEE Std 1003.1-2008 (\\(lqPOSIX.1\\(rq)")
++LINE("-p1003.1-2013",	"IEEE Std 1003.1-2008/Cor 1-2013 (\\(lqPOSIX.1\\(rq)")
++LINE("-p1003.1-2016",	"IEEE Std 1003.1-2008/Cor 1-2016 (\\(lqPOSIX.1\\(rq)")
++LINE("-p1003.1-2017",	"IEEE Std 1003.1-2008/Cor 1-2017 (\\(lqPOSIX.1\\(rq)")
+ LINE("-p1003.1",	"IEEE Std 1003.1 (\\(lqPOSIX.1\\(rq)")
+ LINE("-p1003.1b",	"IEEE Std 1003.1b (\\(lqPOSIX.1b\\(rq)")
+ LINE("-p1003.1b-93",	"IEEE Std 1003.1b-1993 (\\(lqPOSIX.1b\\(rq)")
