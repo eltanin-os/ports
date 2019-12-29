@@ -32,9 +32,11 @@ case *
 	portsys_io_error unknown action
 }
 
-AAV=()
-DAV=()
 KP=false
+OAV=false
+OBV=true
+ODV=false
+
 CACHEDIR=''
 EXTRAINC=''
 EXTRALIB=''
@@ -47,11 +49,13 @@ while (~ $1 -*) {
 	for (opt in `{printf '%s' $1 | fold -w1}) switch($opt) {
 	case A
 		if (test -z $"2) portsys_io_error no packages given
-		AAV=(`{echo $2})
+		OAV=true
+		OBV=false
 		shift
 	case D
 		if (test -z $"2) portsys_io_error no packages given
-		DAV=(`{echo $2})
+		ODV=true
+		OBV=false
 		shift
 	case d
 		if (test -z $"2) portsys_io_error no cache directory given
@@ -84,9 +88,15 @@ while (~ $1 -*) {
 	shift
 }
 
-BAV=(`{echo $1})
+AAV=()
+BAV=()
+DAV=()
+
 if (~ $#* 0) portsys_io_error no arguments given
-if (test $#* -gt 1) portsys_io_error too much arguments
+
+if ($OAV) AAV=$*
+if ($OBV) BAV=$*
+if ($ODV) DAV=$*
 
 tmpbuild=`{mktemp} || portsys_io_error failed to obtain a temporary file.
 chmod +x $"tmpbuild
