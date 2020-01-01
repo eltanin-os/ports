@@ -1,6 +1,8 @@
 # PACKAGE: %package%
 @{
 	%%vars%%
+	%%mdeps%%
+	%%rdeps%%
 	if (test -z $"src) src=$name-$version
 	# FETCH
 	@{

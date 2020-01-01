@@ -296,10 +296,10 @@ fn portsys_gen_pkg @{
 	# list to string
 	build=$"build
 	install=$"install
-	mdeps=$"mdeps
+	mdeps='mdeps=('$"mdeps')'
 	mirrors=$"mirrors
 	patches=$"patches
-	rdeps=$"rdeps
+	rdeps='rdeps=('$"rdeps')'
 	vars=$"vars
 
 	portsys_io_message $p: generating build file
