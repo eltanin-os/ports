@@ -60,5 +60,5 @@ UXZ=(xzcat)
 UZZ=(unpigz -c)
 
 # OTHERS
-pkgsuf=pkg.vlz
+pkgsuf=vlz
 nprocs=2
