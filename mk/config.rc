@@ -54,10 +54,10 @@ ZZ=(pigz -z9)
 
 # UNCOMPRESSION TOOLS
 UBZ2=(bzcat)
-UGZ=(unpigz -c)
+UGZ=(pigz -dc)
 ULZ=(lzip -dc)
 UXZ=(xzcat)
-UZZ=(unpigz -c)
+UZZ=(pigz -dc)
 
 # OTHERS
 pkgsuf=vlz
