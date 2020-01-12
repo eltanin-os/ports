@@ -1,4 +1,4 @@
 # Ports - EltaninOS ports
 
-A build system that uses shell script
-to build, install and/or package the packages.
+A build system that uses rc scripts to
+build, install and/or package applications.
