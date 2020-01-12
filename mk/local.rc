@@ -278,10 +278,12 @@ fn portsys_gen_pkg @{
 	# sections
 	build=`{portsys_gen_codesec $file build}
 	install=`{portsys_gen_codesec $file install}
-	mdeps=''''^`{portsys_gen_section $file mdeps}^''''
+	mdeps=`{portsys_gen_section $file mdeps}
+	if (! ~ $#mdeps 0) mdeps=''''^$mdeps^''''
 	mirrors=`{portsys_gen_section $file mirrors}
 	patches=`{portsys_gen_section $file patches}
-	rdeps=''''^`{portsys_gen_section $file rdeps}^''''
+	rdeps=`{portsys_gen_section $file rdeps}
+	if (! ~ $#rdeps 0) rdeps=''''^$rdeps^''''
 	vars=`{portsys_gen_varsec $file vars}
 
 	# variables
