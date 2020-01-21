@@ -19,3 +19,4 @@ portsys_mk_exec all-static
 
 [install]
 portsys_mk_exec install-static
+ln -s . $DESTDIR$INCDIR/ncursesw
