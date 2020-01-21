@@ -1,0 +1,23 @@
+[vars]
+name=htop
+version=2.2.0
+license=GPL-2
+description=An interactive process viewer.
+cksum=e1f1ac9d68f086efd65d87a5024d956a5489badb1c3632d9217d11088333b730882940c1b4be22c5675753dfd81e54b183f973f135776fa9313f365ce04b3a73
+
+[patches]
+htop-netbsd_curses_compat.patch
+
+[mirrors]
+http://hisham.hm/htop/releases/$version/htop-$version.tar.gz
+
+[mdeps]
+ncurses
+libc
+
+[build]
+portsys_mk_meth autohell
+portsys_mk_exec
+
+[install]
+portsys_mk_exec install
