@@ -205,7 +205,7 @@ fn portsys_pkg_install {
 	dest=$"2
 	@{ cd $src
 	portsys_utils_perm $dest
-	find . | $PORTSYS_SU pax -rw $dest }
+	$PORTSYS_SU cp -R * $dest }
 }
 
 
