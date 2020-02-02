@@ -1,9 +1,9 @@
 [vars]
 name=ecore
-version=0.5.0
+version=0.6.0
 license=UNLICENSE
 description=Eltanin core utilities.
-cksum=2db33002672728d58dcc25d62ce32091a114eb5d943e795b891021b7c44af5c514da9a6f2303f2a7c366415c1e2e1643c6a59d75e8a42084459c4ac302d0105b
+cksum=7d513c7880902366ac97242f02c610268dba9e26ff7af294a009d3f82f9ac3c4f4ac6f0c05414ff277783bd33e26e3f58be0785869df58e3e2aa5a4d91ad94e3
 
 [mirrors]
 http://downloads.eltan.in.net/files/ecore-$version.tar.lz
