@@ -3,7 +3,7 @@ name=htop
 version=2.2.0
 license=GPL-2
 description=An interactive process viewer.
-cksum=e1f1ac9d68f086efd65d87a5024d956a5489badb1c3632d9217d11088333b730882940c1b4be22c5675753dfd81e54b183f973f135776fa9313f365ce04b3a73
+cksum=d8fbb22890948cb2e2134691e5d97629f2eb424fe29fb70a2e0e73ffe3c39ff29e5b42bd8b9c21be92e7afe642ff7ab5076d034d12f805b1d100fa273369dee2
 
 [patches]
 htop-netbsd_curses_compat.patch

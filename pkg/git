@@ -1,9 +1,9 @@
 [vars]
 name=git
-version=2.23.0
+version=2.25.0
 license=GPL-2
 description=A fast, scalable, distributed revision control system.
-cksum=1d00497e7e9f8d5c3e90135da9f9e52847513aea782a8543287dc1d66c97ef88c2c716c6eb842f92d54caec147f05561e3a714351d805c0da1e51bbf41c8d4f6
+cksum=08103328de89ab544113f168292fd6fdea2b18725917eacfe0c1ca26276d48ae449a0359cbbaf96a266ca36a09b994af7d379983f70d335de8ba695ee1c3e71a
 
 [mirrors]
 https://www.kernel.org/pub/software/scm/git/git-$version.tar.xz

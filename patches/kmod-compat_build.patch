@@ -1,40 +1,14 @@
-diff -Naur a/libkmod/libkmod-internal.h b/libkmod/libkmod-internal.h
---- a/libkmod/libkmod-internal.h	2019-02-04 20:03:17.867038004 -0200
-+++ b/libkmod/libkmod-internal.h	2019-08-11 10:21:58.109724414 -0300
-@@ -2,6 +2,7 @@
- 
- #include <stdbool.h>
- #include <stdio.h>
-+#include <stdlib.h>
- #include <syslog.h>
- #include <limits.h>
- 
-@@ -37,14 +38,7 @@
- 
- #define KCMD_LINE_SIZE 4096
- 
--#ifndef HAVE_SECURE_GETENV
--#  ifdef HAVE___SECURE_GETENV
--#    define secure_getenv __secure_getenv
--#  else
--#    warning neither secure_getenv nor __secure_getenv is available
--#    define secure_getenv getenv
--#  endif
--#endif
-+#define secure_getenv(x) getenv(x)
- 
- void kmod_log(const struct kmod_ctx *ctx,
- 		int priority, const char *file, int line, const char *fn,
 diff -Naur a/Makefile b/Makefile
 --- a/Makefile	1969-12-31 21:00:00.000000000 -0300
-+++ b/Makefile	2019-08-11 10:23:11.097727123 -0300
-@@ -0,0 +1,115 @@
++++ b/Makefile	2020-02-01 15:30:14.029976490 -0300
+@@ -0,0 +1,116 @@
 +#include config.mk
 +
 +.SUFFIXES:
 +.SUFFIXES: .o .c
 +
 +INC= -I .
++__OPTS__= -DSYSCONFDIR=\"$ETCDIR\" -DENABLE_ZLIB
 +HDR=\
 +	libkmod/libkmod.h\
 +	libkmod/libkmod-index.h\
@@ -114,11 +88,11 @@ diff -Naur a/Makefile b/Makefile
 +	$(CC) $(LDFLAGS) -o $@ $< $(LIB) $(LDLIBS)
 +
 +.c.o:
-+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INC) -o $@ -c $<
++	$(CC) $(__OPTS__) $(CFLAGS) $(CPPFLAGS) $(INC) -o $@ -c $<
 +
 +# BINARIES RULES
 +tools/kmod: $(KMODOBJ) $(LIB)
-+	$(CC) $(LDFLAGS) -o tools/kmod $(KMODOBJ) $(LIB) $(LDLIBS)
++	$(CC) $(LDFLAGS) -o tools/kmod $(KMODOBJ) $(LIB) $(LDLIBS) -lz
 +
 +# LIBRARIES RULES
 +$(LIBKMOD): $(LIBKMODOBJ)
@@ -144,9 +118,36 @@ diff -Naur a/Makefile b/Makefile
 +
 +.PHONY:
 +	all install clean
+diff -Naur a/libkmod/libkmod-internal.h b/libkmod/libkmod-internal.h
+--- a/libkmod/libkmod-internal.h	2020-02-01 15:30:29.782180479 -0300
++++ b/libkmod/libkmod-internal.h	2020-02-01 15:23:25.923897629 -0300
+@@ -2,6 +2,7 @@
+ 
+ #include <stdbool.h>
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <syslog.h>
+ #include <limits.h>
+ 
+@@ -37,14 +38,7 @@
+ 
+ #define KCMD_LINE_SIZE 4096
+ 
+-#ifndef HAVE_SECURE_GETENV
+-#  ifdef HAVE___SECURE_GETENV
+-#    define secure_getenv __secure_getenv
+-#  else
+-#    warning neither secure_getenv nor __secure_getenv is available
+-#    define secure_getenv getenv
+-#  endif
+-#endif
++#define secure_getenv(x) getenv(x)
+ 
+ void kmod_log(const struct kmod_ctx *ctx,
+ 		int priority, const char *file, int line, const char *fn,
 diff -Naur a/shared/missing.h b/shared/missing.h
---- a/shared/missing.h	2014-12-25 23:28:51.712629340 -0200
-+++ b/shared/missing.h	2019-08-11 10:21:58.113724415 -0300
+--- a/shared/missing.h	2020-02-01 15:30:29.763180232 -0300
++++ b/shared/missing.h	2020-02-01 15:23:25.904897383 -0300
 @@ -1,27 +1,18 @@
  #pragma once
  
@@ -213,8 +214,8 @@ diff -Naur a/shared/missing.h b/shared/missing.h
 +	return memcpy(alloca(n+1), v, n);
 +}
 diff -Naur a/tools/kmod.c b/tools/kmod.c
---- a/tools/kmod.c	2018-01-31 15:10:59.598903840 -0200
-+++ b/tools/kmod.c	2019-08-11 10:21:58.113724415 -0300
+--- a/tools/kmod.c	2020-02-01 15:30:29.770180323 -0300
++++ b/tools/kmod.c	2020-02-01 15:23:25.909897447 -0300
 @@ -58,6 +58,8 @@
  	&kmod_cmd_compat_depmod,
  };
@@ -234,8 +235,8 @@ diff -Naur a/tools/kmod.c b/tools/kmod.c
  		err = handle_kmod_commands(argc, argv);
  	else
 diff -Naur a/tools/kmod.h b/tools/kmod.h
---- a/tools/kmod.h	2018-01-31 15:10:59.599903844 -0200
-+++ b/tools/kmod.h	2019-08-11 10:21:58.113724415 -0300
+--- a/tools/kmod.h	2020-02-01 15:30:29.769180310 -0300
++++ b/tools/kmod.h	2020-02-01 15:23:25.910897460 -0300
 @@ -27,6 +27,13 @@
  	const char *help;
  };

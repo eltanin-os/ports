@@ -3,7 +3,7 @@ name=mksh
 version=R57
 license=MirOS
 description=An enhanced version of the public domain ksh.
-cksum=6ba7a121a441c4f3c05aedcf319403fd0e0a6a58c4326f632109c85aad35513ed00e25e4b7b8ef1343e30141c0ecb3019b8eeaf33160ebfdcccd88b74c7318b5
+cksum=41b313b7c77ac191aae36357d45d099e1e0cc9f1b107275c1b444dd75fefc069c1dbe9650da382d9c116f7681d3aaf903686b28d82ca6842679e41faef721cef
 src=$name
 
 [mirrors]

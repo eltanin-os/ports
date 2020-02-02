@@ -3,7 +3,7 @@ name=ncurses
 version=0.3.1
 license=BSD-3
 description=A NetBSD curses library.
-cksum=3eace58e3a9adaf214000a29a155bed76af426d11ea025cfc173a8fe74887ab694196d4881c6ecde4c10915e4d62ff6f43ac61fca7d1127fbdcd95c9d5cdf94b
+cksum=c6b6a0e897c6fc17268b7669f14792a8cbfe2ec94def9189069de5d706b0ef5df8024764ad00b6c2cbf2c6d096ffdbce36b0f6b87da2ee30158eb165e34e2f2e
 src=netbsd-curses-$version
 
 [mirrors]

@@ -3,7 +3,7 @@ name=w3m
 version=0.5.3+git20190105
 license=MIT UCD
 description=WWW browsable pager.
-cksum=5d71a4e7b493b21f5ccfbeae0b882eb827cceafd9c723c2cb9851baa5254bf31f05dc3fba1ee9a7c32f19cb880f41ea9fadba1e375d7fa9b5fbecda8b0aa073b
+cksum=923634a1ae89ca3538519a2abccee1ffcaecd4726fb1a9f9af61dcf0eb03aef19f697f54d7751d5399b68ebd3beec613a5ee407bd4020383d1ae66095c0eb864
 src=w3m-0.5.3-git20190105
 
 [mirrors]

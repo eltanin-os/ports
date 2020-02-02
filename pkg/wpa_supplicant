@@ -3,7 +3,7 @@ name=wpa_supplicant
 version=2.6
 license=BSD-3
 description=A WPA supplicant implementation.
-cksum=63f91b9f72fee65df5412e90f5a4b38f327f47b44724164aa27a6933a68c68672a129d7c01e658c7fed1f7018fe9e4b743f3c6cef2f69fd75c3f5b9a1cb67c1b
+cksum=19f3114b3d57672c9af01cb0cc9d94e48af39411a5df8db770b3fb3cbbd992ddc2ab2fdd0401c466471145210a173a3f6ba986c90a1842189407777db15e2d4e
 
 [patches]
 wpa_supplicant-fflush.patch

@@ -3,7 +3,7 @@ name=gc
 version=8.0.4
 license=MIT
 description=A garbage collector for C and C++.
-cksum=5f821912f8a5ed241191c5b0cfa060b47b7cc3c6ea47dba88b4b751dd4c1a83dba7435c3ab8b0ba0334da16f4045916cf58550d2bac219b58dea9f7811f3085e
+cksum=0dafc8461587be7ed572a441ff0c979f23596cc442140e4d7d0d332b409ea7dd9c680dc22787160eba14f05d271a4c76a324a0f5f1079c990f7ebf68dc1f3110
 
 [mirrors]
 https://www.hboehm.info/gc/gc_source/gc-$version.tar.gz

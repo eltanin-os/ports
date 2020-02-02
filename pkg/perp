@@ -3,7 +3,7 @@ name=perp
 version=2.07
 license=CUSTOM
 description=A persistent process supervisor and service managment framework for un*x.
-cksum=f82041228ba839be6e0303afb4353a11778b7aa06ec6f533a415547388e2322236a51340d91a30702da1911041c673bd0b18f75d5f728f30bc0413b32f07def6
+cksum=9f8beb5c5a5e4ddf6157c347ff40e2ff58f915d5d81d4cb2e6fd633e4dc992e1e38f1968620f9cb6e466aa063733962aec51bc18d063f1e010c5d7e5e319b593
 
 [mirrors]
 http://b0llix.net/perp/distfiles/perp-$version.tar.gz

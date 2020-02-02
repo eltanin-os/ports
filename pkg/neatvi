@@ -3,7 +3,7 @@ name=neatvi
 version=07
 license=ISC
 description=vi/ex editor with small footprint.
-cksum=dc0f35541f7f84ee28db4a15162c1f4ea553a5e398336fc9c584f8713f5b818439d6ec1159bc8150de28619457ede0ceeebeeb69c853f2ee8c1048eec029cae7
+cksum=ca2ba5c41b4493183bb9c1ba1202006794fb7751906e661e21e7d50802ec98469f154e03891218242ddb8c04057c7e0cf50a95e08446e30a710e8f6b7acaeaac
 
 [mirrors]
 https://github.com/aligrudi/neatvi/archive/$version.tar.gz

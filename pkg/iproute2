@@ -3,7 +3,7 @@ name=iproute2
 version=4.19.0
 license=GPL-2
 description=A set of utilities for Linux networking.
-cksum=098b0f69e413e1ff20f486c8d129a212a83a4c2469c3cb0ccafd551948be002bd3d8e7cc2749c664b8d4968c51efbaa758790671f086c343dc8e85b097e019de
+cksum=c863bb88bf0c4667db03834b72041dc5eb95e9025487771d595b5e59be4c7d99169efbd2666d7565f47cc3029ea5eea3adee12b1ea7383f3346c6f75746fcd64
 
 [patches]
 iproute2-fix_includes_for_musl_libc.patch

@@ -3,7 +3,7 @@ name=libnl-tiny
 version=1.0.1
 license=LGPL-2
 description=A tiny replacement for libnl.
-cksum=7d7543f42170b0ce974ad530fa22f0cc5edb707b8cc8771a0026518388b6d3e892c9263952a2f8e1cec3ad72b974a89d52fa20411c498b02cbc31d32e571d9b7
+cksum=308c7cad02ac0f8a1f9c1b52812f56fb354355edc37179c2b40ae3d04beab4a2cfd565205406c814463086c0c1fe928c134d0892b7b6c931dc6b76f6e0a12c80
 
 [mirrors]
 http://ftp.barfooze.de/pub/sabotage/tarballs/libnl-tiny-$version.tar.xz

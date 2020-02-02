@@ -3,7 +3,7 @@ name=tertium
 version=0.4.0
 license=UNLICENSE
 description=Eltanin system programming library.
-cksum=0579c73b4c070771d0a86b361bdff4b834db869419a74ce4fcc5aa4ff1f3c23ca491c65622453b892fad1aa29372b687a9bfa3fc773fc46ebec10791d3dcaa7d
+cksum=01a6aa891068f3ca2951368b344b835757b3fd39d41d8055447ac5f70a1b0f9c885486d503fd0d4408d3847fc906ab650f83614411bf463e5704f76ef5893213
 
 [mirrors]
 http://downloads.eltan.in.net/files/tertium-$version.tar.lz

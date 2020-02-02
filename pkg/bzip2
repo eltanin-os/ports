@@ -3,7 +3,7 @@ name=bzip2
 version=1.0.8
 license=custom
 description=A high-quality data compressor.
-cksum=109bffc8f00b9a9c676bbe4fb9bdaaf66797ace87caef566fb2a11cb02eff796032f3d1692054e167e6e1322396c90c2e83b9e341c53380a5e05a2265e60ee85
+cksum=9f4ea30bd214e61c79c3f6a93abaf262a52000b67a4c55f3e1930a917587d2894cb3c47915a7f774902bba4066ca835b0301e30677245b025776e9d6c52a851f
 
 [mirrors]
 http://sourceware.org/pub/bzip2/bzip2-$version.tar.gz
