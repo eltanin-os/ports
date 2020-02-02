@@ -48,12 +48,10 @@ shift
 while (~ $1 -*) {
 	for (opt in `{printf '%s' $1 | fold -w1}) switch($opt) {
 	case A
-		if (test -z $"2) portsys_io_error no packages given
 		OAV=true
 		OBV=false
 		shift
 	case D
-		if (test -z $"2) portsys_io_error no packages given
 		ODV=true
 		OBV=false
 		shift
