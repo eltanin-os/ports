@@ -3,10 +3,11 @@ name=mandoc
 version=1.14.5
 license=ISC
 description=A suite of tools compiling mdoc from the OpenBSD project.
-cksum=6b2d49b182b01a6b57b891cc59db01c396bc7091e81f0aa89573feb87df8ea140a307998587256f6dbdf448ae3a1d05bc1a100960d1434d46bceff272e0422a3
+cksum=035071b0c6beb1fde1a86e2b778dcc2f08c2634f57060b91ac1cbe7fa062559fbf4ee01f502c785722632e0740188e66780ab4391b33e19e6c654823a2cac9da
 
 [patches]
 mandoc-add_posix_cor.patch
+mandoc-configure.patch
 mandoc-zzip_support.patch
 
 [mirrors]
