@@ -1,9 +1,9 @@
 [vars]
 name=samurai
-version=0.7
+version=1.0
 license=ISC
 description=A ninja-compatible build tool written in C.
-cksum=852624b5c7622d6ff8020a46ca878795aba742a11a2889ac94c10086be153919da041a8500da7cd87791f939d3bd264c920f0cb9a49b71072339d242e276a4e6
+cksum=1d8a96ef912e93048d32bbf0d698f590636d8601f3b1f44660ab6a86a081f327cc4336f7c2139f79965579b914f0ff06c6cde206cda7d21e2a13c2a2d414b831
 
 [mirrors]
 http://github.com/michaelforney/samurai/releases/download/$version/samurai-$version.tar.gz
