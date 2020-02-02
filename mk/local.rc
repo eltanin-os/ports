@@ -153,37 +153,40 @@ fn portsys_pkg_createdb {
 	shift
 	size=`{find $src -type f -exec wc -c '{}' + | tail -n1 | $AWK '{printf "%o", $1}'}
 	cat <<EOF
-# name: $name
-# version: $version
-# license: $license
-# description: $description
-# size: $size
+name:$name
+version:$version
+license:$license
+description:$description
+size:$size
 EOF
 	if (! ~ $#mdeps 0) {
-		echo makedeps:
+		echo 'makedeps{'
 		for (d in $mdeps) {
 			d=$"d'-dev'
 			if (test -e $"DBDIR/$"d) dbdir=$"DBDIR
 			if not dbdir=$"PORTSYS_ROOTPWD$"DBDIR
-			v=`{$SED -n 's/# version://p' $"dbdir/$"d}
+			v=`{$SED -n 's/version://p' $"dbdir/$"d}
 			d=$"d'#'$"v
 			printf '\t%s\n' $"d
 		}
+		echo '}'
 	}
 	if (! ~ $#rdeps 0) {
-		echo rundeps:
+		echo 'rundeps{'
 		printf '\t%s\n' $rdeps
+		echo '}'
 	}
 	@{
 		cd $src
 		files=`{find . | cut -c 3-} # may overflow
 		if (! ~ $#files 0) {
-			echo files:
+			echo 'files{'
 			for (f in $files) {
 				if (test -d $"f) continue
 				f=`{venus-cksum $f}
 				printf '\t%s\n' $"f
 			}
+			echo '}'
 		}
 	}
 }
@@ -205,7 +208,7 @@ fn portsys_pkg_install {
 	dest=$"2
 	@{ cd $src
 	portsys_utils_perm $dest
-	$PORTSYS_SU cp -R * $dest }
+	find . -exec $"PORTS/mk/bin/copy.rc '{}' $dest ';' }
 }
 
 

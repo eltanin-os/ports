@@ -1,0 +1,15 @@
+#!/bin/rc
+# because cp, pax, and install sucks
+src=$"1
+dest=$"2'/'$"1
+type=`{ls -ld $src | cut -c1}
+switch ($type) {
+case d
+	$PORTSYS_SU mkdir -p $"dest
+case l
+	@{ $PORTSYS_SU mkdir -p `{dirname $"dest} } ||;
+	s=`{readlink $"src}
+	$PORTSYS_SU ln -s $"s $"dest
+case *
+	$PORTSYS_SU $INSTALL -D $"src $"dest
+}
