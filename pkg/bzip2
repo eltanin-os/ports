@@ -5,6 +5,9 @@ license=custom
 description=A high-quality data compressor.
 cksum=9f4ea30bd214e61c79c3f6a93abaf262a52000b67a4c55f3e1930a917587d2894cb3c47915a7f774902bba4066ca835b0301e30677245b025776e9d6c52a851f
 
+[patches]
+bzip2-makefile.patch
+
 [mirrors]
 http://sourceware.org/pub/bzip2/bzip2-$version.tar.gz
 
@@ -12,12 +15,8 @@ http://sourceware.org/pub/bzip2/bzip2-$version.tar.gz
 libc
 
 [build]
-portsys_hlp_sed Makefile \
-    -e 's/ln -s -f $(PREFIX)\/bin\/\(.*\) $(PREFIX)\/bin\/\(.*\)/ln -sf \1 $(PREFIX)\/bin\/\2/g' \
-    -e 's/$(PREFIX)/$(DESTDIR)$(PREFIX)/g' \
-    -e 's/$(PREFIX)\/man/$(PREFIX)\/share\/man/g'
-portsys_mk_meth make replace
-portsys_mk_exec
+mkmeth make replace
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

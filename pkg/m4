@@ -12,8 +12,8 @@ http://haddonthethird.net/m4/m4-$version.tar.bz2
 libc
 
 [build]
-portsys_mk_meth make
-portsys_mk_exec
+mkmeth make
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

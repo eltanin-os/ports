@@ -36,13 +36,13 @@ LIBDIR="$LIBDIR"
 MANDIR="$MANDIR"
 STATIC="$static"
 OSNAME="$OS"
-INSTALL_PROGRAM="install -m 0755"
+INSTALL_PROGRAM="$INSTALL -m 0755"
 UTF8_LOCALE="$LOCALE"
 LN="ln -sf"
 EOF
-portsys_mk_meth make
+mkmeth make
 ./configure
-portsys_mk_exec
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

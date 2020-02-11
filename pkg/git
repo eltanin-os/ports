@@ -21,12 +21,12 @@ libressl
 libz
 
 [build]
-portsys_mk_meth autohell nobuilddir
-portsys_hlp_sed configure \
+mkmeth autohell nobuilddir
+mhsed configure \
     -e 's/-\*) as_fn_error $?/-\*) as_echo $?/g' \
     -e 's/LIBS="-lcurl/LIBS="-lcurl -lssl -lcrypto -lz /g'
-portsys_mk_setflags --with-openssl --without-tcltk --without-expat
-portsys_mk_exec all
+mksetflags --with-openssl --without-tcltk --without-expat
+mkexec all
 
 [install]
-portsys_mk_exec install
+mkexec install

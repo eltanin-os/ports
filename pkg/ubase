@@ -15,8 +15,8 @@ http://downloads.eltan.in.net/mirrors/ubase-$version.tar.lz
 libc
 
 [build]
-portsys_mk_meth make replace
-portsys_mk_exec ubase-box
+mkmeth make replace
+mkexec ubase-box
 
 [install]
-portsys_mk_exec ubase-box-install
+mkexec ubase-box-install

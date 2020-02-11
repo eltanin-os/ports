@@ -16,8 +16,8 @@ http://mirrors.edge.kernel.org/pub/linux/utils/net/iproute2/iproute2-$version.ta
 libc
 
 [build]
-portsys_mk_meth make
-portsys_mk_exec
+mkmeth make
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

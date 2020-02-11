@@ -20,8 +20,8 @@ libressl
 libz
 
 [build]
-portsys_mk_meth autohell
-portsys_mk_exec
+mkmeth autohell
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

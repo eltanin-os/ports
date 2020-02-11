@@ -16,15 +16,12 @@ libc
 chmod +x Build.sh
 @{ mkdir build_mksh
 cd build_mksh
-portsys_hlp_envsh ../Build.sh }
+mhenv ../Build.sh }
 @{ mkdir build_lksh
 cd build_lksh
 CPPFLAGS=($CPPFLAGS -DMKSH_BINSHPOSIX -DMKSH_BINSHREDUCED -DMKSH_SMALL -DMKSH_LEGACY)
-portsys_hlp_envsh ../Build.sh -L }
+mhenv ../Build.sh -L }
 
 [install]
-$INSTALL -dm 0755                                 $DESTDIR$BINDIR
-$INSTALL -dm 0755                                 $DESTDIR$MANDIR/man1
-$STRIP            build_mksh/mksh build_lksh/lksh
-$INSTALL -m  0755 build_mksh/mksh build_lksh/lksh $DESTDIR$BINDIR
-$INSTALL -m  0644 lksh.1 mksh.1                   $DESTDIR$MANDIR/man1
+mhinstall bin build_mksh/mksh build_lksh/lksh
+mhinstall man1 lksh.1 mksh.1

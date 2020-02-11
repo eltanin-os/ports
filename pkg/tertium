@@ -13,12 +13,12 @@ CFLAGS=($CFLAGS -fno-builtin)
 if (test -d sys/$PORTSYS_HOSTOS && \
     test -f sys/$PORTSYS_HOSTOS/$PORTSYS_HOSTARCH.h.in && \
     test -f sys/$PORTSYS_HOSTOS/$PORTSYS_HOSTARCH.s) {
-	portsys_hlp_sed config.mk \
+	mhsed config.mk \
 	    -e 's/^OSNAME  =.*/OSNAME='$"PORTSYS_HOSTOS'/g' \
 	    -e 's/^OBJTYPE =.*/OBJTYPE='$"PORTSYS_HOSTARCH'/g'
 }
-portsys_mk_meth make replace
-portsys_mk_exec
+mkmeth make replace
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

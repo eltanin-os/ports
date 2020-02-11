@@ -15,9 +15,9 @@ skalibs
 [build]
 SYSDEPSPATH=$"PORTSYS_SYSPATH/lib/skalibs/sysdeps
 if (! test -e $"SYSDEPSPATH) SYSDEPSPATH=$"PORTSYS_ROOTPWD/lib/skalibs/sysdeps
-portsys_mk_meth autohell nobuilddir
-portsys_mk_setflags --with-sysdeps=$"SYSDEPSPATH
-portsys_mk_exec
+mkmeth autohell nobuilddir
+mksetflags --with-sysdeps=$"SYSDEPSPATH
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

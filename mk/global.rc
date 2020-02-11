@@ -6,7 +6,7 @@
 
 # $1 : method
 # $* : flags
-fn portsys_mk_meth {
+fn mkmeth {
 	PORTSYS_MK_METHOD=$1
 	shift
 	switch ($PORTSYS_MK_METHOD) {
@@ -21,7 +21,7 @@ fn portsys_mk_meth {
 }
 
 # $* : flags
-fn portsys_mk_setflags {
+fn mksetflags {
 	switch ($PORTSYS_MK_METHOD) {
 	case autohell
 	case cmake
@@ -34,7 +34,7 @@ fn portsys_mk_setflags {
 }
 
 # $* : operation
-fn portsys_mk_exec {
+fn mkexec {
 	switch ($PORTSYS_MK_METHOD) {
 	case autohell
 	case cmake
@@ -53,7 +53,7 @@ fn portsys_mk_exec {
 
 # $1 : filename
 # $* : args
-fn portsys_hlp_sed {
+fn mhsed {
 	fd=$1
 	shift
 	tmp=`{mktemp}
@@ -62,7 +62,7 @@ fn portsys_hlp_sed {
 }
 
 # $* : void
-fn portsys_hlp_envsh @{
+fn mhenv @{
 	AR=$"AR             \
 	CC=$"CC             \
 	CXX=$"CXX           \
@@ -82,10 +82,33 @@ fn portsys_hlp_envsh @{
 	$*
 }
 
-# $1 : directory
-# $2 : pattern
-fn portsys_hlp_findpattern {
-	dir=$"1
+# $1: flag
+# $2: type (inc lib bin)
+# $*: arguments
+fn mhinstall {
+	switch ($1) {
+	case 'bin'
+		dest=$"DESTDIR$"BINDIR
+	case 'inc'
+		dest=$"DESTDIR$"INCDIR
+	case 'lib'
+		dest=$"DESTDIR$"LIBDIR
+	case 'man'*
+		num=`{echo $"1 | cut -c4}
+		dest=$"DESTDIR$"MANDIR/man$"num
+	}
+	$INSTALL -d $"dest
 	shift
-	find $dir -type f '(' -name '' `{printf ' -o -name %s' $*} ')'
+	switch ($1) {
+	case '-e'
+		shift
+		touch $"dest/$*
+	case '-l'
+		shift
+		s=$1
+		shift
+		ln -s $1 $"dest/$*
+	case *
+		$INSTALL $* $"dest
+	}
 }

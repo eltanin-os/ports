@@ -14,13 +14,11 @@ libc
 
 [build]
 CFLAGS=($CFLAGS -D__STDC_ISO_10646__)
-portsys_mk_meth autohell
-portsys_mk_exec
+mkmeth autohell
+mkexec
 
 [install]
-portsys_mk_exec install
-ln -s libedit.a $"DESTDIR$"LIBDIR/libreadline.a
-$INSTALL -dm 0755 $"DESTDIR$"INCDIR/readline
-ln -s ../editline/readline.h $"DESTDIR/$"INCDIR/readline
-touch $"DESTDIR$"INCDIR/readline/history.h
-touch $"DESTDIR$"INCDIR/readline/tilde.h
+mkexec install
+mhinstall lib -l libedit.a libreadline.a
+mhinstall lib -l ../editline/readline.h readline.h
+mhinstall inc -e readline/history.h readline/tilde.h

@@ -14,9 +14,9 @@ libressl
 libz
 
 [build]
-portsys_mk_meth autohell
-portsys_mk_setflags --with-mantype=man
-portsys_mk_exec
+mkmeth autohell
+mksetflags --with-mantype=man
+mkexec
 
 [install]
-portsys_mk_exec install-nokeys
+mkexec install-nokeys

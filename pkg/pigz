@@ -13,12 +13,9 @@ libc
 libz
 
 [build]
-portsys_mk_meth make nocppflags replace
-portsys_mk_exec pigz
+mkmeth make nocppflags replace
+mkexec pigz
 
 [install]
-$INSTALL -dm 755        $DESTDIR$BINDIR
-$INSTALL -dm 755        $DESTDIR$MANDIR/man1
-$STRIP           pigz
-$INSTALL -m  755 pigz   $DESTDIR$BINDIR
-$INSTALL -m  644 pigz.1 $DESTDIR$MANDIR/man1
+mhinstall bin pigz
+mhintsall man1 pigz.1

@@ -12,8 +12,8 @@ http://skarnet.org/software/skalibs/skalibs-$version.tar.gz
 libc
 
 [build]
-portsys_mk_meth autohell nobuilddir
-portsys_mk_exec
+mkmeth autohell nobuilddir
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

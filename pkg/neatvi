@@ -12,10 +12,8 @@ https://github.com/aligrudi/neatvi/archive/$version.tar.gz
 libc
 
 [build]
-portsys_mk_meth make replace
-portsys_mk_exec
+mkmeth make replace
+mkexec
 
 [install]
-$INSTALL -dm 0755 $DESTDIR$BINDIR
-$STRIP vi
-$INSTALL -cm 0755 vi $DESTDIR$BINDIR
+mhinstall bin vi

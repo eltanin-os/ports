@@ -21,12 +21,12 @@ libressl
 [build]
 cd wpa_supplicant
 cp defconfig .config
-portsys_hlp_sed .config \
+mhsed .config \
     -e 's/#CONFIG_WPS=y/CONFIG_WPS=y/' \
     -e 's/#CONFIG_LIBNL20=y/CONFIG_LIBNL20=y/'
 CPPFLAGS=($CPPFLAGS -DLIBNL1_COMPAT)
-portsys_mk_meth make nocppflags
-portsys_mk_exec CONFIG_LIBNL_TINY=y
+mkmeth make nocppflags
+mkexec CONFIG_LIBNL_TINY=y
 
 [install]
-portsys_mk_exec install
+mkexec install

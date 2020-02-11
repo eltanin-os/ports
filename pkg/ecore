@@ -13,8 +13,8 @@ tertium
 
 [build]
 CFLAGS=($CFLAGS -fno-builtin)
-portsys_mk_meth make replace
-portsys_mk_exec ecore
+mkmeth make replace
+mkexec ecore
 
 [install]
-portsys_mk_exec install-ecore
+mkexec install-ecore

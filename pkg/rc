@@ -13,9 +13,9 @@ libc
 libedit
 
 [build]
-portsys_mk_meth autohell
-portsys_mk_setflags --with-edit=bsd
-portsys_mk_exec
+mkmeth autohell
+mksetflags --with-edit=bsd
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

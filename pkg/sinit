@@ -12,8 +12,8 @@ http://downloads.eltan.in.net/mirrors/sinit-$version.tar.lz
 libc
 
 [build]
-portsys_mk_meth make replace
-portsys_mk_exec
+mkmeth make replace
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

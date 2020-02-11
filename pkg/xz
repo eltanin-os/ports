@@ -12,8 +12,8 @@ https://tukaani.org/xz/xz-$version.tar.xz
 libc
 
 [build]
-portsys_mk_meth autohell
-portsys_mk_exec
+mkmeth autohell
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

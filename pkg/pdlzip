@@ -12,11 +12,10 @@ https://download.savannah.gnu.org/releases/lzip/pdlzip/pdlzip-$version.tar.lz
 libc
 
 [build]
-portsys_mk_meth autohell
-portsys_mk_setflags \
+mkmeth autohell
+mksetflags \
     CC=$"CC CFLAGS=$"CFLAGS CPPFLAGS=$"CPPFLAGS LDFLAGS=$"LDFLAGS
-portsys_mk_exec
+mkexec
 
 [install]
-portsys_mk_exec install
-ln -s pdlzip $DESTDIR/$BINDIR/lzip
+mkexec install

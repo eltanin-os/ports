@@ -122,6 +122,14 @@ fn portsys_utils_explode {
 	{ $UNCOMPRESS -- $"n | $UNTAR } ||;
 }
 
+# $1 : directory
+# $2 : pattern
+fn portsys_utils_findpattern {
+	dir=$"1
+	shift
+	find $dir -type f '(' -name '' `{printf ' -o -name %s' $*} ')'
+}
+
 # $1: directory
 fn portsys_utils_perm {
 	if (! test -w $"1) PORTSYS_SU=$"SU
@@ -215,7 +223,7 @@ fn portsys_pkg_install {
 
 # $* : void
 fn portsys_pkg_blacklist {
-	rm -f `{portsys_hlp_findpattern . `{cat $"PORTS/mk/blacklist}}
+	rm -f `{portsys_utils_findpattern . `{cat $"PORTS/mk/blacklist}}
 	find . -type d -exec rmdir -p '{}' + >[2]/dev/null || true
 }
 
@@ -225,7 +233,7 @@ fn portsys_pkg_prepare {
 	if (test -d .$BINDIR)
 		find .$"BINDIR -type f -exec $STRIP --strip-all '{}' + ||;
 	if (test -d .$MANDIR) {
-		mf=`{portsys_hlp_findpattern .$"MANDIR '*.'^(1 2 3 4 5 6 7 8)}
+		mf=`{portsys_utils_findpattern .$"MANDIR '*.'^(1 2 3 4 5 6 7 8)}
 		if (test -n $"mf) $ZZ $mf
 		# fix broken symbolic links
 		MLINKS=`{find ./$"MANDIR -type l}

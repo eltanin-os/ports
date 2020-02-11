@@ -12,8 +12,8 @@ http://b0llix.net/perp/distfiles/perp-$version.tar.gz
 libc
 
 [build]
-portsys_mk_meth make nocppflags
-portsys_mk_exec
+mkmeth make nocppflags
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install

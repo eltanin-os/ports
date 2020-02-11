@@ -14,8 +14,8 @@ libressl#*
 sh#*
 
 [build]
-portsys_mk_meth make
-portsys_mk_exec
+mkmeth make
+mkexec
 
 [install]
-portsys_mk_exec install
+mkexec install
