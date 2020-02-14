@@ -1,9 +1,9 @@
 [vars]
 name=venus
-version=0.5.0
+version=0.5.1
 license=UNLICENSE
 description=A simple package manager.
-cksum=2c02bb4ac5ba70665dd73886b167673832f35de4115ef8ee44d774c74256fcced75f8599bfbb7116db514c992913cb94f9c455d90739f0931b7c35dd2c9ffc59
+cksum=3a0cef3136655f00f40a1359ef1d10154cdbc5a9fd625ae4c09b689dbe67091de5af133f64e77dfac5861e75e3fbe0848f9819af5437be977188207a2737ba5c
 
 [mirrors]
 http://downloads.eltan.in.net/files/venus-$version.tar.lz
