@@ -18,4 +18,4 @@ mkexec pigz
 
 [install]
 mhinstall bin pigz
-mhintsall man1 pigz.1
+mhinstall man1 pigz.1
