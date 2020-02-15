@@ -17,11 +17,9 @@ fn portsys_arg_dep {
 	if (!$"3) echo $"2
 }
 
-# $1: list
 # $*: packages
 fn portsys_arg_deps {
-	list=($1)
-	shift
+	list=''
 	for (dep in $*) list=($list `{portsys_arg_dep $"list $"dep true})
 	echo $list
 }
