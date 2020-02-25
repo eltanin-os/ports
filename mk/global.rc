@@ -97,8 +97,11 @@ fn mhinstall {
 		num=`{echo $"1 | cut -c4}
 		dest=$"DESTDIR$"MANDIR/man$"num
 	}
-	$INSTALL -d $"dest
 	shift
+	for (arg in $*) {
+		dir=`{dirname $"dest/$"arg}
+		$INSTALL -d $"dir
+	}
 	switch ($1) {
 	case '-e'
 		shift
