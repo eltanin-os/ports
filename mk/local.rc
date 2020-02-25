@@ -298,7 +298,7 @@ fn portsys_gen_pkg @{
 	# variables
 	dev_dbdir=$"DEVDBDIR
 	dev_syspath=$"DEVPATH
-	dbdir=$"TDBDIR
+	dbdir=$"BINDBDIR
 	file=$"CACHEDIR/`{basename $mirrors($#mirrors)}
 	package=$"p
 	pkgdir=$PKGPATH

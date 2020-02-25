@@ -36,12 +36,12 @@ BIN=true
 DEV=false
 KP=false
 
+BINDBDIR=''
 CACHEDIR=''
 EXTRAINC=''
 EXTRALIB=''
 PKGPATH=''
 SYSPATH=''
-BINDBDIR=''
 
 shift
 while (~ $1 -*) {
@@ -107,17 +107,16 @@ if ($ODP) {
 	if (test -z $"PKGPATH) PKGPATH=$"CURDIR/portsys_pkgs
 	if (! test -d $"PKGPATH) mkdir -p $"PKGPATH
 	BINDBDIR=$"PKGPATH
-	DEVDBDIR=$"PKGPATH
 }
 
 if (test -z $"CACHEDIR) CACHEDIR=$"CURDIR/portsys_cache
 if (! test -d $"CACHEDIR) mkdir -p $"CACHEDIR
 if (test -z $"BINDBDIR) BINDBDIR=$SYSPATH$"DBDIR
 DEVPATH=$SYSPATH
-DEVDBDIR=$DBDIR
+DEVDBDIR=$BINDBDIR
 
-DPAV=(' ' `{portsys_arg_deps $*})
-if ($DEV) DPAV=`{printf '%s\n' $DPAV | grep -v `{printf '-e %s ' $*}}
+DPAV=`{portsys_arg_deps $*}
+if ($DEV) DPAV=`{printf '%s\n' $DPAV ' ' | grep -v `{printf '-e %s ' $*}}
 @{
 	if (~ $#DPAV 0) exit
 	if (!$KP) {
