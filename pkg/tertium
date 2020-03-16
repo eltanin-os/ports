@@ -14,8 +14,8 @@ if (test -d sys/$PORTSYS_HOSTOS && \
     test -f sys/$PORTSYS_HOSTOS/$PORTSYS_HOSTARCH.h.in && \
     test -f sys/$PORTSYS_HOSTOS/$PORTSYS_HOSTARCH.s) {
 	mhsed config.mk \
-	    -e 's/^OSNAME  =.*/OSNAME='$"PORTSYS_HOSTOS'/g' \
-	    -e 's/^OBJTYPE =.*/OBJTYPE='$"PORTSYS_HOSTARCH'/g'
+	    -e 's/^OSNAME.*/OSNAME='$"PORTSYS_HOSTOS'/g' \
+	    -e 's/^OBJTYPE.*/OBJTYPE='$"PORTSYS_HOSTARCH'/g'
 }
 mkmeth make replace
 mkexec
