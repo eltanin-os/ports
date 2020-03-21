@@ -1,9 +1,9 @@
 [vars]
 name=tertium
-version=0.5.0
+version=0.6.0
 license=UNLICENSE
 description=Eltanin system programming library.
-cksum=9124cb93c8f194061dd36b64d34383406f56e88b9a52eae94b5e2d84309afd96654ba6723ca6ee214a46350d3cd0e5f3b1869489da8192884b7a13471c1ad59b
+cksum=6bb142b9ca10f6f94e1e5ca9cd210cfca60d6fa3511e194495d3ba831115f45a03df06f96544716053b577f73db9041af6292888154b1a10d4371f6d5ce92ed9
 
 [mirrors]
 http://downloads.eltan.in.net/files/tertium-$version.tar.lz
