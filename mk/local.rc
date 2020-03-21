@@ -169,8 +169,8 @@ EOF
 		echo 'makedeps{'
 		for (d in $mdeps) {
 			d=$"d'-dev'
-			if (test -e $"DBDIR/$"d) dbdir=$"DBDIR
-			if not dbdir=$"PORTSYS_ROOTPWD$"DBDIR
+			dbdir=$"PORTSYS_SYSPATH$"DBDIR
+			if (! test -e $dbdir/$"d) dbdir=$"PORTSYS_ROOTPWD$"DBDIR
 			v=`{$SED -n 's/version://p' $"dbdir/$"d}
 			d=$"d'#'$"v
 			printf '\t%s\n' $"d
