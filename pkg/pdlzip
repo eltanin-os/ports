@@ -13,8 +13,7 @@ libc
 
 [build]
 mkmeth autohell
-mksetflags \
-    CC=$"CC CFLAGS=$"CFLAGS CPPFLAGS=$"CPPFLAGS LDFLAGS=$"LDFLAGS
+mksetflags CC=$"CC CFLAGS=$"CFLAGS CPPFLAGS=$"CPPFLAGS LDFLAGS=$"LDFLAGS
 mkexec
 
 [install]

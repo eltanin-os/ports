@@ -38,7 +38,7 @@ SED=sed
 TAR=(pax -x ustar -w)
 UNTAR=(pax -r)
 PACK=(venus-ar -c)
-COMPRESS=(lzip -9)
+COMPRESS=(clzip -9)
 FETCH=(curl -Lo)
 CKSUM=(venus-cksum -w)
 SU=doas
@@ -48,14 +48,14 @@ STRIP=strip
 # COMPRESSION TOOLS
 BZ2=(bzip2 -9)
 GZ=(pigz -9)
-LZ=(lzip -9)
+LZ=(clzip -9)
 XZ=(xz -9)
 ZZ=(pigz -z9)
 
 # UNCOMPRESSION TOOLS
 UBZ2=(bzcat)
 UGZ=(pigz -dc)
-ULZ=(lzip -dc)
+ULZ=(clzip -dc)
 UXZ=(xzcat)
 UZZ=(pigz -dc)
 
