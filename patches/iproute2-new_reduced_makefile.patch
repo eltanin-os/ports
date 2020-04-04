@@ -1,11 +1,12 @@
-diff --git a/Makefile b/Makefile
-index b7488add..089a8b75 100644
---- a/Makefile
-+++ b/Makefile
+diff -Naur a/Makefile b/Makefile
+--- a/Makefile	2020-03-28 01:48:35.695836272 -0300
++++ b/Makefile	2020-03-28 01:49:01.355837540 -0300
 @@ -1,128 +1,194 @@
 -# SPDX-License-Identifier: GPL-2.0
 -# Top level Makefile for iproute2
--
++.SUFFIXES:
++.SUFFIXES: .o .c
+ 
 -ifeq ("$(origin V)", "command line")
 -VERBOSE = $(V)
 -endif
@@ -91,10 +92,6 @@ index b7488add..089a8b75 100644
 -
 -config.mk:
 -	sh configure $(KERNEL_INCLUDE)
--
-+.SUFFIXES:
-+.SUFFIXES: .o .c
-+
 +INTERNAL_CFLAGS=\
 +	-D_GNU_SOURCE\
 +	-DHAVE_SETNS\
@@ -272,7 +269,7 @@ index b7488add..089a8b75 100644
 +$(LIBNETLINK): $(LIBNETLINKOBJ)
 +	$(AR) rc $@ $?
 +	$(RANLIB) $@
-+
+ 
 +#
  install: all
 -	install -m 0755 -d $(DESTDIR)$(SBINDIR)
@@ -299,7 +296,7 @@ index b7488add..089a8b75 100644
 +	install -cm 755 $(BIN) $(DESTDIR)/$(PREFIX)/bin
 +	install -dm 755         $(DESTDIR)/$(MANDIR)/man8
 +	install -cm 644 $(MAN8) $(DESTDIR)/$(MANDIR)/man8
-
+ 
  clean:
 -	@for i in $(SUBDIRS) testsuite; \
 -	do $(MAKE) $(MFLAGS) -C $$i clean; done
