@@ -1,0 +1,56 @@
+diff -Naur a/Makefile b/Makefile
+--- a/Makefile	2019-09-19 11:00:38.000000000 -0300
++++ b/Makefile	2020-03-29 23:41:11.523992719 -0300
+@@ -24,9 +24,9 @@
+ CFLAGS_ALL := $(CFLAGS_AUTO) $(CFLAGS)
+ LDFLAGS_ALL := $(LDFLAGS_AUTO) $(LDFLAGS)
+ LDLIBS_ALL := $(LDLIBS_AUTO) $(LDLIBS)
+-AR := $(CROSS_COMPILE)ar
+-RANLIB := $(CROSS_COMPILE)ranlib
+-STRIP := $(CROSS_COMPILE)strip
++AR := $(CROSS_COMPILE)$(AR_AUTO)
++RANLIB := $(CROSS_COMPILE)$(RANLIB_AUTO)
++STRIP := $(CROSS_COMPILE)$(STRIP_AUTO)
+ INSTALL := ./tools/install.sh
+ 
+ TYPES := size uid gid pid time dev ino
+diff -Naur a/configure b/configure
+--- a/configure	2019-09-20 18:59:33.000000000 -0300
++++ b/configure	2020-03-29 23:42:21.523996176 -0300
+@@ -46,7 +46,7 @@
+ Sysdeps autodetection override:
+   --with-sysdep-K=V             assume sysdep K has the value V [autodetected]
+ List of mandatory K for cross-compiling: devurandom (V=yes|no)
+- 
++
+ EOF
+   exit 0
+ }
+@@ -297,7 +297,7 @@
+   for t in size uid gid pid time dev ino ; do
+     iscached "signed$t" || { echon "signed${t}: " ; if trysigned "${t}_t" ; then echo "yes" ; else echo "no" ; fi ; } >> "$sysdeps/sysdeps"
+     iscached "sizeof$t" || { echon "sizeof${t}: " ; trysizes "${t}_t" 4 8 2 ; } >> "$sysdeps/sysdeps"
+-  done  
++  done
+   echo "  ... done"
+ }
+ 
+@@ -405,7 +405,7 @@
+     --with-default-path=*) defaultpath=${arg#*=} ; dpathorig=false ;;
+     --without-default-path) defaultpath=$ddefaultpath ; dpathorig=true ;;
+     --with-sysdep-*=*) sysdeplist="$sysdeplist ${arg#--with-sysdep-}" ;;
+-    --without-sysdep-*) sysdeplist="$sysdeplist ${arg#--with-sysdep-}=no" ;; 
++    --without-sysdep-*) sysdeplist="$sysdeplist ${arg#--with-sysdep-}=no" ;;
+     --enable-*|--disable-*|--with-*|--without-*|--*dir=*) ;;
+     --host=*|--target=*) target=${arg#*=} ;;
+     --build=*) build=${arg#*=} ;;
+@@ -661,6 +661,9 @@
+ SYSCLOCK_LIB := ${sysclock_lib}
+ TIMER_LIB := ${timer_lib}
+ UTIL_LIB := ${util_lib}
++AR_AUTO := ${AR}
++RANLIB_AUTO := ${RANLIB}
++STRIP_AUTO := ${STRIP}
+ CC := ${CC_AUTO}
+ CPPFLAGS_AUTO := $CPPFLAGS_AUTO
+ CPPFLAGS := $CPPFLAGS $CPPFLAGS_POST

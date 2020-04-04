@@ -5,6 +5,9 @@ license=ISC
 description=The skarnet.org C system programming library.
 cksum=91c9c8251a21afdb2b1304e106e576086f1b0bb346ac1957007a9689e4bfc5fd3545b0e60adb2c91f32759d2eeba5af905d62413253f2aeffece9f482aaea0ae
 
+[patches]
+skalibs-vars.patch
+
 [mirrors]
 http://skarnet.org/software/skalibs/skalibs-$version.tar.gz
 

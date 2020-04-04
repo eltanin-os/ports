@@ -12,6 +12,7 @@ http://dl.2f30.org/releases/sdhcp-$version.tar.gz
 libc
 
 [build]
+mksed Makefile 's/@ranlib/@$(RANLIB)/g'
 mkmeth make replace
 mkexec
 
