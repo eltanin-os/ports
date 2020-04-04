@@ -25,6 +25,7 @@ case *
 	static=0
 }
 cat <<EOF >configure.local
+AR="$AR"
 CC="$CC"
 CFLAGS="$CFLAGS"
 LDFLAGS="$LDFLAGS"
@@ -40,6 +41,7 @@ INSTALL_PROGRAM="$INSTALL -m 0755"
 UTF8_LOCALE="$LOCALE"
 LN="ln -sf"
 EOF
+mhsed Makefile 's/\(\t\)ar/\1$(AR)/g'
 mkmeth make
 ./configure
 mkexec
