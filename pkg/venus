@@ -6,7 +6,7 @@ description=A simple package manager.
 cksum=e16989a2f2968472e4cc57c69669fae01f0ec6b5346bab0780dbc4aa2412894516c0f69d1fa5ca8b81d0a337aff4556c8de8fb8ade02969b67329a414f56b818
 
 [mirrors]
-http://downloads.eltan.in.net/files/venus-$version.tar.lz
+http://downloads.eltan.in.net/files/venus/venus-$version.tar.lz
 
 [mdeps]
 tertium
