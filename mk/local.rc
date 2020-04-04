@@ -238,7 +238,7 @@ fn portsys_pkg_prepare {
 		for (l in $MLINKS) {
 			dir=`{dirname $"l}
 			file=`{basename $"l}
-			lp=`{basename `{readlink $"l}}
+			lp=`{basename `{ls -l $"l | sed 's/.*-> //g'}}
 			@{ cd $"dir
 			ln -sf $"lp $"file }
 		}

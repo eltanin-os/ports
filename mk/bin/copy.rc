@@ -8,7 +8,7 @@ case d
 	$PORTSYS_SU mkdir -p $"dest
 case l
 	@{ $PORTSYS_SU mkdir -p `{dirname $"dest} } ||;
-	s=`{readlink $"src}
+	s=`{ls -l $"src | sed 's/.*-> //g'}
 	$PORTSYS_SU ln -s $"s $"dest
 case *
 	$PORTSYS_SU $INSTALL -D $"src $"dest

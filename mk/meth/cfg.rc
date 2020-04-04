@@ -18,6 +18,7 @@ PORTSYS_METH_ENV=(
 	AR=$"AR
 	CC=$"CC
 	CXX=$"CXX
+	LD=$"LD
 	CFLAGS=$"_C
 	CPPFLAGS=$"_P
 	LDFLAGS=$"_L
