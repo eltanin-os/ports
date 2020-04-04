@@ -6,7 +6,7 @@ description=Eltanin core utilities.
 cksum=40b24f8c33e54d489ebb9e483f9b6023fd751fec1a120e9d67224d3d38485a5e1e61c100adee55c24104122d7dd9839b95e31177f58e5fc0d8f7671ac0642825
 
 [mirrors]
-http://downloads.eltan.in.net/files/ecore-$version.tar.lz
+http://downloads.eltan.in.net/files/ecore/ecore-$version.tar.lz
 
 [mdeps]
 tertium
