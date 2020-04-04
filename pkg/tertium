@@ -6,7 +6,7 @@ description=Eltanin system programming library.
 cksum=6bb142b9ca10f6f94e1e5ca9cd210cfca60d6fa3511e194495d3ba831115f45a03df06f96544716053b577f73db9041af6292888154b1a10d4371f6d5ce92ed9
 
 [mirrors]
-http://downloads.eltan.in.net/files/tertium-$version.tar.lz
+http://downloads.eltan.in.net/files/tertium/tertium-$version.tar.lz
 
 [build]
 CFLAGS=($CFLAGS -fno-builtin)
