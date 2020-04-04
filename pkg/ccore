@@ -6,7 +6,7 @@ description=Eltanin complementary core.
 cksum=7df8ff477d2cecacf520fec7a497f52fe2b52c3a3279f3d45f0871ea14f9a11b73afc0a972f56a254b479d7b34a2649457b3d3eef920f6193ae3e21910d7d3be
 
 [mirrors]
-http://downloads.eltan.in.net/files/ccore-$version.tar.lz
+http://downloads.eltan.in.net/files/ccore/ccore-$version.tar.lz
 
 [mdeps]
 ncurses
