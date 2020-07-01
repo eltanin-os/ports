@@ -1,0 +1,22 @@
+#!/bin/rc
+PORTSYS_METH_FLAGS=()
+PORTSYS_MK_FLAGS=()
+while (~ $1 -*) {
+	for (opt in `{printf '%s' $1 | fold -w1}) switch($opt) {
+	case f
+		PORTSYS_MK_FLAGS=($PORTSYS_MK_FLAGS $2)
+		shift
+	case m
+		PORTSYS_METH_FLAGS=($PORTSYS_METH_FLAGS $2)
+		shift
+	case -
+		;
+	case *
+		echo $0: '<error>' unknown flag $opt >[1=2]
+		exit 1
+	}
+	shift
+}
+meth=$1
+shift
+for (rule in $*) $"PORTS/mk/meth/$"meth.rc $rule

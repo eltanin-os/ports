@@ -1,0 +1,4 @@
+#!/bin/rc
+dest=$name'#'$version.$pkgsuf
+if (! ~ $PKGPATH '') dest=$PKGPATH/$dest
+cat $* | $PACK | $COMPRESS > $dest

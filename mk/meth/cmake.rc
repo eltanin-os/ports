@@ -7,30 +7,30 @@ mkdir $"dir
 cd $"dir
 
 if ($static) {
-	flags=(-D BUILD_SHARED_LIBS=OFF)
+	flags=(-D BUILD_SHARED_LIBS'='OFF)
 }; if not {
-	flags=(-D BUILD_SHARED_LIBS=ON)
+	flags=(-D BUILD_SHARED_LIBS'='ON)
 }
 
 switch ($_L) {
 case *'-O3'*
-	flags=($flags -DCMAKE_BUILD_TYPE=Release)
+	flags=($flags -DCMAKE_BUILD_TYPE'='Release)
 case *'-O2'*
-	flags=($flags -DCMAKE_BUILD_TYPE=MinSizeRel)
+	flags=($flags -DCMAKE_BUILD_TYPE'='MinSizeRel)
 case *'-Os'*
-	flags=($flags -DCMAKE_BUILD_TYPE=MinSizeRel)
+	flags=($flags -DCMAKE_BUILD_TYPE'='MinSizeRel)
 }
 
 if (~ $"1 *install*) {
 	cmake --build . --target $*
 }; if not @{
 	if (! test -n $"PREFIX) PREFIX='/'
-	env -i -- $PORTSYS_METH_ENV         \
-	    cmake                           \
-	    -GNinja                         \
-	    -DCMAKE_INSTALL_PREFIX=$"PREFIX \
-	    $flags                          \
-	    $PORTSYS_METH_FLAGS             \
+	env -i -- $PORTSYS_METH_ENV           \
+	    cmake                             \
+	    -GNinja                           \
+	    -DCMAKE_INSTALL_PREFIX'='$"PREFIX \
+	    $flags                            \
+	    $PORTSYS_METH_FLAGS               \
 	    ..
 	cmake --build .
 }

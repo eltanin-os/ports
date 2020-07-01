@@ -12,7 +12,7 @@ for (flag in $PORTSYS_MK_FLAGS) {
 for (flag in $PORTSYS_MK_FLAGS) {
 	switch ($flag) {
 	case 'replace'
-		_A=(CFLAGS=$"_C CPPFLAGS=$"_P LDFLAGS=$"_L)
+		_A=(CFLAGS'='$"_C CPPFLAGS'='$"_P LDFLAGS'='$"_L)
 		PORTSYS_METH_FLAGS=($PORTSYS_METH_FLAGS $_A)
 	}
 }
@@ -20,20 +20,20 @@ for (flag in $PORTSYS_MK_FLAGS) {
 @{
 env -i -- $PORTSYS_METH_ENV \
     make -j $nprocs         \
-    AR=$"AR                 \
-    CC=$"CC                 \
-    CXX=$"CXX               \
-    YACC=$"YACC             \
-    STRIP=$"STRIP           \
-    RANLIB=$"RANLIB         \
-    PREFIX=$"PREFIX         \
-    BINDIR=$"BINDIR         \
-    LIBDIR=$"LIBDIR         \
-    ETCDIR=$"ETCDIR         \
-    DFLDIR=$"DFLDIR         \
-    MANDIR=$"MANDIR         \
-    INCDIR=$"INCDIR         \
-    DESTDIR=$"DESTDIR       \
+    AR'='$"AR               \
+    CC'='$"CC               \
+    CXX'='$"CXX             \
+    YACC'='$"YACC           \
+    STRIP'='$"STRIP         \
+    RANLIB'='$"RANLIB       \
+    PREFIX'='$"PREFIX       \
+    BINDIR'='$"BINDIR       \
+    LIBDIR'='$"LIBDIR       \
+    ETCDIR'='$"ETCDIR       \
+    DFLDIR'='$"DFLDIR       \
+    MANDIR'='$"MANDIR       \
+    INCDIR'='$"INCDIR       \
+    DESTDIR'='$"DESTDIR     \
     $PORTSYS_METH_FLAGS     \
     $*
 }

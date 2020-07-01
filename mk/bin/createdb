@@ -1,0 +1,43 @@
+#!/bin/rc -e
+# $1: file
+# $2: type
+# $3: desc
+files=`{cat $1}
+if (~ $#files 0) exit 0
+# header
+if (! ~ $3 '') description=$"description' '$3
+size=`{cat $1 | $PORTS/mk/bin/install -n}
+tmp=`{mktemp}
+cat <<EOF >$tmp
+name:$name
+version:$version
+license:$license
+description:$description
+size:$size
+EOF
+# rdeps
+if (! ~ $#rdeps 0) {
+	echo 'rdeps{'
+	for (dep in $rdeps) printf '\t%s\n' $dep
+	echo '}'
+} >> $tmp
+# mdeps
+# TODO: move dynamic mdeps to rdeps
+if (! ~ $#mdeps 0) {
+	echo 'mdeps{'
+	for (dep in $mdeps) printf '\t%s\n' $dep
+	echo '}'
+} >> $tmp
+# files
+{
+echo 'files{'
+for (f in $files) {
+	fsum=`{venus-cksum $f}
+	printf '\t%s\n' $"fsum
+}
+echo '}'
+} >> $tmp
+# gen
+target=$"name
+if (! ~ $2 '') target=$target$2
+mv $tmp $DBDIR/$target

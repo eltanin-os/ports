@@ -1,0 +1,19 @@
+#!/bin/rc -e
+# $1 : tmp file
+. $PORTS/mk/config.rc
+. $PORTS/mk/io.rc
+file=`{cat $1}
+switch ($file) {
+case *'.tar.bz2' *'.tbz2'
+	{ $UBZ2 $file | $UNTAR } ||; # catch false error
+case *'.tar.gz' *'.tgz'
+	$UGZ $file | $UNTAR
+case *'.tar.lz' *'.tlz'
+	$ULZ $file | $UNTAR
+case *'.tar.xz' *'.txz'
+	$UXZ $file | $UNTAR
+case *'.tar.zz' *'.tzz'
+	$UZZ $file | $UNTAR
+case *
+	error $file: unknown format
+}

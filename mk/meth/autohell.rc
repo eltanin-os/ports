@@ -25,27 +25,28 @@ if ($static) {
 	shared=yes
 }
 
-if (~ $"1 *install*) {
+if (teste -e AUTOHELL@DONE) {
 	make -- DESTDIR=$"DESTDIR $*
 }; if not @{
 	if (! test -n $"PREFIX) PREFIX='/'
 	chmod +x $CONFIGURE
 	env -i -- $PORTSYS_METH_ENV  \
 	    $CONFIGURE               \
-	    --prefix=$"PREFIX        \
-	    --bindir=$"BINDIR        \
-	    --sbindir=$"BINDIR       \
-	    --libdir=$"LIBDIR        \
-	    --includedir=$"INCDIR    \
-	    --oldincludedir=$"INCDIR \
-	    --datarootdir=$"DRTDIR   \
-	    --mandir=$"MANDIR        \
-	    --enable-shared=$"shared \
-	    --enable-static=$"static \
+	    --prefix'='$"PREFIX        \
+	    --bindir'='$"BINDIR        \
+	    --sbindir'='$"BINDIR       \
+	    --libdir'='$"LIBDIR        \
+	    --includedir'='$"INCDIR    \
+	    --oldincludedir'='$"INCDIR \
+	    --datarootdir'='$"DRTDIR   \
+	    --mandir'='$"MANDIR        \
+	    --enable-shared'='$"shared \
+	    --enable-static'='$"static \
 	    $PORTSYS_METH_FLAGS
+	touch AUTOHELL@DONE
 	if (test -f 'libtool' && ~ $"static 'yes') {
 		_L=($_L -all-static)
-		make -- LDFLAGS=$"_L $*
+		make -- DESTDIR=$"DESTDIR LDFLAGS=$"_L $*
 	}
-	if not make -- $*
+	if not make -- DESTDIR=$"DESTDIR $*
 }

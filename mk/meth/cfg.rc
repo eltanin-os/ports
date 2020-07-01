@@ -5,8 +5,8 @@ _L=$LDFLAGS
 . $PORTS/mk/config.rc
 
 if (test -z $"_C) _C=$CFLAGS
-if (test -z $"_P) _P=$CPPFLAGS
 if (test -z $"_L) _L=$LDFLAGS
+if (test -z $"_P) _P=$CPPFLAGS
 
 static=false
 if (~ ' '$"_L' ' *' -static '*) {
@@ -14,30 +14,33 @@ if (~ ' '$"_L' ' *' -static '*) {
 	PKG_CONFIG=$"PKG_CONFIG' --static'
 }
 
-PORTSYS_METH_ENV=(
-	AR=$"AR
-	CC=$"CC
-	CXX=$"CXX
-	LD=$"LD
-	CFLAGS=$"_C
-	CPPFLAGS=$"_P
-	LDFLAGS=$"_L
-	LDLIBS=$"LDLIBS
-	ACLOCAL='aclocal -I'$"PORTSYS_ROOTPWD$"DRTDIR/aclocal
-	PKG_CONFIG=$"PKG_CONFIG
-	PKG_CONFIG_LIBDIR=$"SYSPATH$"LIBDIR
-	PKG_CONFIG_PATH=$"PORTSYS_ROOTPWD$"LIBDIR/pkgconfig
-	PKG_CONFIG_SYSROOT_DIR=$"PORTSYS_ROOTPWD
-	PATH=$"PATH
-	INSTALL=$"INSTALL
-	YACC=$"YACC
-	STRIP=$"STRIP
-	RANLIB=$"RANLIB
-	PREFIX=$"PREFIX
-	BINDIR=$"BINDIR
-	LIBDIR=$"LIBDIR
-	ETCDIR=$"ETCDIR
-	DFLDIR=$"DFLDIR
-	MANDIR=$"MANDIR
-	INCDIR=$"INCDIR
+_L=($_L $PORTSYS_TMP_LIBDIRS)
+_P=($_P $PORTSYS_TMP_INCDIRS)
+
+PORTSYS_METH_ENV=(                                            \
+	AR'='$"AR                                             \
+	CC'='$"CC                                             \
+	CXX'='$"CXX                                           \
+	LD'='$"LD                                             \
+	CFLAGS'='$"_C                                         \
+	CPPFLAGS'='$"_P                                       \
+	LDFLAGS'='$"_L                                        \
+	LDLIBS'='$"LDLIBS                                     \
+	ACLOCAL'=aclocal -I'$"PORTSYS_ROOTPWD$"DRTDIR/aclocal \
+	PKG_CONFIG'='$"PKG_CONFIG                             \
+	PKG_CONFIG_LIBDIR'='$"SYSPATH$"LIBDIR                 \
+	PKG_CONFIG_PATH'='$"PORTSYS_ROOTPWD$"LIBDIR/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR'='$"PORTSYS_ROOTPWD            \
+	PATH'='$"PATH                                         \
+	INSTALL'='$"INSTALL                                   \
+	YACC'='$"YACC                                         \
+	STRIP'='$"STRIP                                       \
+	RANLIB'='$"RANLIB                                     \
+	PREFIX'='$"PREFIX                                     \
+	BINDIR'='$"BINDIR                                     \
+	LIBDIR'='$"LIBDIR                                     \
+	ETCDIR'='$"ETCDIR                                     \
+	DFLDIR'='$"DFLDIR                                     \
+	MANDIR'='$"MANDIR                                     \
+	INCDIR'='$"INCDIR                                     \
 )

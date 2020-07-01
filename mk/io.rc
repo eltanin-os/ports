@@ -1,0 +1,16 @@
+#!/bin/rc
+# $* : message
+fn error {
+	echo $argv0: '<error>' $* >[1=2]
+	exit 1
+}
+
+# $* : message
+fn message {
+	echo $argv0: '<message>' $*
+}
+
+# $* : message
+fn warning {
+	echo $argv0: '<warning>' $* >[1=2]
+}

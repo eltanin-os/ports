@@ -13,21 +13,21 @@ if ($static) {
 }
 
 if (! test -d $PORTSYS_TMP_BUILDDIR) {
-	env -i $PORTSYS_METH_ENV          \
-	    PKG_CONFIG=$"PC               \
-	    meson                         \
-	    --prefix=$"prefix             \
-	    --bindir=$"prefix$"BINDIR     \
-	    --datadir=$"prefix$"DRTDIR    \
-	    --includedir=$"prefix$"INCDIR \
-	    --libdir=$"prefix$"LIBDIR     \
-	    --mandir=$"prefix$"MANDIR     \
-	    --sbindir=$"prefix$"BINDIR    \
-	    --sysconfdir=$"ETCDIR         \
-	    --buildtype=plain             \
-	    --default-library=$"static    \
-	    $PORTSYS_METH_FLAGS           \
-	    --                            \
+	env -i $PORTSYS_METH_ENV            \
+	    PKG_CONFIG'='$"PC               \
+	    meson                           \
+	    --prefix'='$"prefix             \
+	    --bindir'='$"prefix$"BINDIR     \
+	    --datadir'='$"prefix$"DRTDIR    \
+	    --includedir'='$"prefix$"INCDIR \
+	    --libdir'='$"prefix$"LIBDIR     \
+	    --mandir'='$"prefix$"MANDIR     \
+	    --sbindir'='$"prefix$"BINDIR    \
+	    --sysconfdir'='$"ETCDIR         \
+	    --buildtype'='plain             \
+	    --default-library'='$"static    \
+	    $PORTSYS_METH_FLAGS             \
+	    --                              \
 	    $PORTSYS_TMP_BUILDDIR
 }
 

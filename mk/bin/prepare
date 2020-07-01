@@ -1,0 +1,22 @@
+#!/bin/rc -e
+# $1 : directory
+# $2 : pattern
+fn findpattern {
+	dir=$1
+	shift
+	find $dir -type f '(' -name '' `{printf ' -o -name %s' $*} ')'
+}
+
+if (test -d .$BINDIR)
+	find $BINDIR -type f -exec $STRIP --strip-all '{}' + ||;
+if (test -d .$MANDIR) {
+	mf=`{findpattern .$MANDIR '*.'^(1 2 3 4 5 6 7 8)}
+	if (! ~ $#mf 0) $ZZ $mf
+	for (l in `{find ./$MANDIR -type l}) {
+		dir=`{dirname $l}
+		file=`{basename $l}
+		lp=`{basename `{ls -l $l | sed 's/.*-> //g'}}
+		@{ cd $dir
+		ln -sf $lp $file }
+	}
+}
