@@ -17,6 +17,8 @@ if (test -d .$MANDIR) {
 		file=`{basename $l}
 		lp=`{basename `{ls -l $l | sed 's/.*-> //g'}}
 		@{ cd $dir
+		if (test -f $lp.zz) lp=$lp.zz
 		ln -sf $lp $file }
 	}
 }
+true # only god knows why

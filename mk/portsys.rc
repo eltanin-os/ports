@@ -99,7 +99,8 @@ if (!$bflag && !$dflag && !$mflag && !$sflag) {
 # portsys global vars
 PWD=`{pwd}
 if (~ $PKGPATH '') PKGPATH=$PWD/portsys_pkgs
-if (~ $mk 'pack') DBDIR=$PKGPATH
+if (~ $mk 'pack') TDBDIR=$PKGPATH
+if not TDBDIR=$DBDIR
 if (! test -d $PKGPATH) mkdir $PKGPATH
 if (~ $CACHEDIR '') CACHEDIR=$PWD/portsys_cache
 if (! test -d $CACHEDIR) mkdir $CACHEDIR
@@ -128,8 +129,8 @@ if ($uflag || ! test -f $PORTS/pkg/cache.cdb) $PORTS/mk/bin/helper -u
 deplist=`{$PORTS/mk/bin/helper -d $*}
 if (! ~ $status 0) error failed to generate args list
 args=($deplist $*)
-PORTSYS_TMP_INCDIRS='-I '$WRKDIR/pkgroot/$args/$INCDIR
-PORTSYS_TMP_LIBDIRS='-L '$WRKDIR/pkgroot/$args/$LIBDIR
+PORTSYS_TMP_INCDIRS='-I'$WRKDIR/pkgroot/$args/$INCDIR
+PORTSYS_TMP_LIBDIRS='-L'$WRKDIR/pkgroot/$args/$LIBDIR
 
 # stage1: fetch, explode, patch
 for (pkg in $args) {
@@ -144,8 +145,8 @@ for (pkg in $args) {
 	message $pkg: patching...
 	cd `{getsrc $pkg}
 	for (p in `{$PORTS/mk/bin/helper -t patches $pkg}) {
-		path=`{$PORTS/mk/bin/helper $pkg}
-		patch -p1 < $path/$p
+		dir=`{$PORTS/mk/bin/helper $pkg}
+		patch -p1 < $dir/patches/$p
 	}
 }
 
@@ -157,7 +158,7 @@ for (pkg in $args) {
 	@{ name=`{$PORTS/mk/bin/helper -k name $pkg}
 	DESTDIR=$WRKDIR/pkgroot/$name
 	dir=`{$PORTS/mk/bin/helper $pkg}
-	PORTSYS_TMP_BUILDDIR=`{mktemp -tu 'PORTSYS@XXXXXXXXX'}
+	PORTSYS_TMP_BUILDDIR=`{mktemp -u 'PORTSYS@XXXXXXXXX'}
 	PATH=$PATH:$PORTS/mk/utils
 	$dir/build }
 }
@@ -192,11 +193,19 @@ for (pkg in $deplist $*) {
 	rdeps=`{$PORTS/mk/bin/helper -t rdeps $pkg}
 	if ($bflag) {
 		$PORTS/mk/bin/createdb INSTALL@DEF
-		if ($mflag) $PORTS/mk/bin/createdb INSTALL@MAN '-man' '<MANPAGES>'
+		if ($mflag) {
+			rdeps=()
+			mdeps=()
+			$PORTS/mk/bin/createdb INSTALL@MAN '-man' '<MANPAGES>'
+		}
 	}
 	if ($dflag) {
 		$PORTS/mk/bin/createdb INSTALL@DEV '-dev' '<DEVELOPMENT>'
-		if ($mflag) $PORTS/mk/bin/createdb INSTALL@DEVMAN '-devman' '<DEVELOPMENT MANPAGES>'
+		if ($mflag) {
+			rdeps=()
+			mdeps=()
+			$PORTS/mk/bin/createdb INSTALL@DEVMAN '-devman' '<DEVELOPMENT MANPAGES>'
+		}
 	}
 	if ($sflag) $PORTS/mk/bin/createdb INSTALL@DYNLIB '-dynlib' '<DYNAMIC LIBRARIES>'
 }

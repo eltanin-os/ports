@@ -25,7 +25,14 @@ if (! ~ $#rdeps 0) {
 # TODO: move dynamic mdeps to rdeps
 if (! ~ $#mdeps 0) {
 	echo 'mdeps{'
-	for (dep in $mdeps) printf '\t%s\n' $dep
+	for (dep in $mdeps) {
+		d=$dep'-dev'
+		dir=$DBDIR
+		if (! test -e $dir/$d) v=`{$PORTS/mk/bin/helper -k version $dep}
+		if not v=`{$SED -n 's/version://p' $dir/$d}
+		dep=$d'#'$v
+		printf '\t%s\n' $dep
+	}
 	echo '}'
 } >> $tmp
 # files
@@ -40,4 +47,4 @@ echo '}'
 # gen
 target=$"name
 if (! ~ $2 '') target=$target$2
-mv $tmp $DBDIR/$target
+mv $tmp $TDBDIR/$target

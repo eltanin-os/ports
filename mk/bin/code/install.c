@@ -94,8 +94,8 @@ main(int argc, char **argv)
 		while ((r = c_ioq_getln(ioq0, &arr)) > 0) {
 			dest = c_arr_data(&arr);
 			dest[c_arr_bytes(&arr) - 1] = 0;
-			if (c_sys_stat(&st, dest) < 0)
-				c_err_die(1, "c_sys_stat %s", dest);
+			if (c_sys_lstat(&st, dest) < 0)
+				c_err_die(1, "c_sys_lstat %s", dest);
 			len += st.blocks;
 			c_arr_trunc(&arr, 0, sizeof(uchar));
 		}

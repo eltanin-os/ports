@@ -12,8 +12,8 @@ case *'nobuilddir'*
 
 if ($OBDIR) {
 	dir=$"PORTSYS_TMP_BUILDDIR
-	mkdir $"dir
-	cd $"dir
+	mkdir $dir
+	cd $dir
 	CONFIGURE='../configure'
 }
 
@@ -25,8 +25,8 @@ if ($static) {
 	shared=yes
 }
 
-if (teste -e AUTOHELL@DONE) {
-	make -- DESTDIR=$"DESTDIR $*
+if (test -f AUTOHELL@DONE) {
+	make -- DESTDIR'='$"DESTDIR $*
 }; if not @{
 	if (! test -n $"PREFIX) PREFIX='/'
 	chmod +x $CONFIGURE
@@ -46,7 +46,7 @@ if (teste -e AUTOHELL@DONE) {
 	touch AUTOHELL@DONE
 	if (test -f 'libtool' && ~ $"static 'yes') {
 		_L=($_L -all-static)
-		make -- DESTDIR=$"DESTDIR LDFLAGS=$"_L $*
+		make -- DESTDIR'='$"DESTDIR LDFLAGS'='$"_L $*
 	}
-	if not make -- DESTDIR=$"DESTDIR $*
+	if not make -- DESTDIR'='$"DESTDIR $*
 }
