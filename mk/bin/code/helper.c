@@ -274,20 +274,33 @@ getkey(struct cfg *cfg, char *k, int istag)
 
 /* args routines */
 static int
+checknode(ctype_node *p, char *s)
+{
+	if (!p)
+		return 0;
+	p = p->next;
+	do {
+		if (!c_str_cmp(p->p, -1, s))
+			return 1;
+	} while ((p = p->next)->prev);
+	return 0;
+}
+
+static int
 populatedeps(ctype_node **np, ctype_node *list)
 {
 	struct cfg *cfg;
 	ctype_stat st;
 	ctype_node *wp;
+	ctype_fssize off;
 	ctype_status r;
-	int n;
 	char *path, *s;
 
 	if (!list)
 		return 0;
 
 	wp = list->next;
-	r = n = 0;
+	r = 0;
 	do {
 		cfg = getcfg(wp->p);
 		if (!(s = getkey(cfg, "mdeps{", 1)))
@@ -300,19 +313,20 @@ populatedeps(ctype_node **np, ctype_node *list)
 				r = c_err_warnx("%s: package not found", s);
 				continue;
 			}
-			if (c_adt_ltpush(np,
-			    c_adt_lnew(path, c_str_len(path, -1) + 1)) < 0)
+			if (checknode(*np, path))
+				continue;
+			off = c_str_len(path, -1) + 1;
+			if (c_adt_ltpush(np, c_adt_lnew(path, off)) < 0)
 				c_err_die(1, "c_adt_lpush %s", path);
-			n = 1;
+			off = getpos(cfg);
+			populatedeps(np, *np);
+			cfg = getcfg(wp->p);
+			tagsetpos(cfg, off + c_str_len(s, -1) + 1);
 		} while ((s = getkey(cfg, nil, 1)));
 		c_sys_close(c_ioq_fileno(&cfg->ioq));
 	} while ((wp = wp->next)->prev);
 
-	if (r)
-		c_sys_exit(1);
-	if (n)
-		populatedeps(np, *np);
-	return n;
+	return r ? (c_sys_exit(1), -1) : 0;
 }
 
 static void
