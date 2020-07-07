@@ -29,8 +29,8 @@ case *
 shift
 
 # path vars
-EXTRAINC=''
-EXTRALIB=''
+EXTRAINC=()
+EXTRALIB=()
 PKGPATH=''
 SYSPATH=''
 
@@ -65,8 +65,8 @@ while (~ $1 -*) {
 	case e
 		if (test -z $2) error no directory given
 		message using a extra directory
-		EXTRAINC=$EXTRAINC' -I'$2$"INCDIR
-		EXTRALIB=$EXTRALIB' -L'$2$"LIBDIR
+		EXTRAINC=($EXTRAINC '-I'$2$"INCDIR)
+		EXTRALIB=($EXTRALIB '-L'$2$"LIBDIR)
 		shift
 	case k
 		message preserving dependencies
@@ -129,8 +129,12 @@ if ($uflag || ! test -f $PORTS/pkg/cache.cdb) $PORTS/mk/bin/helper -u
 deplist=`{$PORTS/mk/bin/helper -d $*}
 if (! ~ $status 0) error failed to generate args list
 args=($deplist $*)
-PORTSYS_TMP_INCDIRS='-I'$WRKDIR/pkgroot/$args/$INCDIR
-PORTSYS_TMP_LIBDIRS='-L'$WRKDIR/pkgroot/$args/$LIBDIR
+PORTSYS_TMP_INCDIRS=$EXTRAINC
+PORTSYS_TMP_LIBDIRS=$EXTRALIB
+if (! ~ $#args 0) {
+	PORTSYS_TMP_INCDIRS=($PORTSYS_TMP_INCDIRS '-I'$WRKDIR/pkgroot/$args/$INCDIR)
+	PORTSYS_TMP_LIBDIRS=($PORTSYS_TMP_LIBDIRS '-L'$WRKDIR/pkgroot/$args/$LIBDIR)
+}
 
 # stage1: fetch, explode, patch
 for (pkg in $args) {
@@ -166,46 +170,42 @@ for (pkg in $args) {
 # stage3: install/pack, generate db files
 if (! $kflag) deplist=()
 
-ilist=''
-if ($bflag) {
-	ilist=('INSTALL@DEF')
-	if ($mflag) ilist=($ilist 'INSTALL@MAN')
-}
-if ($dflag) {
-	ilist=($ilist 'INSTALL@DEV')
-	if ($mflag) ilist=($ilist 'INSTALL@DEVMAN')
-}
-if ($sflag) ilist=($ilist 'INSTALL@DYNLIB')
-
 for (pkg in $deplist $*) {
 	name=`{$PORTS/mk/bin/helper -k name $pkg}
 	cd $WRKDIR/pkgroot/$name
 	message $pkg: preparing...
 	$PORTS/mk/bin/prepare
-	message $pkg: installing...
+	message $pkg: installing and creating database entries...
 	$PORTS/mk/bin/list
 	version=`{$PORTS/mk/bin/helper -k version $pkg}
-	$PORTS/mk/bin/$mk $ilist
-	message $pkg: creating database entries...
 	license=`{$PORTS/mk/bin/helper -k license $pkg}
 	description=`{$PORTS/mk/bin/helper -k description $pkg}
 	mdeps=`{$PORTS/mk/bin/helper -t mdeps $pkg}
 	rdeps=`{$PORTS/mk/bin/helper -t rdeps $pkg}
 	if ($bflag) {
+		$PORTS/mk/bin/$mk INSTALL@DEF
 		$PORTS/mk/bin/createdb INSTALL@DEF
-		if ($mflag) {
+		if ($mflag) @{
 			rdeps=()
 			mdeps=()
+			@{ name=$name'-man'
+			$PORTS/mk/bin/$mk INSTALL@MAN }
 			$PORTS/mk/bin/createdb INSTALL@MAN '-man' '<MANPAGES>'
 		}
 	}
 	if ($dflag) {
 		$PORTS/mk/bin/createdb INSTALL@DEV '-dev' '<DEVELOPMENT>'
-		if ($mflag) {
+		if ($mflag) @{
 			rdeps=()
 			mdeps=()
+			@{ name=$name'-devman'
+			$PORTS/mk/bin/$mk INSTALL@DEVMAN }
 			$PORTS/mk/bin/createdb INSTALL@DEVMAN '-devman' '<DEVELOPMENT MANPAGES>'
 		}
 	}
-	if ($sflag) $PORTS/mk/bin/createdb INSTALL@DYNLIB '-dynlib' '<DYNAMIC LIBRARIES>'
+	if ($sflag) {
+		@{ name=$name'-dynlib'
+		$PORTS/mk/bin/$mk INSTALL@DYNLIB }
+		$PORTS/mk/bin/createdb INSTALL@DYNLIB '-dynlib' '<DYNAMIC LIBRARIES>'
+	}
 }
