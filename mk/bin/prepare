@@ -7,6 +7,8 @@ fn findpattern {
 	find $dir -type f '(' -name '' `{printf ' -o -name %s' $*} ')'
 }
 
+rm -f `{findpattern . `{cat $PORTS/mk/blacklist}}
+
 if (test -d .$BINDIR)
 	find $BINDIR -type f -exec $STRIP --strip-all '{}' + ||;
 if (test -d .$MANDIR) {
