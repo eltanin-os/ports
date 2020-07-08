@@ -109,6 +109,7 @@ PORTSYS_HOSTARCH=`{uname -m}
 
 # tmp env fuctions
 WRKDIR=`{mktemp -dt PORTSYS@XXXXXXXXX}
+PORTSYS_PKGDIR=$WRKDIR/pkgroot
 fn sigexit {
 	rm -Rf $WRKDIR
 }
@@ -161,10 +162,13 @@ for (pkg in $args) {
 	message $pkg: building...
 	@{ name=`{$PORTS/mk/bin/helper -k name $pkg}
 	DESTDIR=$WRKDIR/pkgroot/$name
-	dir=`{$PORTS/mk/bin/helper $pkg}
-	PORTSYS_TMP_BUILDDIR=`{mktemp -u 'PORTSYS@XXXXXXXXX'}
 	PATH=$PATH:$PORTS/mk/utils
-	$dir/build }
+	PORTSYS_TMP_BUILDDIR=`{mktemp -u 'PORTSYS@XXXXXXXXX'}
+	dir=`{$PORTS/mk/bin/helper $pkg}
+	$dir/build
+	cd $DESTDIR
+	message $pkg: preparing...
+	$PORTS/mk/bin/prepare }
 }
 
 # stage3: install/pack, generate db files
@@ -173,8 +177,6 @@ if (! $kflag) deplist=()
 for (pkg in $deplist $*) {
 	name=`{$PORTS/mk/bin/helper -k name $pkg}
 	cd $WRKDIR/pkgroot/$name
-	message $pkg: preparing...
-	$PORTS/mk/bin/prepare
 	message $pkg: installing and creating database entries...
 	$PORTS/mk/bin/list
 	version=`{$PORTS/mk/bin/helper -k version $pkg}
