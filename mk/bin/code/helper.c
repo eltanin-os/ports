@@ -246,7 +246,10 @@ getkey(struct cfg *cfg, char *k, int istag)
 	func = istag ? cfgfindtag : cfgfind;
 	if ((s = func(cfg, k)) == (void *)-1)
 		c_err_die(1, "getkey");
-	if (s && (p = c_str_chr(s, -1, '$'))) {
+	if (!s)
+		return nil;
+
+	while ((p = c_str_chr(s, -1, '$'))) {
 		len = p - s;
 		if (!(s = c_str_dup(s, c_arr_bytes(&cfg->arr))))
 			c_err_die(1, "c_str_dup");
