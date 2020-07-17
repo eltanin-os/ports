@@ -146,11 +146,11 @@ for (pkg in $args) {
 	tmp=`{mktemp -p $WRKDIR}
 	$PORTS/mk/bin/fetch $tmp $mirrors
 	message $pkg: exploding...
-	$PORTS/mk/bin/explode $tmp
+	@{ $PORTS/mk/bin/explode $tmp } ||; # catch false errors
 	message $pkg: patching...
-	cd `{getsrc $pkg}
-	for (p in `{$PORTS/mk/bin/helper -t patches $pkg}) {
-		dir=`{$PORTS/mk/bin/helper $pkg}
+	dir=`{$PORTS/mk/bin/helper $pkg}
+	patches=`{$PORTS/mk/bin/helper -t patches $pkg}
+	for (p in $patches) {
 		patch -p1 < $dir/patches/$p
 	}
 }
@@ -196,6 +196,8 @@ for (pkg in $deplist $*) {
 		}
 	}
 	if ($dflag) {
+		@{ name=$name'-dev'
+		$PORTS/mk/bin/$mk INSTALL@DEV }
 		$PORTS/mk/bin/createdb INSTALL@DEV '-dev' '<DEVELOPMENT>'
 		if ($mflag) @{
 			rdeps=()

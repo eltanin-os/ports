@@ -19,4 +19,4 @@ while (~ $1 -*) {
 }
 meth=$1
 shift
-for (rule in $*) $"PORTS/mk/meth/$"meth.rc $rule
+$"PORTS/mk/meth/$"meth.rc $*

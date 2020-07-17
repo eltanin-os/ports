@@ -43,4 +43,5 @@ PORTSYS_METH_ENV=(                                            \
 	DFLDIR'='$"DFLDIR                                     \
 	MANDIR'='$"MANDIR                                     \
 	INCDIR'='$"INCDIR                                     \
+	TERM'='$"TERM                                         \
 )

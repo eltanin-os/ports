@@ -44,6 +44,7 @@ if (test -f AUTOHELL@DONE) {
 	    --enable-static'='$"static \
 	    $PORTSYS_METH_FLAGS
 	touch AUTOHELL@DONE
+	if (~ $#* 0) exit
 	if (test -f 'libtool' && ~ $"static 'yes') {
 		_L=($_L -all-static)
 		make -- DESTDIR'='$"DESTDIR LDFLAGS'='$"_L $*

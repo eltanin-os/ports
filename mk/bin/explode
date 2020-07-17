@@ -5,7 +5,7 @@
 file=`{cat $1}
 switch ($file) {
 case *'.tar.bz2' *'.tbz2'
-	{ $UBZ2 $file | $UNTAR } ||; # catch false error
+	$UBZ2 $file | $UNTAR
 case *'.tar.gz' *'.tgz'
 	$UGZ $file | $UNTAR
 case *'.tar.lz' *'.tlz'
