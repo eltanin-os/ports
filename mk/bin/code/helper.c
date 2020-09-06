@@ -142,6 +142,18 @@ getcfg(char *s)
 	return c;
 }
 
+static void *
+dupcfg(struct cfg *c)
+{
+	struct cfg *nc;
+
+	if (!(nc = c_std_alloc(1, sizeof(*nc))))
+		c_err_die(1, "c_std_alloc");
+	nc->arr = c->arr;
+	cfginit(nc, c->fd);
+	return nc;
+}
+
 static void
 closecfg(struct cfg *c)
 {
@@ -152,6 +164,7 @@ closecfg(struct cfg *c)
 static char *
 getkey(struct cfg *c, char *k, int istag)
 {
+	struct cfg *nc;
 	usize len;
 	int ch;
 	char *e, *p, *s;
@@ -167,13 +180,15 @@ getkey(struct cfg *c, char *k, int istag)
 		p = s + len;
 		*p++ = 0;
 		for (e = p; *e && c_str_casechr(ALPHA, 26, *e); ++e) ;
+		nc = dupcfg(c);
 		if (*e) {
 			ch = *e;
 			*e++ = 0;
-			s = fmtstr("%s%s%c%s", s, getkey(c, p, 0), ch, e);
+			s = fmtstr("%s%s%c%s", s, getkey(nc, p, 0), ch, e);
 		} else {
-			s = fmtstr("%s%s", s, getkey(c, p, 0));
+			s = fmtstr("%s%s", s, getkey(nc, p, 0));
 		}
+		c_std_free(nc);
 		len = c_arr_bytes(c->arr);
 		c_arr_trunc(c->arr, 0, sizeof(uchar));
 		if (c_dyn_fmt(c->arr, "%s", s) < 0)
@@ -373,28 +388,33 @@ main(int argc, char **argv)
 	char *k, *s;
 
 	c_std_setprogname(argv[0]);
+	--argc, ++argv;
 
 	mode = PMODE;
 	uflag = 0;
 
-	C_ARGBEGIN {
-	case 'd':
-		mode = DMODE;
-		break;
-	case 'k':
-		k = C_EARGF(usage());
-		mode = KMODE;
-		break;
-	case 't':
-		k = C_EARGF(usage());
-		mode = TMODE;
-		break;
-	case 'u':
-		uflag = 1;
-		break;
-	default:
-		usage();
-	} C_ARGEND
+	while (c_std_getopt(argmain, argc, argv, "dk:t:u")) {
+		switch (argmain->opt) {
+		case 'd':
+			mode = DMODE;
+			break;
+		case 'k':
+			k = argmain->arg;
+			mode = KMODE;
+			break;
+		case 't':
+			k = argmain->arg;
+			mode = TMODE;
+			break;
+		case 'u':
+			uflag = 1;
+			break;
+		default:
+			usage();
+		}
+	}
+	argc -= argmain->idx;
+	argv += argmain->idx;
 
 	if (!(ports = c_std_getenv("PORTS")))
 		c_err_diex(1, "missing PORTS environmental variable");
@@ -428,6 +448,13 @@ main(int argc, char **argv)
 		printdeps(argv);
 		break;
 	case KMODE:
+		if (!(s = getpath(*argv)))
+			c_err_diex(1, "%s: package not found", *argv);
+		c = getcfg(s);
+		c_ioq_fmt(ioq1, "%s\n", getkey(c, k, 0));
+		closecfg(c);
+		break;
+	case TMODE:
 		if (!(s = getpath(*argv)))
 			c_err_diex(1, "%s: package not found", *argv);
 		c = getcfg(s);

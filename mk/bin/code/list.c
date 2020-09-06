@@ -102,11 +102,16 @@ main(int argc, char **argv)
 	char *curdir[2];
 
 	c_std_setprogname(argv[0]);
+	--argc, ++argv;
 
-	C_ARGBEGIN {
-	default:
-		usage();
-	} C_ARGEND
+	while (c_std_getopt(argmain, argc, argv, "")) {
+		switch (argmain->opt) {
+		default:
+			usage();
+		}
+	}
+	argc -= argmain->idx;
+	argv += argmain->idx;
 
 	if (argc)
 		usage();
@@ -147,6 +152,7 @@ main(int argc, char **argv)
 				p->num = DEFDIR;
 				break;
 			case 1:
+			case 2:
 				p->num = getdirnum(p->path, p->len);
 				break;
 			default:

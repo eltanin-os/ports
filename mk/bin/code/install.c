@@ -75,16 +75,21 @@ main(int argc, char **argv)
 	char *dest;
 
 	c_std_setprogname(argv[0]);
+	--argc, ++argv;
 
 	nflag = 0;
 
-	C_ARGBEGIN {
-	case 'n':
-		nflag = 1;
-		break;
-	default:
-		usage();
-	} C_ARGEND
+	while (c_std_getopt(argmain, argc, argv, "n")) {
+		switch (argmain->opt) {
+		case 'n':
+			nflag = 1;
+			break;
+		default:
+			usage();
+		}
+	}
+	argc -= argmain->idx;
+	argv += argmain->idx;
 
 	if (argc)
 		usage();
@@ -104,14 +109,8 @@ main(int argc, char **argv)
 		return 0;
 	}
 
-	if (!(rootdir = c_std_getenv("PREFIX")))
+	if (!(rootdir = c_std_getenv("SYSPATH")))
 		c_err_diex(1, "missing PREFIX environmental variable");
-	if ((dest = c_std_getenv("DESTDIR"))) {
-		c_mem_set(&arr, sizeof(arr), 0);
-		if (c_dyn_fmt(&arr, "%s/%s", dest, rootdir) < 0)
-			c_err_die(1, "c_dyn_fmt");
-		rootdir = c_arr_data(&arr);
-	}
 
 	c_mem_set(&arr, sizeof(arr), 0);
 	while ((r = c_ioq_getln(ioq0, &arr)) > 0) {
