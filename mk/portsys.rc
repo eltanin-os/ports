@@ -97,19 +97,20 @@ if (!$bflag && !$dflag && !$mflag && !$sflag) {
 }
 
 # portsys global vars
+WRKDIR=`{mktemp -dt PORTSYS@XXXXXXXXX}
+PORTSYS_PKGDIR=$WRKDIR/pkgroot
+PORTSYS_ROOTPWD=$WRKDIR/tmproot
 PWD=`{pwd}
 if (~ $PKGPATH '') PKGPATH=$PWD/portsys_pkgs
 if (~ $mk 'pack') TDBDIR=$PKGPATH
 if not TDBDIR=$DBDIR
-if (! test -d $PKGPATH) mkdir $PKGPATH
+if (! test -d $TDBDIR) mkdir $TDBDIR
 if (~ $CACHEDIR '') CACHEDIR=$PWD/portsys_cache
 if (! test -d $CACHEDIR) mkdir $CACHEDIR
 PORTSYS_HOSTOS=`{uname -s | $AWK '{print(tolower($0))}'}
 PORTSYS_HOSTARCH=`{uname -m}
 
 # tmp env fuctions
-WRKDIR=`{mktemp -dt PORTSYS@XXXXXXXXX}
-PORTSYS_PKGDIR=$WRKDIR/pkgroot
 fn sigexit {
 	rm -Rf $WRKDIR
 }
@@ -130,12 +131,8 @@ if ($uflag || ! test -f $PORTS/pkg/cache.cdb) $PORTS/mk/bin/helper -u
 deplist=`{$PORTS/mk/bin/helper -d $*}
 if (! ~ $status 0) error failed to generate args list
 args=($deplist $*)
-PORTSYS_TMP_INCDIRS=$EXTRAINC
-PORTSYS_TMP_LIBDIRS=$EXTRALIB
-if (! ~ $#args 0) {
-	PORTSYS_TMP_INCDIRS=($PORTSYS_TMP_INCDIRS '-I'$WRKDIR/pkgroot/$args/$INCDIR)
-	PORTSYS_TMP_LIBDIRS=($PORTSYS_TMP_LIBDIRS '-L'$WRKDIR/pkgroot/$args/$LIBDIR)
-}
+PORTSYS_TMP_INCDIRS=($EXTRAINC '-I'$PORTSYS_ROOTPWD$INCDIR '-I'$SYSPATH$INCDIR)
+PORTSYS_TMP_LIBDIRS=($EXTRALIB '-L'$PORTSYS_ROOTPWD$LIBDIR '-L'$SYSPATH$LIBDIR)
 
 # stage1: fetch, explode, patch
 for (pkg in $args) {
@@ -160,15 +157,18 @@ for (pkg in $args) {
 	dir=`{getsrc $pkg}
 	cd $WRKDIR/$dir
 	message $pkg: building...
-	@{ name=`{$PORTS/mk/bin/helper -k name $pkg}
-	DESTDIR=$WRKDIR/pkgroot/$name
+	@{ PORTSYS_TMP_BUILDDIR=`{mktemp -u 'PORTSYS@XXXXXXXXX'}
 	PATH=$PATH:$PORTS/mk/utils
-	PORTSYS_TMP_BUILDDIR=`{mktemp -u 'PORTSYS@XXXXXXXXX'}
 	dir=`{$PORTS/mk/bin/helper $pkg}
+	name=`{$PORTS/mk/bin/helper -k name $pkg}
+	# for now install two times
+	@{ DESTDIR=$WRKDIR/tmproot
+	$dir/build }
+	@{ DESTDIR=$WRKDIR/pkgroot/$name
 	$dir/build
 	cd $DESTDIR
 	message $pkg: preparing...
-	$PORTS/mk/bin/prepare }
+	$PORTS/mk/bin/prepare } }
 }
 
 # stage3: install/pack, generate db files
