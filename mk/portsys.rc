@@ -116,19 +116,19 @@ fn sigexit {
 }
 
 fn getsrc {
-	dir=`{$PORTS/mk/bin/helper -k src $1}
+	dir=`{$PORTS/mk/bin/dbman -k src $1}
 	if (! ~ $dir '<nil>') {
 		echo -n $dir
 	}; if not {
-		name=`{$PORTS/mk/bin/helper -k name $1}
-		version=`{$PORTS/mk/bin/helper -k version $1}
+		name=`{$PORTS/mk/bin/dbman -k name $1}
+		version=`{$PORTS/mk/bin/dbman -k version $1}
 		echo -n $name-$version
 	}
 }
 
 # current deps as flags
-if ($uflag || ! test -f $PORTS/pkg/cache.cdb) $PORTS/mk/bin/helper -u
-deplist=`{$PORTS/mk/bin/helper -d $*}
+if ($uflag || ! test -f $PORTS/pkg/cache.cdb) $PORTS/mk/bin/dbman -u
+deplist=`{$PORTS/mk/bin/dbman -d $*}
 if (! ~ $status 0) error failed to generate args list
 args=($deplist $*)
 PORTSYS_TMP_INCDIRS=($EXTRAINC '-I'$PORTSYS_ROOTPWD$INCDIR '-I'$SYSPATH$INCDIR)
@@ -138,18 +138,17 @@ PORTSYS_TMP_LIBDIRS=($EXTRALIB '-L'$PORTSYS_ROOTPWD$LIBDIR '-L'$SYSPATH$LIBDIR)
 for (pkg in $args) {
 	cd $WRKDIR
 	message $pkg: fetching...
-	mirrors=`{$PORTS/mk/bin/helper -t mirrors $pkg}
-	version=`{$PORTS/mk/bin/helper -k version $pkg}
+	mirrors=`{$PORTS/mk/bin/dbman -t mirrors $pkg}
+	version=`{$PORTS/mk/bin/dbman -k version $pkg}
 	tmp=`{mktemp -p $WRKDIR}
 	$PORTS/mk/bin/fetch $tmp $mirrors
 	message $pkg: exploding...
 	@{ $PORTS/mk/bin/explode $tmp } ||; # catch false errors
 	message $pkg: patching...
-	dir=`{$PORTS/mk/bin/helper $pkg}
-	patches=`{$PORTS/mk/bin/helper -t patches $pkg}
-	for (p in $patches) {
-		patch -p1 < $dir/patches/$p
-	}
+	dir=`{$PORTS/mk/bin/dbman $pkg}
+	patches=`{$PORTS/mk/bin/dbman -t patches $pkg}
+	@{ cd `{getsrc $pkg}
+	for (p in $patches) patch -p1 < $dir/patches/$p }
 }
 
 # stage2: building
@@ -159,31 +158,31 @@ for (pkg in $args) {
 	message $pkg: building...
 	@{ PORTSYS_TMP_BUILDDIR=`{mktemp -u 'PORTSYS@XXXXXXXXX'}
 	PATH=$PATH:$PORTS/mk/utils
-	dir=`{$PORTS/mk/bin/helper $pkg}
-	name=`{$PORTS/mk/bin/helper -k name $pkg}
-	# for now install two times
-	@{ DESTDIR=$WRKDIR/tmproot
-	$dir/build }
+	dir=`{$PORTS/mk/bin/dbman $pkg}
+	name=`{$PORTS/mk/bin/dbman -k name $pkg}
 	@{ DESTDIR=$WRKDIR/pkgroot/$name
 	$dir/build
 	cd $DESTDIR
 	message $pkg: preparing...
-	$PORTS/mk/bin/prepare } }
+	$PORTS/mk/bin/prepare
+	# copy dev files in a single dir
+	$PORTS/mk/bin/list
+	@{ SYSPATH=$WRKDIR/tmproot
+	$PORTS/mk/bin/install -c <INSTALL@DEV } } }
 }
 
 # stage3: install/pack, generate db files
 if (! $kflag) deplist=()
 
 for (pkg in $deplist $*) {
-	name=`{$PORTS/mk/bin/helper -k name $pkg}
+	name=`{$PORTS/mk/bin/dbman -k name $pkg}
 	cd $WRKDIR/pkgroot/$name
 	message $pkg: installing and creating database entries...
-	$PORTS/mk/bin/list
-	version=`{$PORTS/mk/bin/helper -k version $pkg}
-	license=`{$PORTS/mk/bin/helper -k license $pkg}
-	description=`{$PORTS/mk/bin/helper -k description $pkg}
-	mdeps=`{$PORTS/mk/bin/helper -t mdeps $pkg}
-	rdeps=`{$PORTS/mk/bin/helper -t rdeps $pkg}
+	version=`{$PORTS/mk/bin/dbman -k version $pkg}
+	license=`{$PORTS/mk/bin/dbman -k license $pkg}
+	description=`{$PORTS/mk/bin/dbman -k description $pkg}
+	mdeps=`{$PORTS/mk/bin/dbman -t mdeps $pkg}
+	rdeps=`{$PORTS/mk/bin/dbman -t rdeps $pkg}
 	if ($bflag) {
 		$PORTS/mk/bin/$mk INSTALL@DEF
 		$PORTS/mk/bin/createdb INSTALL@DEF
