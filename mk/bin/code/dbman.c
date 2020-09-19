@@ -244,16 +244,22 @@ gencache(char *path)
 
 	while ((ep = c_dir_read(&dir))) {
 		switch (ep->info) {
-		case C_FSF:
-			if (!CSTRCMP("build", ep->name) ||
-			    !CSTRCMP("vars", ep->name))
-				++ep->parent->num; /* tag the parent */
+		case C_FSD:
+			if (ep->name[0] == '.' && ep->name[1]) {
+				c_dir_set(&dir, ep, C_FSSKP);
+				continue;
+			}
 			break;
 		case C_FSDP:
 			if (ep->num)
 				if (c_cdb_mkadd(&cdbmk, ep->name, ep->nlen,
 				    ep->path, ep->len) < 0)
 					c_err_die(1, "c_cdb_mkadd");
+			break;
+		case C_FSF:
+			if (!CSTRCMP("build", ep->name) ||
+			    !CSTRCMP("vars", ep->name))
+				++ep->parent->num; /* tag the parent */
 			break;
 		case C_FSDNR:
 		case C_FSNS:

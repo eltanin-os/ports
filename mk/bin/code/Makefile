@@ -5,7 +5,7 @@ include config.mk
 
 # BIN
 BIN=\
-	helper\
+	dbman\
 	install\
 	list
 
