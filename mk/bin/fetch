@@ -5,7 +5,6 @@
 . $PORTS/mk/io.rc
 tmp=$1
 shift
-failed=false
 @{ for (url in $*) {
 	shift
 	switch ($url) {
@@ -26,12 +25,10 @@ failed=false
 		$FETCH $url && {
 			echo $target > $tmp
 			mv $file $target
-			failed=false
 			exit
 		}
 	}
 }}
-if ($failed) error fetch failed
 if (! ~ $cksum '') {
 	file=`{cat $tmp}
 	fsum=`{$CKSUM $file}

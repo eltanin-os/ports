@@ -138,10 +138,11 @@ PORTSYS_TMP_LIBDIRS=($EXTRALIB '-L'$PORTSYS_ROOTPWD$LIBDIR '-L'$SYSPATH$LIBDIR)
 for (pkg in $args) {
 	cd $WRKDIR
 	message $pkg: fetching...
+	cksum=`{$PORTS/mk/bin/dbman -k cksum $pkg}
 	mirrors=`{$PORTS/mk/bin/dbman -t mirrors $pkg}
 	version=`{$PORTS/mk/bin/dbman -k version $pkg}
 	tmp=`{mktemp -p $WRKDIR}
-	$PORTS/mk/bin/fetch $tmp $mirrors
+	$PORTS/mk/bin/fetch $tmp $mirrors || exit 1
 	message $pkg: exploding...
 	@{ $PORTS/mk/bin/explode $tmp } ||; # catch false errors
 	message $pkg: patching...
