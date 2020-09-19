@@ -28,6 +28,7 @@ struct file {
 };
 
 static char *drtdir, *incdir, *libdir, *mandir;
+static usize drtlen, inclen, liblen, manlen;
 
 static char *strtab[] = {
 	"INSTALL@DEF",
@@ -60,20 +61,19 @@ fmtstr_(char *fmt, ...)
 }
 
 static int
-getdirnum(char *s, usize n)
+getdirnum(char *s)
 {
-	if (!c_str_cmp(mandir, n, s)) {
+	if (!c_mem_cmp(mandir, manlen, s)) {
 		return MANDIR;
-	} else if (!c_str_cmp(libdir, n, s)) {
+	} else if (!c_str_cmp(libdir, liblen, s)) {
 		return DEVDIR;
-	} else if (!c_str_cmp(incdir, n, s)) {
+	} else if (!c_str_cmp(incdir, inclen, s)) {
 		return DEVDIR;
 	} else {
-		n = c_str_len(drtdir, -1);
-		if (!c_mem_cmp(drtdir, n, s)) {
-			if (!CMP("/aclocal", s + n) ||
-			    !CMP("/xcb", s + n) ||
-			    !CMP("/pkgconfig", s + n))
+		if (!c_mem_cmp(drtdir, drtlen, s)) {
+			if (!CMP("/aclocal", s + drtlen) ||
+			    !CMP("/xcb", s + drtlen) ||
+			    !CMP("/pkgconfig", s + drtlen))
 				return DEVDIR;
 			else
 				return DEFDIR;
@@ -119,15 +119,19 @@ main(int argc, char **argv)
 	if (!(drtdir = c_std_getenv("DRTDIR")))
 		c_err_diex(1, "missing DRTDIR environmental variable");
 	drtdir = estrdup(fmtstr(".%s", drtdir));
+	drtlen = c_str_len(drtdir, -1);
 	if (!(incdir = c_std_getenv("INCDIR")))
 		c_err_diex(1, "missing INCDIR environmental variable");
 	incdir = estrdup(fmtstr(".%s", incdir));
+	inclen = c_str_len(incdir, -1);
 	if (!(libdir = c_std_getenv("LIBDIR")))
 		c_err_diex(1, "missing LIBDIR environmental variable");
 	libdir = estrdup(fmtstr(".%s", libdir));
+	liblen = c_str_len(libdir, -1);
 	if (!(mandir = c_std_getenv("MANDIR")))
 		c_err_diex(1, "missing MANDIR environmental variable");
 	mandir = estrdup(fmtstr(".%s", mandir));
+	manlen = c_str_len(mandir, -1);
 
 	if (!(fp = c_std_alloc(ALL, sizeof(*fp))))
 		c_err_die(1, "c_std_alloc");
@@ -153,7 +157,7 @@ main(int argc, char **argv)
 				break;
 			case 1:
 			case 2:
-				p->num = getdirnum(p->path, p->len);
+				p->num = getdirnum(p->path);
 				break;
 			default:
 				p->num = p->parent->num;
