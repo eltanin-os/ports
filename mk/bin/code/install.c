@@ -1,6 +1,7 @@
 #include <tertium/cpu.h>
 #include <tertium/std.h>
 
+static int cflag;
 static char *rootdir;
 
 static ctype_status
@@ -53,14 +54,18 @@ sysmove(char *p)
 	d = c_arr_data(&arr);
 	if (mkpath(d, 0755) < 0)
 		c_err_die(1, "mkpath %s", d);
-	if (c_sys_rename(p, d) < 0)
+	if (cflag) {
+		if (c_sys_link(p, d) < 0)
+			c_err_die(1, "c_sys_link %s %s", p, d);
+	} else if (c_sys_rename(p, d) < 0) {
 		c_err_die(1, "c_sys_rename %s %s", p, d);
+	}
 }
 
 static void
 usage(void)
 {
-	c_ioq_fmt(ioq2, "usage: %s [-n]\n", c_std_getprogname());
+	c_ioq_fmt(ioq2, "usage: %s [-n] [file]\n", c_std_getprogname());
 	c_std_exit(1);
 }
 
@@ -68,8 +73,10 @@ ctype_status
 main(int argc, char **argv)
 {
 	ctype_stat st;
+	ctype_ioq *file;
 	ctype_arr arr;
 	usize len;
+	ctype_fd fd;
 	ctype_status r;
 	int nflag;
 	char *dest;
@@ -77,13 +84,15 @@ main(int argc, char **argv)
 	c_std_setprogname(argv[0]);
 	--argc, ++argv;
 
-	nflag = 0;
-
-	while (c_std_getopt(argmain, argc, argv, "n")) {
+	while (c_std_getopt(argmain, argc, argv, "cn")) {
 		switch (argmain->opt) {
+		case 'c':
+			cflag = 1;
+			break;
 		case 'n':
 			nflag = 1;
 			break;
+
 		default:
 			usage();
 		}
@@ -91,12 +100,30 @@ main(int argc, char **argv)
 	argc -= argmain->idx;
 	argv += argmain->idx;
 
-	if (argc)
+	switch (argc) {
+	case 1:
+		if (C_ISDASH(*argv)) {
+			;
+		} else {
+			if ((fd = c_sys_open(*argv, C_OREAD, 0)) < 0)
+				c_err_die(1, "c_sys_open %s", *argv);
+			if (!(file = c_ioq_alloc(fd, C_BIOSIZ, &c_sys_read)))
+				c_err_die(1, "c_ioq_alloc");
+			break;
+		}
+		/* FALLTHROUGH */
+	case 0:
+		fd = -1;
+		file = ioq0;
+		break;
+	default:
 		usage();
+	}
+
 	if (nflag) {
 		len = 0;
 		c_mem_set(&arr, sizeof(arr), 0);
-		while ((r = c_ioq_getln(ioq0, &arr)) > 0) {
+		while ((r = c_ioq_getln(file, &arr)) > 0) {
 			dest = c_arr_data(&arr);
 			dest[c_arr_bytes(&arr) - 1] = 0;
 			if (c_sys_lstat(&st, dest) < 0)
@@ -105,15 +132,14 @@ main(int argc, char **argv)
 			c_arr_trunc(&arr, 0, sizeof(uchar));
 		}
 		c_ioq_fmt(ioq1, "%lluo\n", (uvlong)C_HOWMANY(len, 2));
-		c_ioq_flush(ioq1);
-		return 0;
+		c_std_exit(0);
 	}
 
 	if (!(rootdir = c_std_getenv("SYSPATH")))
-		c_err_diex(1, "missing PREFIX environmental variable");
+		c_err_diex(1, "missing SYSPATH environmental variable");
 
 	c_mem_set(&arr, sizeof(arr), 0);
-	while ((r = c_ioq_getln(ioq0, &arr)) > 0) {
+	while ((r = c_ioq_getln(file, &arr)) > 0) {
 		dest = c_arr_data(&arr);
 		dest[c_arr_bytes(&arr) - 1] = 0;
 		sysmove(dest);
