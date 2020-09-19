@@ -16,6 +16,12 @@ if (~ ' '$"_L' ' *' -static '*) {
 
 _L=($_L $PORTSYS_TMP_LIBDIRS)
 _P=($_P $PORTSYS_TMP_INCDIRS)
+
+switch ($PORTSYS_MK_FLAGS) {
+case *'nocppflags'*
+	_C=($_C $_P)
+}
+
 ACLOCAL='aclocal -I'$"PORTSYS_ROOTPWD/$"DRTDIR/aclocal
 PKG_CONFIG_PATH=$"PORTSYS_ROOTPWD/$"LIBDIR/pkgconf
 
