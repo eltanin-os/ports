@@ -1,12 +1,5 @@
 #!/bin/rc
 #
-for (flag in $PORTSYS_MK_FLAGS) {
-	switch ($flag) {
-	case 'nocppflags'
-		CFLAGS=($CFLAGS $CPPFLAGS)
-	}
-}
-
 . $PORTS/mk/meth/cfg.rc
 
 for (flag in $PORTSYS_MK_FLAGS) {
