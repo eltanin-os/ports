@@ -44,7 +44,7 @@ fn wrap_install {
 		shift
 		s=$1
 		shift
-		ln -s $1 $"dest/$*
+		ln -s $s $"dest/$*
 	case *
 		$INSTALL $* $"dest
 	}
