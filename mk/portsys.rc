@@ -103,8 +103,8 @@ PORTSYS_ROOTPWD=$WRKDIR/tmproot
 PWD=`{pwd}
 if (~ $PKGPATH '') PKGPATH=$PWD/portsys_pkgs
 if (~ $mk 'pack') TDBDIR=$PKGPATH
-if not TDBDIR=$DBDIR
-if (! test -d $TDBDIR) mkdir $TDBDIR
+if not TDBDIR=$SYSPATH$DBDIR
+if (! test -d $TDBDIR) mkdir -p $TDBDIR
 if (~ $CACHEDIR '') CACHEDIR=$PWD/portsys_cache
 if (! test -d $CACHEDIR) mkdir $CACHEDIR
 PORTSYS_HOSTOS=`{uname -s | $AWK '{print(tolower($0))}'}
@@ -185,31 +185,31 @@ for (pkg in $deplist $*) {
 	mdeps=`{$PORTS/mk/bin/dbman -t mdeps $pkg}
 	rdeps=`{$PORTS/mk/bin/dbman -t rdeps $pkg}
 	if ($bflag) {
-		$PORTS/mk/bin/$mk INSTALL@DEF
 		$PORTS/mk/bin/createdb INSTALL@DEF
+		$PORTS/mk/bin/$mk INSTALL@DEF
 		if ($mflag) @{
 			rdeps=()
 			mdeps=()
+			$PORTS/mk/bin/createdb INSTALL@MAN '-man' '<MANPAGES>'
 			@{ name=$name'-man'
 			$PORTS/mk/bin/$mk INSTALL@MAN }
-			$PORTS/mk/bin/createdb INSTALL@MAN '-man' '<MANPAGES>'
 		}
 	}
 	if ($dflag) {
+		$PORTS/mk/bin/createdb INSTALL@DEV '-dev' '<DEVELOPMENT>'
 		@{ name=$name'-dev'
 		$PORTS/mk/bin/$mk INSTALL@DEV }
-		$PORTS/mk/bin/createdb INSTALL@DEV '-dev' '<DEVELOPMENT>'
 		if ($mflag) @{
 			rdeps=()
 			mdeps=()
+			$PORTS/mk/bin/createdb INSTALL@DEVMAN '-devman' '<DEVELOPMENT MANPAGES>'
 			@{ name=$name'-devman'
 			$PORTS/mk/bin/$mk INSTALL@DEVMAN }
-			$PORTS/mk/bin/createdb INSTALL@DEVMAN '-devman' '<DEVELOPMENT MANPAGES>'
 		}
 	}
 	if ($sflag) {
+		$PORTS/mk/bin/createdb INSTALL@DYNLIB '-dynlib' '<DYNAMIC LIBRARIES>'
 		@{ name=$name'-dynlib'
 		$PORTS/mk/bin/$mk INSTALL@DYNLIB }
-		$PORTS/mk/bin/createdb INSTALL@DYNLIB '-dynlib' '<DYNAMIC LIBRARIES>'
 	}
 }
