@@ -392,6 +392,7 @@ main(int argc, char **argv)
 	ctype_fd fd;
 	int mode, uflag;
 	char *k, *s;
+	char *syspath;
 
 	c_std_setprogname(argv[0]);
 	--argc, ++argv;
@@ -441,8 +442,12 @@ main(int argc, char **argv)
 		c_err_die(1, "c_sys_open %s", s);
 	c_cdb_init(&cdb, fd);
 
+	if (!(syspath = c_std_getenv("SYSPATH")))
+		c_err_diex(1, "missing SYSPATH environmental variable");
 	if (!(dbdir = c_std_getenv("DBDIR")))
 		c_err_diex(1, "missing DBDIR environmental variable");
+	if (!(dbdir = c_str_dup(fmtstr("%s/%s", syspath, dbdir), -1)))
+		c_err_die(1, "c_str_dup");
 
 	switch (mode) {
 	case PMODE:
