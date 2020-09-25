@@ -20,6 +20,7 @@ enum {
 #define fmtstr(...) fmtstr_(__VA_ARGS__, nil)
 #define CMP(a, b) c_mem_cmp((a), sizeof((a)), (b))
 #define SCMP(a, b) c_mem_cmp((a), sizeof((a)) - 1, (b))
+#define DCMP(a, b, c) ((!c[(b)] || c[(b)] == '/') && !c_mem_cmp((a), (b), (c)))
 
 struct file {
 	char buf[C_BIOSIZ];
@@ -63,11 +64,11 @@ fmtstr_(char *fmt, ...)
 static int
 getdirnum(char *s)
 {
-	if (!c_mem_cmp(mandir, manlen, s)) {
+	if (DCMP(mandir, manlen, s)) {
 		return MANDIR;
-	} else if (!c_str_cmp(libdir, liblen, s)) {
+	} else if (DCMP(libdir, liblen, s)) {
 		return DEVDIR;
-	} else if (!c_str_cmp(incdir, inclen, s)) {
+	} else if (DCMP(incdir, inclen, s)) {
 		return DEVDIR;
 	} else {
 		if (!c_mem_cmp(drtdir, drtlen, s)) {
