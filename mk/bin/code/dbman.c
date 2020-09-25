@@ -320,7 +320,7 @@ populatedeps(ctype_node **np, ctype_node *list)
 				r = c_err_warnx("%s: package not found", s);
 				continue;
 			}
-			if (checknode(*np, p))
+			if (checknode(list, p))
 				continue;
 			len = c_str_len(p, -1) + 1;
 			if (c_adt_ltpush(np, c_adt_lnew(p, len)) < 0)
@@ -333,7 +333,8 @@ populatedeps(ctype_node **np, ctype_node *list)
 	if (n) {
 		deps = nil;
 		r |= populatedeps(&deps, *np);
-		c_adt_ltpush(np, deps);
+		if (deps)
+			c_adt_ltpush(np, deps);
 	}
 
 	return r ? (c_std_exit(1), -1) : 0;
