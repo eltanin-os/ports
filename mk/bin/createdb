@@ -27,7 +27,7 @@ if (! ~ $#mdeps 0) {
 	echo 'mdeps{'
 	for (dep in $mdeps) {
 		d=$dep'-dev'
-		dir=$DBDIR
+		dir=$SYSPATH$DBDIR
 		if (! test -e $dir/$d) v=`{$PORTS/mk/bin/dbman -k version $dep}
 		if not v=`{$SED -n 's/version://p' $dir/$d}
 		dep=$d'#'$v
