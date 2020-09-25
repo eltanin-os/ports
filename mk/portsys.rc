@@ -31,6 +31,7 @@ shift
 # path vars
 EXTRAINC=()
 EXTRALIB=()
+CACHEDIR=''
 PKGPATH=''
 SYSPATH=''
 
