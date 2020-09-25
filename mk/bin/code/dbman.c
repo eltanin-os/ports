@@ -311,7 +311,7 @@ populatedeps(ctype_node **np, ctype_node *list)
 	do {
 		c = getcfg(wp->p);
 		if (!(s = getkey(c, "mdeps{", 1)))
-			break;
+			continue;
 		do {
 			p = fmtstr("%s/%s-dev", dbdir, s);
 			if (!c_sys_stat(&st, p))
@@ -320,8 +320,6 @@ populatedeps(ctype_node **np, ctype_node *list)
 				r = c_err_warnx("%s: package not found", s);
 				continue;
 			}
-			if (checknode(list, p))
-				continue;
 			len = c_str_len(p, -1) + 1;
 			if (c_adt_ltpush(np, c_adt_lnew(p, len)) < 0)
 				c_err_die(1, "c_adt_ltpush %s", p);
@@ -333,23 +331,23 @@ populatedeps(ctype_node **np, ctype_node *list)
 	if (n) {
 		deps = nil;
 		r |= populatedeps(&deps, *np);
-		if (deps)
-			c_adt_ltpush(np, deps);
+		if (deps) c_adt_ltpush(np, deps);
 	}
 
 	return r ? (c_std_exit(1), -1) : 0;
 }
 
 static void
-printdeps(char **argv)
+printdeps(char **pkglist, int aflag)
 {
 	ctype_node *deps, *list;
 	ctype_status r;
+	char **argv;
 	char *s;
 
 	r = 0;
 	list = nil;
-	for (; *argv; ++argv) {
+	for (argv = pkglist; *argv; ++argv) {
 		if (!(s = getpath(*argv))) {
 			r = c_err_warnx("%s: package not found", *argv);
 			continue;
@@ -364,13 +362,37 @@ printdeps(char **argv)
 	deps = nil;
 	populatedeps(&deps, list);
 
+	while (list)
+		c_adt_lfree(c_adt_lpop(&list));
+
 	if (!deps)
 		return;
 
 	deps = deps->next;
 	do {
-		c_ioq_fmt(ioq1, "%s\n", c_gen_basename(deps->p));
+		s = c_gen_basename(deps->p);
+		if (checknode(list, s))
+			continue;
+		if (c_adt_lpush(&list, c_adt_lnew(s, c_str_len(s, -1) + 1)) < 0)
+			c_err_die(1, "c_adt_lpush %s", s);
 	} while ((deps = deps->next)->prev);
+	/* free deps */
+
+	if (aflag) {
+		for (argv = pkglist; *argv; ++argv) {
+			if (checknode(list, *argv))
+				continue;
+			if (c_adt_lpush(&list,
+			    c_adt_lnew(*argv, c_str_len(*argv, -1) + 1)) < 0)
+				c_err_die(1, "c_adt_lpush %s", *argv);
+		}
+	}
+
+	list = list->next;
+	do {
+		c_ioq_fmt(ioq1, "%s\n", list->p);
+	} while ((list = list->next)->prev);
+	/* free list */
 }
 
 static void
@@ -379,7 +401,7 @@ usage(void)
 	c_ioq_fmt(ioq2,
 	    "usage: %s [-u] pkg\n"
 	    "       %s [-u] -k|-t key pkg\n"
-	    "       %s [-u] -d pkg ...\n"
+	    "       %s [-u] -a|-d pkg ...\n"
 	    "       %s -u\n",
 	    c_std_getprogname(), c_std_getprogname(),
 	    c_std_getprogname(), c_std_getprogname());
@@ -391,7 +413,7 @@ main(int argc, char **argv)
 {
 	struct cfg *c;
 	ctype_fd fd;
-	int mode, uflag;
+	int aflag, mode, uflag;
 	char *k, *s;
 	char *syspath;
 
@@ -401,9 +423,14 @@ main(int argc, char **argv)
 	mode = PMODE;
 	uflag = 0;
 
-	while (c_std_getopt(argmain, argc, argv, "dk:t:u")) {
+	while (c_std_getopt(argmain, argc, argv, "adk:t:u")) {
 		switch (argmain->opt) {
+		case 'a':
+			aflag = 1;
+			mode = DMODE;
+			break;
 		case 'd':
+			aflag = 0;
 			mode = DMODE;
 			break;
 		case 'k':
@@ -457,7 +484,7 @@ main(int argc, char **argv)
 		c_ioq_fmt(ioq1, "%s\n", s);
 		break;
 	case DMODE:
-		printdeps(argv);
+		printdeps(argv, aflag);
 		break;
 	case KMODE:
 		if (!(s = getpath(*argv)))

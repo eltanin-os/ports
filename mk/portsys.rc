@@ -97,19 +97,23 @@ if (!$bflag && !$dflag && !$mflag && !$sflag) {
 	exit 0
 }
 
-# portsys global vars
+# portsys vars set1
 WRKDIR=`{mktemp -dt PORTSYS@XXXXXXXXX}
 PORTSYS_PKGDIR=$WRKDIR/pkgroot
 PORTSYS_ROOTPWD=$WRKDIR/tmproot
+PORTSYS_HOSTOS=`{uname -s | $AWK '{print(tolower($0))}'}
+PORTSYS_HOSTARCH=`{uname -m}
+
+# portsys vars set2
 PWD=`{pwd}
 if (~ $PKGPATH '') PKGPATH=$PWD/portsys_pkgs
+TDBDIR=$SYSPATH$DBDIR
 if (~ $mk 'pack') TDBDIR=$PKGPATH
-if not TDBDIR=$SYSPATH$DBDIR
 if (! test -d $TDBDIR) mkdir -p $TDBDIR
 if (~ $CACHEDIR '') CACHEDIR=$PWD/portsys_cache
 if (! test -d $CACHEDIR) mkdir $CACHEDIR
-PORTSYS_HOSTOS=`{uname -s | $AWK '{print(tolower($0))}'}
-PORTSYS_HOSTARCH=`{uname -m}
+PORTSYS_TMP_INCDIRS=($EXTRAINC '-I'$PORTSYS_ROOTPWD$INCDIR '-I'$SYSPATH$INCDIR)
+PORTSYS_TMP_LIBDIRS=($EXTRALIB '-L'$PORTSYS_ROOTPWD$LIBDIR '-L'$SYSPATH$LIBDIR)
 
 # tmp env fuctions
 fn sigexit {
@@ -129,11 +133,10 @@ fn getsrc {
 
 # current deps as flags
 if ($uflag || ! test -f $PORTS/pkg/cache.cdb) $PORTS/mk/bin/dbman -u
-deplist=`{$PORTS/mk/bin/dbman -d $*}
+args=`{$PORTS/mk/bin/dbman -a $*}
 if (! ~ $status 0) error failed to generate args list
-args=($deplist $*)
-PORTSYS_TMP_INCDIRS=($EXTRAINC '-I'$PORTSYS_ROOTPWD$INCDIR '-I'$SYSPATH$INCDIR)
-PORTSYS_TMP_LIBDIRS=($EXTRALIB '-L'$PORTSYS_ROOTPWD$LIBDIR '-L'$SYSPATH$LIBDIR)
+deplist=`{$PORTS/mk/bin/dbman -d $*}
+if (! ~ $status 0) error failed to generate deps list
 
 # stage1: fetch, explode, patch
 for (pkg in $args) {
@@ -174,9 +177,8 @@ for (pkg in $args) {
 }
 
 # stage3: install/pack, generate db files
-if (! $kflag) deplist=()
-
-for (pkg in $deplist $*) {
+if (! $kflag) args=$*
+for (pkg in $args) {
 	name=`{$PORTS/mk/bin/dbman -k name $pkg}
 	cd $WRKDIR/pkgroot/$name
 	message $pkg: installing and creating database entries...
