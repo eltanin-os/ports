@@ -84,6 +84,9 @@ main(int argc, char **argv)
 	c_std_setprogname(argv[0]);
 	--argc, ++argv;
 
+	cflag = 0;
+	nflag = 0;
+
 	while (c_std_getopt(argmain, argc, argv, "cn")) {
 		switch (argmain->opt) {
 		case 'c':
