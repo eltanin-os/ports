@@ -365,19 +365,18 @@ printdeps(char **pkglist, int aflag)
 	while (list)
 		c_adt_lfree(c_adt_lpop(&list));
 
-	if (!deps)
-		return;
-
-	deps = deps->next;
-	do {
-		s = c_gen_basename(deps->p);
-		if (checknode(list, s))
-			continue;
-		if (c_adt_lpush(&list, c_adt_lnew(s, c_str_len(s, -1) + 1)) < 0)
-			c_err_die(1, "c_adt_lpush %s", s);
-	} while ((deps = deps->next)->prev);
-	/* free deps */
-
+	if (deps) {
+		deps = deps->next;
+		do {
+			s = c_gen_basename(deps->p);
+			if (checknode(list, s))
+				continue;
+			if (c_adt_lpush(&list,
+			    c_adt_lnew(s, c_str_len(s, -1) + 1)) < 0)
+				c_err_die(1, "c_adt_lpush %s", s);
+		} while ((deps = deps->next)->prev);
+		/* free deps */
+	}
 	if (aflag) {
 		for (argv = pkglist; *argv; ++argv) {
 			if (checknode(list, *argv))
@@ -387,12 +386,13 @@ printdeps(char **pkglist, int aflag)
 				c_err_die(1, "c_adt_lpush %s", *argv);
 		}
 	}
-
-	list = list->next;
-	do {
-		c_ioq_fmt(ioq1, "%s\n", list->p);
-	} while ((list = list->next)->prev);
-	/* free list */
+	if (list) {
+		list = list->next;
+		do {
+			c_ioq_fmt(ioq1, "%s\n", list->p);
+		} while ((list = list->next)->prev);
+		/* free list */
+	}
 }
 
 static void
