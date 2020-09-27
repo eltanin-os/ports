@@ -1,6 +1,9 @@
 #include <tertium/cpu.h>
 #include <tertium/std.h>
 
+#define INITAV4(a, b, c, d, e) \
+{ (a)[0] = (b); (a)[1] = (c); (a)[2] = (d); (a)[3] = (e); }
+
 static int cflag;
 static char *rootdir;
 
@@ -46,6 +49,9 @@ static void
 sysmove(char *p)
 {
 	static ctype_arr arr;
+	ctype_id id;
+	ctype_status r;
+	char *argv[4];
 	char *d;
 
 	c_arr_trunc(&arr, 0, sizeof(uchar));
@@ -54,11 +60,15 @@ sysmove(char *p)
 	d = c_arr_data(&arr);
 	if (mkpath(d, 0755) < 0)
 		c_err_die(1, "mkpath %s", d);
-	if (cflag) {
-		if (c_sys_link(p, d) < 0)
-			c_err_die(1, "c_sys_link %s %s", p, d);
-	} else if (c_sys_rename(p, d) < 0) {
-		c_err_die(1, "c_sys_rename %s %s", p, d);
+
+	r = cflag ? c_sys_link(p, d) : c_sys_rename(p, d);
+	if (r < 0) {
+		if (errno != C_EXDEV)
+			c_err_die(1, "sysmove %s %s", p, d);
+		INITAV4(argv, "cp", "-p", p, d);
+		if (!(id = c_exc_spawn0(*argv, argv, environ)))
+			c_err_die(1, "c_exc_spawn0 %s", *argv);
+		c_sys_waitpid(id, nil, 0);
 	}
 }
 
