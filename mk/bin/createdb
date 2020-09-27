@@ -2,11 +2,10 @@
 # $1: file
 # $2: type
 # $3: desc
-files=`{cat $1}
-if (~ $#files 0) exit 0
+if (! test -s $1) exit 0
 # header
 if (! ~ $3 '') description=$"description' '$3
-size=`{cat $1 | $PORTS/mk/bin/install -n}
+size=`{$PORTS/mk/bin/install -n <$1}
 tmp=`{mktemp}
 cat <<EOF >$tmp
 name:$name
@@ -38,10 +37,7 @@ if (! ~ $#mdeps 0) {
 # files
 {
 echo 'files{'
-for (f in $files) {
-	fsum=`{venus-cksum $f}
-	printf '\t%s\n' $"fsum
-}
+xargs venus-cksum <$1 | sed 's;^;	;g'
 echo '}'
 } >> $tmp
 # gen
