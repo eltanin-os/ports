@@ -14,9 +14,6 @@ if (~ ' '$"_L' ' *' -static '*) {
 	PKG_CONFIG=$"PKG_CONFIG' --static'
 }
 
-_L=($_L $PORTSYS_TMP_LIBDIRS)
-_P=($_P $PORTSYS_TMP_INCDIRS)
-
 switch ($PORTSYS_MK_FLAGS) {
 case *'nocppflags'*
 	_C=($_C $_P)
