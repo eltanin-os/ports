@@ -76,6 +76,8 @@ getdirnum(char *s)
 			    !CMP("/xcb", s + drtlen) ||
 			    !CMP("/pkgconfig", s + drtlen))
 				return DEVDIR;
+			else if (!CMP("/doc", s + drtlen))
+				return MANDIR;
 			else
 				return DEFDIR;
 		} else {
