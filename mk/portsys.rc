@@ -134,10 +134,8 @@ fn getsrc {
 
 # current deps as flags
 if ($uflag || ! test -f $PORTS/pkg/cache.cdb) $PORTS/mk/bin/dbman -u
-args=`{$PORTS/mk/bin/dbman -a $*}
-if (! ~ $status 0) error failed to generate args list
-deplist=`{$PORTS/mk/bin/dbman -d $*}
-if (! ~ $status 0) error failed to generate deps list
+args=`{$PORTS/mk/bin/dbman -a $*} || error failed to generate args list
+deplist=`{$PORTS/mk/bin/dbman -d $*} || error failed to generate deps list
 
 # stage1: fetch, explode, patch
 for (pkg in $args) {
