@@ -1,8 +1,12 @@
 #!/bin/rc
+PORTSYS_METH_ENV=()
 PORTSYS_METH_FLAGS=()
 PORTSYS_MK_FLAGS=()
 while (~ $1 -*) {
 	for (opt in `{printf '%s' $1 | fold -w1}) switch($opt) {
+	case e
+		PORTSYS_METH_ENV=($PORTSYS_METH_ENV $2)
+		shift
 	case f
 		PORTSYS_MK_FLAGS=($PORTSYS_MK_FLAGS $2)
 		shift

@@ -48,4 +48,5 @@ PORTSYS_METH_ENV=(                            \
 	MANDIR'='$"MANDIR                     \
 	INCDIR'='$"INCDIR                     \
 	TERM'='$"TERM                         \
+	$PORTSYS_METH_ENV                     \
 )
