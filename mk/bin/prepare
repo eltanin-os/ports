@@ -8,6 +8,7 @@ fn findpattern {
 }
 
 rm -f `{findpattern . `{cat $PORTS/mk/blacklist}}
+rm -Rf $DRTDIR/info # TODO: move to blacklist
 
 if (test -d .$BINDIR)
 	find $BINDIR -type f -exec $STRIP --strip-all '{}' + ||;
