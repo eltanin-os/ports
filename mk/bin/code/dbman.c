@@ -338,16 +338,15 @@ populatedeps(ctype_node **np, ctype_node *list)
 }
 
 static void
-printdeps(char **pkglist, int aflag)
+printdeps(char **argv, int aflag)
 {
 	ctype_node *deps, *list;
 	ctype_status r;
-	char **argv;
 	char *s;
 
 	r = 0;
 	list = nil;
-	for (argv = pkglist; *argv; ++argv) {
+	for (; *argv; ++argv) {
 		if (!(s = getpath(*argv))) {
 			r = c_err_warnx("%s: package not found", *argv);
 			continue;
@@ -362,9 +361,14 @@ printdeps(char **pkglist, int aflag)
 	deps = nil;
 	populatedeps(&deps, list);
 
-	while (list)
-		c_adt_lfree(c_adt_lpop(&list));
-
+	if (aflag) {
+		if (c_adt_lpush(&deps, list) < 0)
+			c_err_die(1, "c_adt_lpush");
+		list = nil;
+	} else {
+		while (list)
+			c_adt_lfree(c_adt_lpop(&list));
+	}
 	if (deps) {
 		deps = deps->next;
 		do {
@@ -376,15 +380,6 @@ printdeps(char **pkglist, int aflag)
 				c_err_die(1, "c_adt_lpush %s", s);
 		} while ((deps = deps->next)->prev);
 		/* free deps */
-	}
-	if (aflag) {
-		for (argv = pkglist; *argv; ++argv) {
-			if (checknode(list, *argv))
-				continue;
-			if (c_adt_lpush(&list,
-			    c_adt_lnew(*argv, c_str_len(*argv, -1) + 1)) < 0)
-				c_err_die(1, "c_adt_lpush %s", *argv);
-		}
 	}
 	if (list) {
 		list = list->next;
