@@ -20,33 +20,33 @@ case *'nocppflags'*
 }
 
 ACLOCAL='aclocal -I'$"PORTSYS_ROOTPWD/$"DRTDIR/aclocal
-PKG_CONFIG_PATH=$"PORTSYS_ROOTPWD/$"LIBDIR/pkgconf
+PKG_CONFIG_PATH=$"PORTSYS_ROOTPWD/$"DRTDIR/pkgconfig
 
-PORTSYS_METH_ENV=(                            \
-	AR'='$"AR                             \
-	CC'='$"CC                             \
-	CXX'='$"CXX                           \
-	LD'='$"LD                             \
-	CFLAGS'='$"_C                         \
-	CPPFLAGS'='$"_P                       \
-	LDFLAGS'='$"_L                        \
-	LDLIBS'='$"LDLIBS                     \
-	ACLOCAL'='$"ACLOCAL                   \
-	PKG_CONFIG'='$"PKG_CONFIG             \
-	PKG_CONFIG_PATH'='$"PKG_CONFIG_PATH   \
-	PKG_CONFIG_SYSROOT'='$PORTSYS_ROOTPWD \
-	PATH'='$"PATH                         \
-	INSTALL'='$"INSTALL                   \
-	YACC'='$"YACC                         \
-	STRIP'='$"STRIP                       \
-	RANLIB'='$"RANLIB                     \
-	PREFIX'='$"PREFIX                     \
-	BINDIR'='$"BINDIR                     \
-	LIBDIR'='$"LIBDIR                     \
-	ETCDIR'='$"ETCDIR                     \
-	DFLDIR'='$"DFLDIR                     \
-	MANDIR'='$"MANDIR                     \
-	INCDIR'='$"INCDIR                     \
-	TERM'='$"TERM                         \
-	$PORTSYS_METH_ENV                     \
+PORTSYS_METH_ENV=(                                \
+	AR'='$"AR                                 \
+	CC'='$"CC                                 \
+	CXX'='$"CXX                               \
+	LD'='$"LD                                 \
+	CFLAGS'='$"_C                             \
+	CPPFLAGS'='$"_P                           \
+	LDFLAGS'='$"_L                            \
+	LDLIBS'='$"LDLIBS                         \
+	ACLOCAL'='$"ACLOCAL                       \
+	PKG_CONFIG'='$"PKG_CONFIG                 \
+	PKG_CONFIG_PATH'='$"PKG_CONFIG_PATH       \
+	PKG_CONFIG_SYSROOT_DIR'='$PORTSYS_ROOTPWD \
+	PATH'='$"PATH                             \
+	INSTALL'='$"INSTALL                       \
+	YACC'='$"YACC                             \
+	STRIP'='$"STRIP                           \
+	RANLIB'='$"RANLIB                         \
+	PREFIX'='$"PREFIX                         \
+	BINDIR'='$"BINDIR                         \
+	LIBDIR'='$"LIBDIR                         \
+	ETCDIR'='$"ETCDIR                         \
+	DFLDIR'='$"DFLDIR                         \
+	MANDIR'='$"MANDIR                         \
+	INCDIR'='$"INCDIR                         \
+	TERM'='$"TERM                             \
+	$PORTSYS_METH_ENV                         \
 )

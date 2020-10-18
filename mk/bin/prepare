@@ -8,14 +8,18 @@ fn findpattern {
 }
 
 rm -f `{findpattern . `{cat $PORTS/mk/blacklist}}
-rm -Rf $DRTDIR/info # TODO: move to blacklist
+rm -Rf .$DRTDIR/info # TODO: move to blacklist
 
+if (test -d .$LIBDIR/pkgconfig) {
+	mkdir .$DRTDIR >[2]/dev/null ||;
+	mv .$LIBDIR/pkgconfig .$DRTDIR
+}
 if (test -d .$BINDIR)
-	find $BINDIR -type f -exec $STRIP --strip-all '{}' + ||;
+	find .$BINDIR -type f -exec $STRIP --strip-all '{}' + ||;
 if (test -d .$MANDIR) {
 	mf=`{findpattern .$MANDIR '*.'^(1 2 3 4 5 6 7 8)}
 	if (! ~ $#mf 0) $ZZ $mf
-	for (l in `{find ./$MANDIR -type l}) {
+	for (l in `{find .$MANDIR -type l}) {
 		dir=`{dirname $l}
 		file=`{basename $l}
 		lp=`{basename `{ls -l $l | sed 's/.*-> //g'}}
