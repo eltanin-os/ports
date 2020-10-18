@@ -30,8 +30,8 @@ if (test -f AUTOHELL@DONE) {
 }; if not @{
 	if (! test -n $"PREFIX) PREFIX='/'
 	chmod +x $CONFIGURE
-	env -i -- $PORTSYS_METH_ENV  \
-	    $CONFIGURE               \
+	env -i -- $PORTSYS_METH_ENV    \
+	    $CONFIGURE                 \
 	    --prefix'='$"PREFIX        \
 	    --bindir'='$"BINDIR        \
 	    --sbindir'='$"BINDIR       \
