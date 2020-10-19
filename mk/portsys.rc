@@ -1,6 +1,6 @@
 #!/bin/rc -e
 
-if (test -z $"PORTS) {
+if (test -z $PORTS) {
 	echo '<error>' $0: missing PORTS environmental variable >[1=2]
 	exit 1
 }
@@ -9,8 +9,8 @@ argv0=$0
 . $PORTS/mk/config.rc
 . $PORTS/mk/io.rc
 
-rnum=`{ls $PORTS/pkg}
-if (~ $#rnum 0) error no repositories found
+repos=`{ls $PORTS/pkg}
+if (~ $#repos 0) error no repositories found
 
 if (~ $#* 0) {
 	warning no arguments given
@@ -106,7 +106,7 @@ PORTSYS_HOSTARCH=`{uname -m}
 
 # portsys vars set2
 PWD=`{pwd}
-if (test -z $"PKGPATH) PKGPATH=$PWD/portsys_pkgs
+if (test -z $PKGPATH) PKGPATH=$PWD/portsys_pkgs
 { ~ $mk 'pack' } && TDBDIR=$PKGPATH || TDBDIR=$SYSPATH$DBDIR
 if (! test -d $TDBDIR) mkdir -p $TDBDIR
 if (test -z $"CACHEDIR) CACHEDIR=$PWD/portsys_cache
@@ -143,6 +143,7 @@ for (pkg in $args) {
 	cksum=`{$PORTS/mk/bin/dbman -k cksum $pkg}
 	mirrors=`{$PORTS/mk/bin/dbman -t mirrors $pkg}
 	version=`{$PORTS/mk/bin/dbman -k version $pkg}
+	src=`{getsrc $pkg}
 	tmp=`{mktemp -p $WRKDIR}
 	$PORTS/mk/bin/fetch $tmp $mirrors || exit 1
 	message $pkg: exploding...
@@ -150,7 +151,7 @@ for (pkg in $args) {
 	message $pkg: patching...
 	dir=`{$PORTS/mk/bin/dbman $pkg}
 	patches=`{$PORTS/mk/bin/dbman -t patches $pkg}
-	@{ cd `{getsrc $pkg}
+	@{ cd $src
 	for (p in $patches) patch -p1 < $dir/patches/$p }
 }
 

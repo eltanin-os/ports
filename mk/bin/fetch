@@ -11,10 +11,11 @@ shift
 	case 'git'
 		url=$1
 		shift
-		git clone $url $filename
+		git clone $url $src
 		@{ olddir=`{pwd}
-		cd $filename
+		cd $src
 		git checkout tags/v$version }
+		exit
 	case *
 		file=`{basename $url}
 		target=$CACHEDIR'/'$file
@@ -29,7 +30,7 @@ shift
 		}
 	}
 }}
-if (! ~ $cksum '') {
+if (test -z $cksum) {
 	file=`{cat $tmp}
 	fsum=`{$CKSUM $file}
 	if (! ~ $cksum $fsum) error $file: checksum mismatch
