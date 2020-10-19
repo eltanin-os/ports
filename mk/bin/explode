@@ -2,6 +2,7 @@
 # $1 : tmp file
 . $PORTS/mk/config.rc
 . $PORTS/mk/io.rc
+if (! test -s $1) exit
 file=`{cat $1}
 switch ($file) {
 case *'.tar.bz2' *'.tbz2'
