@@ -37,13 +37,16 @@ AWK=awk
 SED=sed
 TAR=(pax -x ustar -w)
 UNTAR=(pax -r)
-PACK=(venus-ar -c)
-COMPRESS=(clzip -9)
 FETCH=(curl -LO)
 CKSUM=(venus-cksum -w)
 SU=doas
 INSTALL=/usr/bin/install
 STRIP=strip
+
+# PKG TOOLS
+MAN_COMPRESS=(pigz -9)
+PKG_COMPRESS=(czlip -9)
+PKG_PACK=(venus-ar -c)
 
 # COMPRESSION TOOLS
 BZ2=(bzip2 -9)

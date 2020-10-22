@@ -18,7 +18,7 @@ if (test -d .$BINDIR)
 	find .$BINDIR -type f -exec $STRIP --strip-all '{}' + ||;
 if (test -d .$MANDIR) {
 	mf=`{findpattern .$MANDIR '*.'^(1 2 3 4 5 6 7 8)}
-	if (! ~ $#mf 0) $ZZ $mf
+	if (! ~ $#mf 0) $MAN_COMPRESS $mf
 	for (l in `{find .$MANDIR -type l}) {
 		dir=`{dirname $l}
 		file=`{basename $l}

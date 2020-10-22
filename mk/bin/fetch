@@ -1,4 +1,4 @@
-#!/bin/rc
+#!/bin/rc -e
 # $1 : tmp file
 # $* : url list (protocol url)
 . $PORTS/mk/config.rc
@@ -29,7 +29,7 @@ shift
 			exit
 		}
 	}
-}}
+}} ||;
 if (test -z $cksum) {
 	file=`{cat $tmp}
 	fsum=`{$CKSUM $file}

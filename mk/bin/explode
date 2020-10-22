@@ -1,4 +1,4 @@
-#!/bin/rc -e
+#!/bin/rc
 # $1 : tmp file
 . $PORTS/mk/config.rc
 . $PORTS/mk/io.rc
