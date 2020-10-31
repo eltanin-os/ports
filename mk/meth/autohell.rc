@@ -2,7 +2,7 @@
 #
 . $PORTS/mk/meth/cfg.rc
 
-CONFIGURE='./configure'
+if (test -z $CONFIGURE) CONFIGURE='./configure'
 OBDIR=true
 
 switch ($PORTSYS_MK_FLAGS) {
@@ -14,7 +14,7 @@ if ($OBDIR) {
 	dir=$"PORTSYS_TMP_BUILDDIR
 	mkdir $dir >[2]/dev/null ||;
 	cd $dir
-	CONFIGURE='../configure'
+	CONFIGURE='../'$CONFIGURE
 }
 
 if ($static) {
