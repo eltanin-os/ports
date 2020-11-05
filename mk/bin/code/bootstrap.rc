@@ -1,0 +1,34 @@
+#!/bin/rc -e
+if (test -z $PORTS) {
+	echo '<error>' $0: missing PORTS environmental variable >[1=2]
+	exit 1
+}
+true # only god knows why
+argv0=$0
+. $PORTS/mk/config.rc
+. $PORTS/mk/io.rc
+
+message checking for tertium...
+tmp=`{mktemp}
+cat <<EOF >$tmp
+#include <tertium/cpu.h>
+#include <tertium/std.h>
+ctype_status main(int argc, char **argv) { c_std_exit(0); }
+EOF
+PORTSYS_ROOTPWD=''
+$CC $CFLAGS $CPPFLAGS $LDFLAGS -o $tmp.out $tmp -ltertium || {
+	warning tertium not found
+	message bootstraping tertium...
+	tmpdir=`{mktemp -d}
+	@{ cd $tmpdir
+	git clone https://git.eltan.in.net/tertium
+	cd tertium
+	CFLAGS=($CFLAGS -fno-builtin)
+	ARCH=`{uname -m}
+	OS=`{uname -s | tr '[A-Z]' '[a-z]'}
+	$PORTS/mk/utils/portmk -f replace make OSNAME'='$"OS OBJTYPE'='$"ARCH }
+	CPPFLAGS=($CPPFLAGS -I$tmpdir/tertium/inc)
+	LDFLAGS=($LDFLAGS -L$tmpdir/tertium/lib)
+}
+message bootstraping ports tools...
+$PORTS/mk/utils/portmk make bootstrap
