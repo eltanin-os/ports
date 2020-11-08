@@ -8,27 +8,34 @@ argv0=$0
 . $PORTS/mk/config.rc
 . $PORTS/mk/io.rc
 
+message creating temporary environment...
+tmpfile=`{mktemp}
+tmpdir=`{mktemp -d}
+fn sigexit {
+	rm -Rf $tmpfile $tmpfile.out $tmpdir
+}
+
 message checking for tertium...
-tmp=`{mktemp}
-cat <<EOF >$tmp
+cat <<EOF >$tmpfile
 #include <tertium/cpu.h>
 #include <tertium/std.h>
 ctype_status main(int argc, char **argv) { c_std_exit(0); }
 EOF
 PORTSYS_ROOTPWD=''
-$CC $CFLAGS $CPPFLAGS $LDFLAGS -o $tmp.out $tmp -ltertium || {
+$CC $CFLAGS $CPPFLAGS $LDFLAGS -o $tmpfile.out $tmpfile -ltertium || {
 	warning tertium not found
 	message bootstraping tertium...
-	tmpdir=`{mktemp -d}
+	dir='tertium-0.9.0'
 	@{ cd $tmpdir
-	git clone https://git.eltan.in.net/tertium
-	cd tertium
+	$FETCH http://downloads.eltan.in.net/files/tertium/$dir.tar.lz
+	$ULZ $dir.tar.lz | $UNTAR
+	cd $dir
 	CFLAGS=($CFLAGS -fno-builtin)
 	ARCH=`{uname -m}
 	OS=`{uname -s | tr '[A-Z]' '[a-z]'}
 	$PORTS/mk/utils/portmk -f replace make OSNAME'='$"OS OBJTYPE'='$"ARCH }
-	CPPFLAGS=($CPPFLAGS -I$tmpdir/tertium/inc)
-	LDFLAGS=($LDFLAGS -L$tmpdir/tertium/lib)
+	CPPFLAGS=($CPPFLAGS -I$tmpdir/$dir/inc)
+	LDFLAGS=($LDFLAGS -L$tmpdir/$dir/lib)
 }
 message bootstraping ports tools...
 $PORTS/mk/utils/portmk make bootstrap
