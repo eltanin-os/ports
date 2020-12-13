@@ -23,4 +23,4 @@ while (~ $1 -*) {
 }
 meth=$1
 shift
-$"PORTS/mk/meth/$"meth.rc $*
+$"PORTS/mk/meth/$meth $*
