@@ -1,0 +1,39 @@
+.Dd $Mdocdate: December 13 2020 $
+.Dt MKUTILS 1
+.Os
+.Sh NAME
+.Nm mkutils
+.Nd portsys utilities
+.Sh SYNOPSIS
+.Nm
+.Ar command
+.Ar args ...
+.Sh DESCRIPTION
+The
+.Nm
+utility executes
+.Ar command
+with the given
+.Ar args .
+.Ss COMMANDS
+.Bl -tag -width
+.It Cm env Ar command
+Executes
+.Ar command
+with the portsys environment.
+.It Cm install Po Cm bin | inc | lib | man Pc Oo Fl e | l Oc Ar
+Install files according to its category. The
+.Fl e
+flag creates empty files. The
+.Fl l
+flag creates symbolic links.
+.It Cm sed Ar file args ...
+Executes the system sed and replaces the
+.Ar file
+atomically.
+.El
+.Sh EXIT STATUS
+.Ex -std
+.Sh SEE ALSO
+.Xr portsys 1 ,
+.Xr portmk 1

@@ -1,0 +1,90 @@
+.Dd $Mdocdate: December 13 2020 $
+.Dt PORTSYS 1
+.Os
+.Sh NAME
+.Nm portsys
+.Nd build-system
+.Sh SYNOPSIS
+.Nm portsys
+.Ar operation
+.Fl ABDMS
+.Op Fl ku
+.Op Fl d Ar dir
+.Op Fl e Ar dir
+.Op Fl p Ar dir
+.Op Fl r Ar dir
+.Ar pkg ...
+.Sh DESCRIPTION
+The
+.Nm
+utility executes the given
+.Ar operation
+for each
+.Ar pkg .
+.Ss OPERATIONS
+.Bl -tag -width XXXXXXX
+.It Cm install
+The generated files are copied to the root system.
+.It Cm package
+The generated files are packed and compressed inside the package
+output directory.
+.El
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl A
+Implies
+.Fl B ,
+.Fl D ,
+.Fl M
+and
+.Fl S .
+.It Fl B
+Preserve binaries and configuration files.
+.It Fl D
+Preserve development files.
+.It Fl d Ar dir
+Set
+.Ar dir
+as a cache directory, where files are searched from and downloaded to.
+.It Fl e Ar dir
+Set
+.Ar dir
+as an extra directory to search for libraries and headers.
+.It Fl k
+Preserve implicit dependencies.
+.It Fl M
+Preserve documentation files.
+.It Fl p Ar dir
+Set
+.Ar dir
+as the package output directory.
+.It Fl r Ar dir
+Set
+.Ar dir
+as root system, where the databases are consulted and packages installed to.
+.It Fl S
+Preserve dynamic libraries.
+.It Fl u
+Update the database before doing any operation.
+.El
+.Pp
+If a cache directory is not given, it defaults to
+.Pa $PORTS/portsys_cache .
+.Pp
+If a package output directory is not given, it defaults to
+.Pa $PORTS/portsys_pkgs .
+.Sh ENVIRONMENT
+.Bl -tag -width XXXXX
+.It Ev PORTS
+Directory where the ports build system is installed.
+.El
+.Sh FILES
+.Bl -tag -width XXXXXXXXXXXXXXXXXXX -compat
+.It Pa $PORTS/mk/config.rc
+Configuration file.
+.El
+.Sh EXIT STATUS
+.Ex -std
+.Sh SEE ALSO
+.Xr mkutils 1 ,
+.Xr portmk 1

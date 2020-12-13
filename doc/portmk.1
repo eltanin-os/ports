@@ -1,0 +1,43 @@
+.Dd $Mdocdate: December 13 2020 $
+.Dt PORTMK 1
+.Os
+.Sh NAME
+.Nm portmk
+.Nd build automation
+.Sh SYNOPSIS
+.Nm
+.Op Fl e Ar var
+.Op Fl f Ar flag
+.Op Fl m Ar flag
+.Ar method
+.Ar args ...
+.Sh DESCRIPTION
+The
+.Nm
+utility executes the build process with the given
+.Ar method .
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl e Ar var
+Export
+.Ar var
+to the environment.
+.It Fl f Ar flag
+Pass the
+.Ar flag
+to the portmk.
+.It Fl m Ar flag
+Pass the
+.Ar flag
+to the build tool.
+.El
+.Sh FILES
+.Bl -tag -width XXXXXXXXXXXXXX -compat
+.It Pa $PORTS/mk/meth
+Directory which includes all supported methods.
+.El
+.Sh EXIT STATUS
+.Ex -std
+.Sh SEE ALSO
+.Xr mkutils 1 ,
+.Xr portsys 1
