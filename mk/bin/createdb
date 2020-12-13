@@ -1,10 +1,9 @@
 #!/bin/rc -e
 # $1: file
-# $2: type
-# $3: desc
+# $2: desc
 if (! test -s $1) exit 0
 # header
-if (! ~ $3 '') description=$"description' '$3
+if (! ~ $2 '') description=$"description' '$2
 size=`{$PORTS/mk/bin/install -n <$1}
 tmp=`{mktemp}
 cat <<EOF >$tmp
@@ -42,5 +41,4 @@ echo '}'
 } >> $tmp
 # gen
 target=$"name
-if (! ~ $2 '') target=$target$2
 mv $tmp $TDBDIR/$target

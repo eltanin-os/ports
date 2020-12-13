@@ -192,26 +192,26 @@ for (pkg in $args) {
 		if ($mflag) @{
 			rdeps=()
 			mdeps=()
-			$PORTS/mk/bin/createdb INSTALL@MAN '-man' '<MANPAGES>'
-			@{ name=$name'-man'
-			$PORTS/mk/bin/$mk INSTALL@MAN }
+			name=$name'-man'
+			$PORTS/mk/bin/createdb INSTALL@MAN '<MANPAGES>'
+			$PORTS/mk/bin/$mk INSTALL@MAN
 		}
 	}
 	if ($dflag) {
-		$PORTS/mk/bin/createdb INSTALL@DEV '-dev' '<DEVELOPMENT>'
-		@{ name=$name'-dev'
-		$PORTS/mk/bin/$mk INSTALL@DEV }
+		name=$name'-dev'
+		$PORTS/mk/bin/createdb INSTALL@DEV '<DEVELOPMENT>'
+		$PORTS/mk/bin/$mk INSTALL@DEV
 		if ($mflag) @{
 			rdeps=()
 			mdeps=()
-			$PORTS/mk/bin/createdb INSTALL@DEVMAN '-devman' '<DEVELOPMENT MANPAGES>'
-			@{ name=$name'-devman'
-			$PORTS/mk/bin/$mk INSTALL@DEVMAN }
+			name=$name'-devman'
+			$PORTS/mk/bin/createdb INSTALL@DEVMAN '<DEVELOPMENT MANPAGES>'
+			$PORTS/mk/bin/$mk INSTALL@DEVMAN
 		}
 	}
 	if ($sflag) {
-		$PORTS/mk/bin/createdb INSTALL@DYNLIB '-dynlib' '<DYNAMIC LIBRARIES>'
-		@{ name=$name'-dynlib'
-		$PORTS/mk/bin/$mk INSTALL@DYNLIB }
+		name=$name'-dynlib'
+		$PORTS/mk/bin/createdb INSTALL@DYNLIB '<DYNAMIC LIBRARIES>'
+		$PORTS/mk/bin/$mk INSTALL@DYNLIB
 	}
 }
