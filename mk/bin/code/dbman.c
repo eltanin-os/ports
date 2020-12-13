@@ -67,7 +67,6 @@ getline(struct cfg *p, ctype_status *r)
 void
 cfginit(struct cfg *c, ctype_fd fd)
 {
-	/* c_arr_init(&c->arr, nil, 0); */
 	c_ioq_init(&c->ioq, fd, c->buf, sizeof(c->buf), &c_sys_read);
 	c->tag = 0;
 	c->fd = fd;
@@ -221,17 +220,21 @@ getpath(char *s)
 
 /* arg routines */
 static void
-gencache(char *path)
+gencache(char *root, char *path)
 {
+	ctype_arr arr;
 	ctype_dir dir;
 	ctype_dent *ep;
 	ctype_cdbmk cdbmk;
 	ctype_fd fd;
-	char tmp[21];
-	char *argv[2];
+	char *argv[2], *tmp;
 
-	c_mem_cpy(tmp, sizeof(tmp), "/tmp/PORTS@XXXXXXXXX");
-	if ((fd = c_std_mktemp(tmp, sizeof(tmp), 0)) < 0)
+	c_mem_set(&arr, sizeof(arr), 0);
+	if (c_dyn_fmt(&arr, "%s/PORTS@XXXXXXXXX", root) < 0)
+		c_err_die(1, "c_dyn_fmt");
+
+	tmp = c_arr_data(&arr);
+	if ((fd = c_std_mktemp(tmp, c_arr_bytes(&arr), 0)) < 0)
 		c_err_die(1, "c_std_mktemp %s", tmp);
 
 	if (c_cdb_mkstart(&cdbmk, fd) < 0)
@@ -278,6 +281,7 @@ gencache(char *path)
 
 	if (c_sys_rename(tmp, path) < 0)
 		c_err_die(1, "c_sys_rename %s %s", tmp, path);
+	c_dyn_free(&arr);
 }
 
 static int
@@ -453,7 +457,7 @@ main(int argc, char **argv)
 
 	s = fmtstr("%s/cache.cdb", ports);
 	if (uflag) {
-		gencache(s);
+		gencache(ports, s);
 		if (!argc)
 			return 0;
 	}
