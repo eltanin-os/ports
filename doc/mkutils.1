@@ -21,12 +21,16 @@ with the given
 Executes
 .Ar command
 with the portsys environment.
-.It Cm install Po Cm bin | inc | lib | man Pc Oo Fl e | l Oc Ar
-Install files according to its category. The
-.Fl e
-flag creates empty files. The
-.Fl l
-flag creates symbolic links.
+.It Cm install Bro Cm bin | inc | lib | man Brc Oo Fl d | Fl e | l Oc Ar
+Copy files according to its category.
+.Bl -tag -width Ds -compact
+.It Fl d
+Delete files instead of copying.
+.It Fl e
+Create empty files.
+.It Fl l
+Create symbolic links
+.El
 .It Cm sed Ar file args ...
 Executes the system sed and replaces the
 .Ar file

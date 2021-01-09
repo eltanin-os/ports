@@ -37,6 +37,9 @@ fn wrap_install {
 		$INSTALL -d $dir
 	}
 	switch ($1) {
+	case '-d'
+		shift
+		rm $dest/$*
 	case '-e'
 		shift
 		touch $dest/$*
