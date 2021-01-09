@@ -45,7 +45,7 @@ STRIP=strip
 
 # PKG TOOLS
 MAN_COMPRESS=(pigz -9)
-PKG_COMPRESS=(czlip -9)
+PKG_COMPRESS=(clzip -9)
 PKG_PACK=(venus-ar -c)
 
 # COMPRESSION TOOLS
