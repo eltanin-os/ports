@@ -18,3 +18,4 @@ case *'.tar.zz' *'.tzz'
 case *
 	error $file: unknown format
 }
+true
