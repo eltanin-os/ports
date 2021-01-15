@@ -99,6 +99,7 @@ if (!$bflag && !$dflag && !$mflag && !$sflag) {
 
 # portsys vars set1
 WRKDIR=`{mktemp -dt PORTSYS@XXXXXXXXX}
+PORTSYS_DBDIR=$WRKDIR/dbfiles
 PORTSYS_PKGDIR=$WRKDIR/pkgroot
 PORTSYS_ROOTPWD=$WRKDIR/tmproot
 PORTSYS_HOSTOS=`{uname -s | $AWK '{print(tolower($0))}'}
@@ -111,6 +112,7 @@ if (test -z $PKGPATH) PKGPATH=$PWD/portsys_pkgs
 if (! test -d $TDBDIR) mkdir -p $TDBDIR
 if (test -z $"CACHEDIR) CACHEDIR=$PWD/portsys_cache
 if (! test -d $CACHEDIR) mkdir $CACHEDIR
+mkdir -p $PORTSYS_DBDIR
 
 CPPFLAGS=($CPPFLAGS $EXTRAINC '-I'$PORTSYS_ROOTPWD$INCDIR '-I'$SYSPATH$INCDIR)
 LDFLAGS=($LDFLAGS $EXTRALIB '-L'$PORTSYS_ROOTPWD$LIBDIR '-L'$SYSPATH$LIBDIR)
@@ -159,11 +161,11 @@ for (pkg in $args) {
 for (pkg in $args) {
 	dir=`{getsrc $pkg}
 	cd $WRKDIR/$dir
+	name=`{$PORTS/mk/bin/dbman -k name $pkg}
 	message $pkg: building...
 	@{ PORTSYS_TMP_BUILDDIR=`{mktemp -u 'PORTSYS@XXXXXXXXX'}
 	PATH=$PATH:$PORTS/mk/utils
 	dir=`{$PORTS/mk/bin/dbman $pkg}
-	name=`{$PORTS/mk/bin/dbman -k name $pkg}
 	@{ DESTDIR=$WRKDIR/pkgroot/$name
 	$dir/build
 	cd $DESTDIR
@@ -173,6 +175,41 @@ for (pkg in $args) {
 	$PORTS/mk/bin/list
 	@{ SYSPATH=$WRKDIR/tmproot
 	$PORTS/mk/bin/install -c <INSTALL@DEV } } }
+	# db files
+	cd $WRKDIR/pkgroot/$name
+	message $pkg: creating database entry...
+	version=`{$PORTS/mk/bin/dbman -k version $pkg}
+	license=`{$PORTS/mk/bin/dbman -k license $pkg}
+	description=`{$PORTS/mk/bin/dbman -k description $pkg}
+	mdeps=`{$PORTS/mk/bin/dbman -t mdeps $pkg}
+	rdeps=`{$PORTS/mk/bin/dbman -t rdeps $pkg}
+	@{
+		$PORTS/mk/bin/createdb INSTALL@DEF
+		if ($mflag) @{
+			mdeps=()
+			rdeps=()
+			name=$name'-man'
+			description=$description' <MANPAGES>'
+			$PORTS/mk/bin/createdb INSTALL@MAN
+		}
+	}
+	mdeps=()
+	rdeps=()
+	@{
+		@{ name=$name'-dev'
+		description=$description' <DEVELOPMENT>'
+		$PORTS/mk/bin/createdb INSTALL@DEV }
+		if ($mflag) @{
+			name=$name'-devman'
+			description=$description' <DEVELOPMENT MANPAGES>'
+			$PORTS/mk/bin/createdb INSTALL@DEVMAN
+		}
+	}
+	@{
+		name=$name'-dynlib'
+		description=$description' <DYNAMIC LIBRARIES>'
+		$PORTS/mk/bin/createdb INSTALL@DYNLIB
+	}
 }
 
 # stage3: install/pack, generate db files
@@ -180,38 +217,25 @@ if (! $kflag) args=$*
 for (pkg in $args) {
 	name=`{$PORTS/mk/bin/dbman -k name $pkg}
 	cd $WRKDIR/pkgroot/$name
-	message $pkg: installing and creating database entries...
-	version=`{$PORTS/mk/bin/dbman -k version $pkg}
-	license=`{$PORTS/mk/bin/dbman -k license $pkg}
-	description=`{$PORTS/mk/bin/dbman -k description $pkg}
-	mdeps=`{$PORTS/mk/bin/dbman -t mdeps $pkg}
-	rdeps=`{$PORTS/mk/bin/dbman -t rdeps $pkg}
+	message $pkg: installing...
 	if ($bflag) {
-		$PORTS/mk/bin/createdb INSTALL@DEF
 		$PORTS/mk/bin/$mk INSTALL@DEF
-		if ($mflag) @{
-			rdeps=()
-			mdeps=()
-			name=$name'-man'
-			$PORTS/mk/bin/createdb INSTALL@MAN '<MANPAGES>'
+		mv $PORTSYS_DBDIR/$name $TDBDIR >[2]/dev/null ||;
+		if ($mflag) {
 			$PORTS/mk/bin/$mk INSTALL@MAN
+			mv $PORTSYS_DBDIR/$name'-man' $TDBDIR >[2]/dev/null ||;
 		}
 	}
 	if ($dflag) {
-		name=$name'-dev'
-		$PORTS/mk/bin/createdb INSTALL@DEV '<DEVELOPMENT>'
 		$PORTS/mk/bin/$mk INSTALL@DEV
-		if ($mflag) @{
-			rdeps=()
-			mdeps=()
-			name=$name'-devman'
-			$PORTS/mk/bin/createdb INSTALL@DEVMAN '<DEVELOPMENT MANPAGES>'
+		mv $PORTSYS_DBDIR/$name'-dev' $TDBDIR >[2]/dev/null ||;
+		if ($mflag) {
 			$PORTS/mk/bin/$mk INSTALL@DEVMAN
+			mv $PORTSYS_DBDIR/$name'-devman' $TDBDIR >[2]/dev/null ||;
 		}
 	}
 	if ($sflag) {
-		name=$name'-dynlib'
-		$PORTS/mk/bin/createdb INSTALL@DYNLIB '<DYNAMIC LIBRARIES>'
 		$PORTS/mk/bin/$mk INSTALL@DYNLIB
+		mv $PORTSYS_DBDIR/$name'-dynlib' $TDBDIR >[2]/dev/null ||;
 	}
 }

@@ -1,9 +1,7 @@
 #!/bin/rc -e
 # $1: file
-# $2: desc
 if (! test -s $1) exit 0
 # header
-if (! ~ $2 '') description=$"description' '$2
 size=`{$PORTS/mk/bin/install -n <$1}
 tmp=`{mktemp}
 cat <<EOF >$tmp
@@ -13,21 +11,32 @@ license:$license
 description:$description
 size:$size
 EOF
+# vars
+SYSDBDIR=$SYSPATH$DBDIR
+# separate deps
+# XXX: maybe use ldd to be sure (for now this is a heuristic)
+makedeps=()
+for (dep in $mdeps) {
+	d=$dep'-dynlib'
+	v=''
+	if (test -e $SYSDBDIR/$d) v=`{$SED -n 's/version://p' $SYSDBDIR/$d}
+	if (test -e $PORTSYS_DBDIR/$d) v=`{$SED -n 's/version://p' $PORTSYS_DBDIR/$d}
+	if (test -n $v) rdeps=($rdeps $d'#'$v)
+	if not makedeps=($makedeps $dep)
+}
 # rdeps
 if (! ~ $#rdeps 0) {
 	echo 'rdeps{'
-	for (dep in $rdeps) printf '\t%s\n' $dep
+	printf '\t%s\n' $rdeps
 	echo '}'
 } >> $tmp
 # mdeps
-# TODO: move dynamic mdeps to rdeps
-if (! ~ $#mdeps 0) {
+if (! ~ $#makedeps 0) {
 	echo 'mdeps{'
-	for (dep in $mdeps) {
+	for (dep in $makedeps) {
 		d=$dep'-dev'
-		dir=$SYSPATH$DBDIR
-		if (! test -e $dir/$d) v=`{$PORTS/mk/bin/dbman -k version $dep}
-		if not v=`{$SED -n 's/version://p' $dir/$d}
+		if (test -e $SYSDBDIR/$d) v=`{$SED -n 's/version://p' $SYSDBDIR/$d}
+		if not v=`{$SED -n 's/version://p' $PORTSYS_DBDIR/$d}
 		dep=$d'#'$v
 		printf '\t%s\n' $dep
 	}
@@ -41,4 +50,4 @@ echo '}'
 } >> $tmp
 # gen
 target=$"name
-mv $tmp $TDBDIR/$target
+mv $tmp $PORTSYS_DBDIR/$target

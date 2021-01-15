@@ -8,15 +8,17 @@ if (test -z $"_C) _C=$CFLAGS
 if (test -z $"_L) _L=$LDFLAGS
 if (test -z $"_P) _P=$CPPFLAGS
 
+switch ($PORTSYS_MK_FLAGS) {
+case *'dynamic'*
+	_L=`{echo $L | sed 's/-static//g'}
+case *'nocppflags'*
+	_C=($_C $_P)
+}
+
 static=false
 if (~ ' '$"_L' ' *' -static '*) {
 	static=true
 	PKG_CONFIG=$"PKG_CONFIG' --static'
-}
-
-switch ($PORTSYS_MK_FLAGS) {
-case *'nocppflags'*
-	_C=($_C $_P)
 }
 
 ACLOCAL='aclocal -I'$"PORTSYS_ROOTPWD/$"DRTDIR/aclocal

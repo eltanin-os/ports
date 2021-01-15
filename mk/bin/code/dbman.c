@@ -320,6 +320,9 @@ populatedeps(ctype_node **np, ctype_node *list)
 			p = fmtstr("%s/%s-dev", dbdir, s);
 			if (!c_sys_stat(&st, p))
 				continue;
+			p = fmtstr("%s/%s-dynlib", dbdir, s);
+			if (!c_sys_stat(&st, p))
+				continue;
 			if (!(p = getpath(s))) {
 				r = c_err_warnx("%s: package not found", s);
 				continue;
