@@ -45,6 +45,19 @@ mkpath(char *dir, uint mode)
 	return 0;
 }
 
+static ctype_status
+copy(char *s, char *d)
+{
+	ctype_status r;
+
+	if ((r = c_sys_link(s, d)) < 0 &&
+	    errno == C_EEXIST) {
+		c_sys_unlink(d);
+		r = c_sys_link(s, d);
+	}
+	return r;
+}
+
 static void
 sysmove(char *p)
 {
@@ -61,7 +74,7 @@ sysmove(char *p)
 	if (mkpath(d, 0755) < 0)
 		c_err_die(1, "mkpath %s", d);
 
-	r = cflag ? c_sys_link(p, d) : c_sys_rename(p, d);
+	r = cflag ? copy(p, d) : c_sys_rename(p, d);
 	if (r < 0) {
 		if (errno != C_EXDEV)
 			c_err_die(1, "sysmove %s %s", p, d);
