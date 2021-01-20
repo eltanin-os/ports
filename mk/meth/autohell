@@ -30,18 +30,19 @@ if (test -f AUTOHELL@DONE) {
 }; if not @{
 	if (! test -n $"PREFIX) PREFIX='/'
 	chmod +x $CONFIGURE
-	env -i -- $PORTSYS_METH_ENV    \
-	    $CONFIGURE                 \
-	    --prefix'='$"PREFIX        \
-	    --bindir'='$"BINDIR        \
-	    --sbindir'='$"BINDIR       \
-	    --libdir'='$"LIBDIR        \
-	    --includedir'='$"INCDIR    \
-	    --oldincludedir'='$"INCDIR \
-	    --datarootdir'='$"DRTDIR   \
-	    --mandir'='$"MANDIR        \
-	    --enable-shared'='$"shared \
-	    --enable-static'='$"static \
+	env -i -- $PORTSYS_METH_ENV     \
+	    enable_option_checking'='no \
+	    $CONFIGURE                  \
+	    --prefix'='$"PREFIX         \
+	    --bindir'='$"BINDIR         \
+	    --sbindir'='$"BINDIR        \
+	    --libdir'='$"LIBDIR         \
+	    --includedir'='$"INCDIR     \
+	    --oldincludedir'='$"INCDIR  \
+	    --datarootdir'='$"DRTDIR    \
+	    --mandir'='$"MANDIR         \
+	    --enable-shared'='$"shared  \
+	    --enable-static'='$"static  \
 	    $PORTSYS_METH_FLAGS
 	touch AUTOHELL@DONE
 	if (~ $#* 0) exit
