@@ -1,0 +1,2 @@
+#!/bin/rc
+# portmk(1) <meth> ($PORTS/mk/meth: supported methods) <rules>

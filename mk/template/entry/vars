@@ -1,0 +1,14 @@
+name:
+version:
+license:
+description:
+cksum:
+src:
+patches{
+}
+mirrors{
+}
+mdeps{
+}
+rdeps{
+}
