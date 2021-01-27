@@ -157,7 +157,13 @@ for (pkg in $args) {
 	for (p in $patches) patch -p1 < $dir/patches/$p }
 }
 
-# stage2: building
+fn _createdb {
+	@{ name=$1
+	if (~ $#* 3) description=$description' '$3
+	$PORTS/mk/bin/createdb $2 }
+}
+
+# stage2: building, generate db files
 for (pkg in $args) {
 	dir=`{getsrc $pkg}
 	cd $WRKDIR/$dir
@@ -181,61 +187,40 @@ for (pkg in $args) {
 	version=`{$PORTS/mk/bin/dbman -k version $pkg}
 	license=`{$PORTS/mk/bin/dbman -k license $pkg}
 	description=`{$PORTS/mk/bin/dbman -k description $pkg}
-	mdeps=`{$PORTS/mk/bin/dbman -t mdeps $pkg}
-	rdeps=`{$PORTS/mk/bin/dbman -t rdeps $pkg}
-	@{
-		$PORTS/mk/bin/createdb INSTALL@DEF
-		if ($mflag) @{
-			mdeps=()
-			rdeps=()
-			name=$name'-man'
-			description=$description' <MANPAGES>'
-			$PORTS/mk/bin/createdb INSTALL@MAN
-		}
+	if ($bflag) {
+		@{ mdeps=`{$PORTS/mk/bin/dbman -t mdeps $pkg}
+		rdeps=`{$PORTS/mk/bin/dbman -t rdeps $pkg}
+		_createdb $name INSTALL@DEF }
+		if ($mflag) _createdb $name'-man' INSTALL@MAN '<MANPAGES>'
 	}
-	mdeps=()
-	rdeps=()
-	@{
-		@{ name=$name'-dev'
-		description=$description' <DEVELOPMENT>'
-		$PORTS/mk/bin/createdb INSTALL@DEV }
-		if ($mflag) @{
-			name=$name'-devman'
-			description=$description' <DEVELOPMENT MANPAGES>'
-			$PORTS/mk/bin/createdb INSTALL@DEVMAN
-		}
+	if ($dflag) {
+		_createdb $name'-dev' INSTALL@DEV '<DEVELOPMENT>'
+		if ($mflag) _createdb $name'-devman' INSTALL@DEVMAN '<DEVELOPMENT MANPAGES>'
 	}
-	@{
-		name=$name'-dynlib'
-		description=$description' <DYNAMIC LIBRARIES>'
-		$PORTS/mk/bin/createdb INSTALL@DYNLIB
-	}
+	_createdb $name'-dynlib' INSTALL@DYNLIB '<DYNAMIC LIBRARIES>'
 }
 
-# stage3: install/pack, generate db files
+fn _install {
+	@{ name=$1
+	if (test -e $PORTSYS_DBDIR/$name) {
+		mv $PORTSYS_DBDIR/$name $TDBDIR
+		$PORTS/mk/bin/$mk $2
+	} }
+}
+
+# stage3: install/pack
 if (! $kflag) args=$*
 for (pkg in $args) {
 	name=`{$PORTS/mk/bin/dbman -k name $pkg}
 	cd $WRKDIR/pkgroot/$name
 	message $pkg: installing...
 	if ($bflag) {
-		$PORTS/mk/bin/$mk INSTALL@DEF
-		mv $PORTSYS_DBDIR/$name $TDBDIR >[2]/dev/null ||;
-		if ($mflag) {
-			$PORTS/mk/bin/$mk INSTALL@MAN
-			mv $PORTSYS_DBDIR/$name'-man' $TDBDIR >[2]/dev/null ||;
-		}
+		_install $name INSTALL@DEF
+		if ($mflag) _install $name'-man' INSTALL@MAN
 	}
 	if ($dflag) {
-		$PORTS/mk/bin/$mk INSTALL@DEV
-		mv $PORTSYS_DBDIR/$name'-dev' $TDBDIR >[2]/dev/null ||;
-		if ($mflag) {
-			$PORTS/mk/bin/$mk INSTALL@DEVMAN
-			mv $PORTSYS_DBDIR/$name'-devman' $TDBDIR >[2]/dev/null ||;
-		}
+		_install $name'-dev' INSTALL@DEV
+		if ($mflag) _install $name'-devman' INSTALL@DEVMAN
 	}
-	if ($sflag) {
-		$PORTS/mk/bin/$mk INSTALL@DYNLIB
-		mv $PORTSYS_DBDIR/$name'-dynlib' $TDBDIR >[2]/dev/null ||;
-	}
+	if ($sflag) _install $name'-dynlib' INSTALL@DYNLIB
 }
