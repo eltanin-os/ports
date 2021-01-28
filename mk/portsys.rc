@@ -193,10 +193,8 @@ for (pkg in $args) {
 		_createdb $name INSTALL@DEF }
 		if ($mflag) _createdb $name'-man' INSTALL@MAN '<MANPAGES>'
 	}
-	if ($dflag) {
-		_createdb $name'-dev' INSTALL@DEV '<DEVELOPMENT>'
-		if ($mflag) _createdb $name'-devman' INSTALL@DEVMAN '<DEVELOPMENT MANPAGES>'
-	}
+	_createdb $name'-dev' INSTALL@DEV '<DEVELOPMENT>'
+	if ($dflag && $mflag) _createdb $name'-devman' INSTALL@DEVMAN '<DEVELOPMENT MANPAGES>'
 	_createdb $name'-dynlib' INSTALL@DYNLIB '<DYNAMIC LIBRARIES>'
 }
 
