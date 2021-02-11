@@ -203,7 +203,8 @@ fn _install {
 	if (test -e $PORTSYS_DBDIR/$name) {
 		mv $PORTSYS_DBDIR/$name $TDBDIR
 		$PORTS/mk/bin/$mk $2
-	} }
+	}
+	true }
 }
 
 # stage3: install/pack
