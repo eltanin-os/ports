@@ -159,7 +159,7 @@ for (pkg in $args) {
 
 fn _createdb {
 	@{ name=$1
-	if (~ $#* 3) description=$description' '$3
+	if (~ $#* 3) description=$"description' '$3
 	$PORTS/mk/bin/createdb $2 }
 }
 
