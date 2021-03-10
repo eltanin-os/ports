@@ -6,8 +6,9 @@ dir=$"PORTSYS_TMP_BUILDDIR
 mkdir $dir
 cd $dir
 
+flags=()
 if ($static) {
-	flags=(-D BUILD_SHARED_LIBS'='OFF)
+	flags=(-D BUILD_SHARED_LIBS'='OFF -D LIBTYPE'='STATIC)
 }; if not {
 	flags=(-D BUILD_SHARED_LIBS'='ON)
 }
@@ -21,16 +22,21 @@ case *'-Os'*
 	flags=($flags -DCMAKE_BUILD_TYPE'='MinSizeRel)
 }
 
-if (~ $"1 *install*) {
-	cmake --build . --target $*
-}; if not @{
-	if (! test -n $"PREFIX) PREFIX='/'
-	env -i -- $PORTSYS_METH_ENV           \
-	    cmake                             \
-	    -GNinja                           \
-	    -DCMAKE_INSTALL_PREFIX'='$"PREFIX \
-	    $flags                            \
-	    $PORTSYS_METH_FLAGS               \
-	    ..
-	cmake --build .
-}
+if (! test -n $"PREFIX) PREFIX='/'
+env -i -- $PORTSYS_METH_ENV                \
+    cmake                                  \
+    -GNinja                                \
+    -DCMAKE_INSTALL_PREFIX'='$"PREFIX      \
+    -DCMAKE_INSTALL_BINDIR'='$"BINDIR      \
+    -DCMAKE_INSTALL_SBINDIR'='$"BINDIR     \
+    -DCMAKE_INSTALL_SYSCONFDIR'='$"ETCDIR  \
+    -DCMAKE_INSTALL_LIBDIR'='$"LIBDIR      \
+    -DCMAKE_INSTALL_INCLUDEDIR'='$"INCDIR  \
+    -DCMAKE_INSTALL_DATAROOTDIR'='$"DRTDIR \
+    -DCMAKE_INSTALL_MANDIR'='$"MANDIR      \
+    $flags                                 \
+    $PORTSYS_METH_FLAGS                    \
+    ..
+args=()
+if (! ~ $#* 0) args=(--target $*)
+cmake --build . $args
