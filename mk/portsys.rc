@@ -153,8 +153,10 @@ for (pkg in $args) {
 	message $pkg: patching...
 	dir=`{$PORTS/mk/bin/dbman $pkg}
 	patches=`{$PORTS/mk/bin/dbman -t patches $pkg}
+	plvl=`{$PORTS/mk/bin/dbman -k patch-level $pkg}
+	if (~ $plvl '<nil>') plvl=1
 	@{ cd $src
-	for (p in $patches) patch -p1 < $dir/patches/$p }
+	for (p in $patches) patch -p$plvl < $dir/patches/$p }
 }
 
 fn _createdb {
