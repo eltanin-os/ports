@@ -1,13 +1,12 @@
 #!/bin/rc -e
-
 if (test -z $PORTS) {
 	echo '<error>' $0: missing PORTS environmental variable >[1=2]
 	exit 1
 }
-true # only god knows why
-argv0=$0
-. $PORTS/mk/config.rc
-. $PORTS/mk/io.rc
+true # '-e' sucks
+argv0=`{basename $0}
+. $PORTS/mk/config
+. $PORTS/mk/com/io.rc
 
 repos=`{ls $PORTS/pkg}
 if (~ $#repos 0) error no repositories found
@@ -114,8 +113,9 @@ if (test -z $"CACHEDIR) CACHEDIR=$PWD/portsys_cache
 if (! test -d $CACHEDIR) mkdir $CACHEDIR
 mkdir -p $PORTSYS_DBDIR
 
-CPPFLAGS=($CPPFLAGS $EXTRAINC '-I'$PORTSYS_ROOTPWD$INCDIR '-I'$SYSPATH$INCDIR)
-LDFLAGS=($LDFLAGS $EXTRALIB '-L'$PORTSYS_ROOTPWD$LIBDIR '-L'$SYSPATH$LIBDIR)
+# build flags
+CPPFLAGS=$"CPPFLAGS' '$"EXTRAINC' -I'$"PORTSYS_ROOTPWD$"INCDIR' -I'$"SYSPATH$"INCDIR
+LDFLAGS=$"LDFLAGS' '$"EXTRALIB' -L'$"PORTSYS_ROOTPWD$"LIBDIR' -L'$"SYSPATH$"LIBDIR
 
 # tmp env fuctions
 fn sigexit {
@@ -175,6 +175,7 @@ for (pkg in $args) {
 	PATH=$PATH:$PORTS/mk/utils
 	dir=`{$PORTS/mk/bin/dbman $pkg}
 	@{ DESTDIR=$WRKDIR/pkgroot/$name
+	. $PORTS/mk/com/premeth.rc
 	$dir/build
 	cd $DESTDIR
 	message $pkg: preparing...
@@ -182,7 +183,8 @@ for (pkg in $args) {
 	# copy dev files in a single dir
 	$PORTS/mk/bin/list
 	@{ SYSPATH=$WRKDIR/tmproot
-	$PORTS/mk/bin/install -c <INSTALL@DEV } } }
+	$PORTS/mk/bin/install -c <INSTALL@DEV
+	$PORTS/mk/bin/install -c <INSTALL@DYNLIB } } }
 	# db files
 	cd $WRKDIR/pkgroot/$name
 	message $pkg: creating database entry...
@@ -213,6 +215,7 @@ fn _install {
 if (! $kflag) args=$*
 for (pkg in $args) {
 	name=`{$PORTS/mk/bin/dbman -k name $pkg}
+	version=`{$PORTS/mk/bin/dbman -k version $pkg}
 	cd $WRKDIR/pkgroot/$name
 	message $pkg: installing...
 	if ($bflag) {

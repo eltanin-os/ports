@@ -1,7 +1,6 @@
 #!/bin/rc
 # $1 : tmp file
-. $PORTS/mk/config.rc
-. $PORTS/mk/io.rc
+. $PORTS/mk/com/io.rc
 if (! test -s $1) exit
 file=`{cat $1}
 switch ($file) {

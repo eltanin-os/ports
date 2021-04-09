@@ -1,7 +1,4 @@
 #!/bin/rc
-#
-. $PORTS/mk/meth/cfg.rc
-
 if (test -z $CONFIGURE) CONFIGURE='./configure'
 OBDIR=true
 
@@ -25,30 +22,25 @@ if ($static) {
 	shared=yes
 }
 
-if (test -f AUTOHELL@DONE) {
-	make -- DESTDIR'='$"DESTDIR $*
-}; if not @{
+if (! test -f AUTOHELL@DONE) @{
 	if (! test -n $"PREFIX) PREFIX='/'
 	chmod +x $CONFIGURE
-	env -i -- $PORTSYS_METH_ENV     \
-	    enable_option_checking'='no \
-	    $CONFIGURE                  \
-	    --prefix'='$"PREFIX         \
-	    --bindir'='$"BINDIR         \
-	    --sbindir'='$"BINDIR        \
-	    --libdir'='$"LIBDIR         \
-	    --includedir'='$"INCDIR     \
-	    --oldincludedir'='$"INCDIR  \
-	    --datarootdir'='$"DRTDIR    \
-	    --mandir'='$"MANDIR         \
-	    --enable-shared'='$"shared  \
-	    --enable-static'='$"static  \
+	enable_option_checking=no
+	$CONFIGURE                     \
+	    --prefix'='$PREFIX         \
+	    --bindir'='$BINDIR         \
+	    --sbindir'='$BINDIR        \
+	    --libdir'='$LIBDIR         \
+	    --includedir'='$INCDIR     \
+	    --oldincludedir'='$INCDIR  \
+	    --datarootdir'='$DRTDIR    \
+	    --mandir'='$MANDIR         \
+	    --enable-shared'='$shared  \
+	    --enable-static'='$static  \
 	    $PORTSYS_METH_FLAGS
 	touch AUTOHELL@DONE
-	if (~ $#* 0) exit
-	if (test -f 'libtool' && ~ $"static 'yes') {
-		_L=($_L -all-static)
-		make -- DESTDIR'='$"DESTDIR LDFLAGS'='$"_L $*
-	}
-	if not make -- DESTDIR'='$"DESTDIR $*
 }
+if (~ $#* 0) exit 0
+V=()
+if (test -f libtool) if (~ $static yes) V=(LDFLAGS'='$"LDFLAGS' -all-static')
+exec make -- DESTDIR'='$"DESTDIR $V $*

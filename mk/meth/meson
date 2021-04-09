@@ -1,8 +1,4 @@
 #!/bin/rc
-#
-PC=$"PKG_CONFIG
-. $PORTS/mk/meth/cfg.rc
-
 prefix=$"PREFIX
 if (test -z $prefix) prefix=/
 
@@ -13,22 +9,20 @@ if ($static) {
 }
 
 if (! test -d $PORTSYS_TMP_BUILDDIR) {
-	env -i $PORTSYS_METH_ENV            \
-	    PKG_CONFIG'='$PC                \
-	    meson                           \
-	    --prefix'='$prefix              \
-	    --bindir'='$"PREFIX$"BINDIR     \
-	    --datadir'='$"PREFIX$"DRTDIR    \
-	    --includedir'='$"PREFIX$"INCDIR \
-	    --libdir'='$"PREFIX$"LIBDIR     \
-	    --mandir'='$"PREFIX$"MANDIR     \
-	    --sbindir'='$"PREFIX$"BINDIR    \
-	    --sysconfdir'='$"PREFIX$"ETCDIR \
-	    --buildtype'='plain             \
-	    --default-library'='$static     \
-	    $PORTSYS_METH_FLAGS             \
-	    --                              \
+	meson                             \
+	    --prefix'='$prefix            \
+	    --bindir'='$PREFIX$BINDIR     \
+	    --datadir'='$PREFIX$DRTDIR    \
+	    --includedir'='$PREFIX$INCDIR \
+	    --libdir'='$PREFIX$LIBDIR     \
+	    --mandir'='$PREFIX$MANDIR     \
+	    --sbindir'='$PREFIX$BINDIR    \
+	    --sysconfdir'='$PREFIX$ETCDIR \
+	    --buildtype'='plain           \
+	    --default-library'='$static   \
+	    $PORTSYS_METH_FLAGS           \
+	    --                            \
 	    $PORTSYS_TMP_BUILDDIR
 }
 
-$NINJA -C $PORTSYS_TMP_BUILDDIR $*
+exec $NINJA -C $PORTSYS_TMP_BUILDDIR $*

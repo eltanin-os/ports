@@ -1,0 +1,13 @@
+#!/bin/rc
+
+static=false
+if (~ ' '$"LDFLAGS' ' *' -static '*) {
+	static=true
+	PKG_CONFIG=$"PKG_CONFIG' --static'
+}
+
+ACLOCAL='aclocal -I'$"PORTSYS_ROOTPWD/$"DRTDIR/aclocal
+PKG_CONFIG_PATH=$"PORTSYS_ROOTPWD/$"DRTDIR/pkgconfig
+PKG_CONFIG_SYSROOT_DIR=$PORTSYS_ROOTPWD
+
+true # only god knows why

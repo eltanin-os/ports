@@ -1,0 +1,10 @@
+#!/bin/rc
+for (flag in $PORTSYS_MK_FLAGS) {
+	switch ($flag) {
+	case 'dynamic'
+		LDFLAGS=`{echo $LDFLAGS | sed 's/-static//g'}
+		LDFLAGS=$"LDFLAGS
+	case 'nocppflags'
+		CPPFLAGS=$"CFLAGS' '$"CPPFLAGS
+	}
+}

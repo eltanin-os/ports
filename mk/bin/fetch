@@ -1,8 +1,7 @@
 #!/bin/rc -e
 # $1 : tmp file
 # $* : url list (protocol url)
-. $PORTS/mk/config.rc
-. $PORTS/mk/io.rc
+. $PORTS/mk/com/io.rc
 tmp=$1
 shift
 @{ for (url in $*) {

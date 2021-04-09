@@ -5,8 +5,8 @@ if (test -z $PORTS) {
 }
 true # only god knows why
 argv0=$0
-. $PORTS/mk/config.rc
-. $PORTS/mk/io.rc
+. $PORTS/mk/config
+. $PORTS/mk/com/io.rc
 
 message creating temporary environment...
 tmpfile=`{mktemp}
@@ -22,6 +22,7 @@ cat <<EOF >$tmpfile
 ctype_status main(int argc, char **argv) { c_std_exit(0); }
 EOF
 PORTSYS_ROOTPWD=''
+DESTDIR=''
 $CC $CFLAGS $CPPFLAGS $LDFLAGS -o $tmpfile.out $tmpfile -ltertium || {
 	warning tertium not found
 	message bootstraping tertium...
@@ -30,12 +31,13 @@ $CC $CFLAGS $CPPFLAGS $LDFLAGS -o $tmpfile.out $tmpfile -ltertium || {
 	$FETCH http://downloads.eltan.in.net/files/tertium/$dir.tar.lz
 	$ULZ $dir.tar.lz | $UNTAR
 	cd $dir
-	CFLAGS=($CFLAGS -fno-builtin)
+	CFLAGS=$"CFLAGS' -fno-builtin'
 	ARCH=`{uname -m}
 	OS=`{uname -s | tr '[A-Z]' '[a-z]'}
+	. $PORTS/mk/com/premeth.rc
 	$PORTS/mk/utils/portmk -f replace make OSNAME'='$"OS OBJTYPE'='$"ARCH }
-	CPPFLAGS=($CPPFLAGS -I$tmpdir/$dir/inc)
-	LDFLAGS=($LDFLAGS -L$tmpdir/$dir/lib)
+	CPPFLAGS=$"CPPFLAGS' -I'$"tmpdir/$"dir/inc
+	LDFLAGS=$"LDFLAGS' -L'$"tmpdir/$"dir/lib
 }
 message bootstraping ports tools...
 $PORTS/mk/utils/portmk make bootstrap

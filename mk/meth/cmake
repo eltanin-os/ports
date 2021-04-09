@@ -1,7 +1,4 @@
 #!/bin/rc
-#
-. $PORTS/mk/meth/cfg.rc
-
 dir=$"PORTSYS_TMP_BUILDDIR
 mkdir $dir
 cd $dir
@@ -13,7 +10,7 @@ if ($static) {
 	flags=(-D BUILD_SHARED_LIBS'='ON)
 }
 
-switch ($_L) {
+switch ($LDFLAGS) {
 case *'-O3'*
 	flags=($flags -DCMAKE_BUILD_TYPE'='Release)
 case *'-O2'*
@@ -23,20 +20,19 @@ case *'-Os'*
 }
 
 if (! test -n $"PREFIX) PREFIX='/'
-env -i -- $PORTSYS_METH_ENV                \
-    cmake                                  \
-    -GNinja                                \
-    -DCMAKE_INSTALL_PREFIX'='$"PREFIX      \
-    -DCMAKE_INSTALL_BINDIR'='$"BINDIR      \
-    -DCMAKE_INSTALL_SBINDIR'='$"BINDIR     \
-    -DCMAKE_INSTALL_SYSCONFDIR'='$"ETCDIR  \
-    -DCMAKE_INSTALL_LIBDIR'='$"LIBDIR      \
-    -DCMAKE_INSTALL_INCLUDEDIR'='$"INCDIR  \
-    -DCMAKE_INSTALL_DATAROOTDIR'='$"DRTDIR \
-    -DCMAKE_INSTALL_MANDIR'='$"MANDIR      \
-    $flags                                 \
-    $PORTSYS_METH_FLAGS                    \
+cmake                                     \
+    -GNinja                               \
+    -DCMAKE_INSTALL_PREFIX'='$PREFIX      \
+    -DCMAKE_INSTALL_BINDIR'='$BINDIR      \
+    -DCMAKE_INSTALL_SBINDIR'='$BINDIR     \
+    -DCMAKE_INSTALL_SYSCONFDIR'='$ETCDIR  \
+    -DCMAKE_INSTALL_LIBDIR'='$LIBDIR      \
+    -DCMAKE_INSTALL_INCLUDEDIR'='$INCDIR  \
+    -DCMAKE_INSTALL_DATAROOTDIR'='$DRTDIR \
+    -DCMAKE_INSTALL_MANDIR'='$MANDIR      \
+    $flags                                \
+    $PORTSYS_METH_FLAGS                   \
     ..
 args=()
 if (! ~ $#* 0) args=(--target $*)
-cmake --build . $args
+exec cmake --build . $args
