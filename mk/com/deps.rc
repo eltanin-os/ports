@@ -1,0 +1,23 @@
+#!/bin/rc -e
+
+# $1: package
+fn portsys_dep @{
+	dir=`{$PORTS/mk/bin/dbman $1}
+	deps=`{$PORTS/mk/bin/dbread -t 'mdeps{' $"dir/vars}
+	for (dep in $deps) {
+		if (! test -e $"SYSPATH$"DBDIR/$dep'-dev') {
+			portsys_dep $dep
+			echo $dep
+		}
+		true
+	}
+}
+
+# $* : packages
+fn portsys_deps {
+	tmp=`{mktemp}
+	for (dep in $*) portsys_dep $dep >> $tmp
+	printf '%s\n' $* >> $tmp
+	awk '!x[$0]++' $tmp
+	rm -f $tmp
+}

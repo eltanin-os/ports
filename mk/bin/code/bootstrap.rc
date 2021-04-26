@@ -26,7 +26,7 @@ DESTDIR=''
 $CC $CFLAGS $CPPFLAGS $LDFLAGS -o $tmpfile.out $tmpfile -ltertium || {
 	warning tertium not found
 	message bootstraping tertium...
-	dir='tertium-0.9.0'
+	dir='tertium-0.9.1'
 	@{ cd $tmpdir
 	$FETCH http://downloads.eltan.in.net/files/tertium/$dir.tar.lz
 	$ULZ $dir.tar.lz | $UNTAR

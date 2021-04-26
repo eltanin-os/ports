@@ -97,7 +97,7 @@ if (!$bflag && !$dflag && !$mflag && !$sflag) {
 }
 
 # portsys vars set1
-WRKDIR=`{mktemp -dt PORTSYS@XXXXXXXXX}
+WRKDIR=`{mktemp -p $PORTS/mk/tmp -dt PORTSYS@XXXXXXXXX}
 PORTSYS_DBDIR=$WRKDIR/dbfiles
 PORTSYS_PKGDIR=$WRKDIR/pkgroot
 PORTSYS_ROOTPWD=$WRKDIR/tmproot
@@ -122,29 +122,38 @@ fn sigexit {
 	rm -Rf $WRKDIR
 }
 
+fn dbman {
+	a1=$1; a2=$2; a3=$3
+	if (~ $a1 '-k') a1=()
+	if (~ $a1 '-t') a2=$"a2'{'
+	dir=`{$PORTS/mk/bin/dbman $a3}
+	$PORTS/mk/bin/dbread $a1 $a2 $"dir/vars
+}
+
 fn getsrc {
-	dir=`{$PORTS/mk/bin/dbman -k src $1}
+	dir=`{dbman -k src $1}
 	if (! ~ $dir '<nil>') {
 		echo -n $dir
 	}; if not {
-		name=`{$PORTS/mk/bin/dbman -k name $1}
-		version=`{$PORTS/mk/bin/dbman -k version $1}
+		name=`{dbman -k name $1}
+		version=`{dbman -k version $1}
 		echo -n $name-$version
 	}
 }
 
 # current deps as flags
 if ($uflag || ! test -f $PORTS/pkg/cache.cdb) $PORTS/mk/bin/dbman -u
-args=`{$PORTS/mk/bin/dbman -a $*} || error failed to generate args list
-deplist=`{$PORTS/mk/bin/dbman -d $*} || error failed to generate deps list
+true
+. $PORTS/mk/com/deps.rc
+args=`{portsys_deps $*} || error failed to generate args list
 
 # stage1: fetch, explode, patch
 for (pkg in $args) {
 	cd $WRKDIR
 	message $pkg: fetching...
-	cksum=`{$PORTS/mk/bin/dbman -k cksum $pkg}
-	mirrors=`{$PORTS/mk/bin/dbman -t mirrors $pkg}
-	version=`{$PORTS/mk/bin/dbman -k version $pkg}
+	cksum=`{dbman -k cksum $pkg}
+	mirrors=`{dbman -t mirrors $pkg}
+	version=`{dbman -k version $pkg}
 	src=`{getsrc $pkg}
 	tmp=`{mktemp -p $WRKDIR}
 	$PORTS/mk/bin/fetch $tmp $mirrors
@@ -152,8 +161,8 @@ for (pkg in $args) {
 	$PORTS/mk/bin/explode $tmp
 	message $pkg: patching...
 	dir=`{$PORTS/mk/bin/dbman $pkg}
-	patches=`{$PORTS/mk/bin/dbman -t patches $pkg}
-	plvl=`{$PORTS/mk/bin/dbman -k patch-level $pkg}
+	patches=`{dbman -t patches $pkg}
+	plvl=`{dbman -k patch-level $pkg}
 	if (~ $plvl '<nil>') plvl=1
 	@{ cd $src
 	for (p in $patches) patch -p$plvl < $dir/patches/$p }
@@ -169,7 +178,7 @@ fn _createdb {
 for (pkg in $args) {
 	dir=`{getsrc $pkg}
 	cd $WRKDIR/$dir
-	name=`{$PORTS/mk/bin/dbman -k name $pkg}
+	name=`{dbman -k name $pkg}
 	message $pkg: building...
 	@{ PORTSYS_TMP_BUILDDIR=`{mktemp -u 'PORTSYS@XXXXXXXXX'}
 	PATH=$PATH:$PORTS/mk/utils
@@ -183,17 +192,18 @@ for (pkg in $args) {
 	# copy dev files in a single dir
 	$PORTS/mk/bin/list
 	@{ SYSPATH=$WRKDIR/tmproot
-	$PORTS/mk/bin/install -c <INSTALL@DEV
-	$PORTS/mk/bin/install -c <INSTALL@DYNLIB } } }
+	$PORTS/mk/bin/install -c <INSTALL@DEF
+	$PORTS/mk/bin/install -c <INSTALL@DYNLIB
+	$PORTS/mk/bin/install -c <INSTALL@DEV } } }
 	# db files
 	cd $WRKDIR/pkgroot/$name
 	message $pkg: creating database entry...
-	version=`{$PORTS/mk/bin/dbman -k version $pkg}
-	license=`{$PORTS/mk/bin/dbman -k license $pkg}
-	description=`{$PORTS/mk/bin/dbman -k description $pkg}
+	version=`{dbman -k version $pkg}
+	license=`{dbman -k license $pkg}
+	description=`{dbman -k description $pkg}
 	if ($bflag) {
-		@{ mdeps=`{$PORTS/mk/bin/dbman -t mdeps $pkg}
-		rdeps=`{$PORTS/mk/bin/dbman -t rdeps $pkg}
+		@{ mdeps=`{dbman -t mdeps $pkg}
+		rdeps=`{dbman -t rdeps $pkg}
 		_createdb $name INSTALL@DEF }
 		if ($mflag) _createdb $name'-man' INSTALL@MAN '<MANPAGES>'
 	}
@@ -214,8 +224,8 @@ fn _install {
 # stage3: install/pack
 if (! $kflag) args=$*
 for (pkg in $args) {
-	name=`{$PORTS/mk/bin/dbman -k name $pkg}
-	version=`{$PORTS/mk/bin/dbman -k version $pkg}
+	name=`{dbman -k name $pkg}
+	version=`{dbman -k version $pkg}
 	cd $WRKDIR/pkgroot/$name
 	message $pkg: installing...
 	if ($bflag) {

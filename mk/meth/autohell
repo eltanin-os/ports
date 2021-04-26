@@ -14,6 +14,7 @@ if ($OBDIR) {
 	CONFIGURE='../'$CONFIGURE
 }
 
+_static=$static
 if ($static) {
 	static=yes
 	shared=no
@@ -41,6 +42,5 @@ if (! test -f AUTOHELL@DONE) @{
 	touch AUTOHELL@DONE
 }
 if (~ $#* 0) exit 0
-V=()
-if (test -f libtool) if (~ $static yes) V=(LDFLAGS'='$"LDFLAGS' -all-static')
-exec make -- DESTDIR'='$"DESTDIR $V $*
+if ($_static) V=(LDFLAGS'='$"LDFLAGS' -all-static'); if not V=()
+exec $PORTS/mk/meth/make $*

@@ -88,7 +88,7 @@ sysmove(char *p)
 static void
 usage(void)
 {
-	c_ioq_fmt(ioq2, "usage: %s [-n] [file]\n", c_std_getprogname());
+	c_ioq_fmt(ioq2, "usage: %s [-cn]\n", c_std_getprogname());
 	c_std_exit(1);
 }
 
@@ -99,7 +99,6 @@ main(int argc, char **argv)
 	ctype_ioq *file;
 	ctype_arr arr;
 	usize len;
-	ctype_fd fd;
 	ctype_status r;
 	int nflag;
 	char *dest;
@@ -126,25 +125,10 @@ main(int argc, char **argv)
 	argc -= argmain->idx;
 	argv += argmain->idx;
 
-	switch (argc) {
-	case 1:
-		if (C_ISDASH(*argv)) {
-			;
-		} else {
-			if ((fd = c_sys_open(*argv, C_OREAD, 0)) < 0)
-				c_err_die(1, "c_sys_open %s", *argv);
-			if (!(file = c_ioq_alloc(fd, C_BIOSIZ, &c_sys_read)))
-				c_err_die(1, "c_ioq_alloc");
-			break;
-		}
-		/* FALLTHROUGH */
-	case 0:
-		fd = -1;
-		file = ioq0;
-		break;
-	default:
+	if (argc)
 		usage();
-	}
+
+	file = ioq0;
 
 	if (nflag) {
 		len = 0;
@@ -157,6 +141,11 @@ main(int argc, char **argv)
 			len += st.blocks;
 			c_arr_trunc(&arr, 0, sizeof(uchar));
 		}
+		/* free arr */
+
+		if (r < 0)
+			c_std_exit(-1);
+
 		c_ioq_fmt(ioq1, "%lluo\n", (uvlong)C_HOWMANY(len, 2));
 		c_std_exit(0);
 	}
@@ -171,5 +160,6 @@ main(int argc, char **argv)
 		sysmove(dest);
 		c_arr_trunc(&arr, 0, sizeof(uchar));
 	}
-	return 0;
+	/* free arr */
+	return r;
 }

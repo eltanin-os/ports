@@ -22,6 +22,7 @@ case *'-Os'*
 if (! test -n $"PREFIX) PREFIX='/'
 cmake                                     \
     -GNinja                               \
+    -DCMAKE_PREFIX_PATH'='$PORTSYS_ROOTPWD \
     -DCMAKE_INSTALL_PREFIX'='$PREFIX      \
     -DCMAKE_INSTALL_BINDIR'='$BINDIR      \
     -DCMAKE_INSTALL_SBINDIR'='$BINDIR     \

@@ -16,6 +16,7 @@ LDFLAGS=-static
 LOCALE=en_US.utf8
 
 # COMPILE TOOLS
+LIBTOOL=/bin/slibtool
 PKG_CONFIG=pkgconf
 NINJA=samu
 

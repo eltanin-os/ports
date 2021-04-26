@@ -7,6 +7,8 @@ for (flag in $PORTSYS_MK_FLAGS) {
 	}
 }
 
+_MAKE='make LIBTOOL='$"LIBTOOL
+
 exec make -j $nprocs       \
     AR'='$AR               \
     CC'='$CC               \
@@ -22,5 +24,6 @@ exec make -j $nprocs       \
     MANDIR'='$MANDIR       \
     INCDIR'='$INCDIR       \
     DESTDIR'='$DESTDIR     \
-    $PORTSYS_METH_FLAGS    \
+    LIBTOOL'='$LIBTOOL     \
+    MAKE'='$_MAKE          \
     $*
