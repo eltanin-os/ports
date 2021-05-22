@@ -17,10 +17,7 @@ enum {
 };
 
 #define WMODE (C_OCREATE | C_OWRITE | C_OCEXEC)
-#define fmtstr(...) fmtstr_(__VA_ARGS__, nil)
-#define CMP(a, b) c_mem_cmp((a), sizeof((a)), (b))
-#define SCMP(a, b) c_mem_cmp((a), sizeof((a)) - 1, (b))
-#define DCMP(a, b, c) ((!c[(b)] || c[(b)] == '/') && !c_mem_cmp((a), (b), (c)))
+#define CMP(a, b) c_mem_cmp((a), sizeof((a)) - 1, (b))
 
 struct file {
 	char buf[C_BIOSIZ];
@@ -28,8 +25,9 @@ struct file {
 	ctype_fd fd;
 };
 
+static char *cdir[] = { ".", nil };
 static char *drtdir, *incdir, *libdir, *mandir;
-static usize drtlen, inclen, liblen, manlen;
+static usize prefixlen, drtlen, inclen, liblen, manlen;
 
 static char *strtab[] = {
 	"INSTALL@DEF",
@@ -39,36 +37,15 @@ static char *strtab[] = {
 	"INSTALL@DYNLIB",
 };
 
-static char *
-estrdup(char *s)
-{
-	if (!(s = c_str_dup(s, -1)))
-		c_err_die(1, "c_str_dup");
-	return s;
-}
-
-static char *
-fmtstr_(char *fmt, ...)
-{
-	static ctype_arr arr;
-	va_list ap;
-
-	va_start(ap, fmt);
-	c_arr_trunc(&arr, 0, sizeof(uchar));
-	if (c_dyn_vfmt(&arr, fmt, ap) < 0)
-		c_err_die(1, "c_dyn_vfmt");
-	va_end(ap);
-	return c_arr_data(&arr);
-}
-
 static int
 getdirnum(char *s)
 {
-	if (DCMP(mandir, manlen, s)) {
+	for (; *s == '/' || *s == '.'; ++s) ;
+	if (!c_mem_cmp(mandir, manlen, s)) {
 		return MANDIR;
-	} else if (DCMP(libdir, liblen, s)) {
+	} else if (!c_mem_cmp(libdir, liblen, s)) {
 		return DEVDIR;
-	} else if (DCMP(incdir, inclen, s)) {
+	} else if (!c_mem_cmp(incdir, inclen, s)) {
 		return DEVDIR;
 	} else {
 		if (!c_mem_cmp(drtdir, drtlen, s)) {
@@ -87,6 +64,18 @@ getdirnum(char *s)
 }
 
 static void
+getenv(char **sp, usize *len, char *env)
+{
+	char *tmp;
+
+	if (!(tmp = c_std_getenv(env)))
+		c_err_diex(1, "missing %s environmental variable", env);
+	++tmp;
+	*len = c_str_len(tmp, -1);
+	*sp = tmp;
+}
+
+static void
 usage(void)
 {
 	c_ioq_fmt(ioq2, "usage: %s\n", c_std_getprogname());
@@ -102,7 +91,6 @@ main(int argc, char **argv)
 	ctype_fd fd;
 	ctype_status r;
 	int num;
-	char *curdir[2];
 
 	c_std_setprogname(argv[0]);
 	--argc, ++argv;
@@ -119,22 +107,10 @@ main(int argc, char **argv)
 	if (argc)
 		usage();
 
-	if (!(drtdir = c_std_getenv("DRTDIR")))
-		c_err_diex(1, "missing DRTDIR environmental variable");
-	drtdir = estrdup(fmtstr(".%s", drtdir));
-	drtlen = c_str_len(drtdir, -1);
-	if (!(incdir = c_std_getenv("INCDIR")))
-		c_err_diex(1, "missing INCDIR environmental variable");
-	incdir = estrdup(fmtstr(".%s", incdir));
-	inclen = c_str_len(incdir, -1);
-	if (!(libdir = c_std_getenv("LIBDIR")))
-		c_err_diex(1, "missing LIBDIR environmental variable");
-	libdir = estrdup(fmtstr(".%s", libdir));
-	liblen = c_str_len(libdir, -1);
-	if (!(mandir = c_std_getenv("MANDIR")))
-		c_err_diex(1, "missing MANDIR environmental variable");
-	mandir = estrdup(fmtstr(".%s", mandir));
-	manlen = c_str_len(mandir, -1);
+	getenv(&drtdir, &drtlen, "DRTDIR");
+	getenv(&incdir, &inclen, "INCDIR");
+	getenv(&libdir, &liblen, "LIBDIR");
+	getenv(&mandir, &manlen, "MANDIR");
 
 	if (!(fp = c_std_alloc(ALL, sizeof(*fp))))
 		c_err_die(1, "c_std_alloc");
@@ -146,9 +122,7 @@ main(int argc, char **argv)
 		    sizeof(fp[num].buf), c_sys_write);
 	}
 
-	curdir[0] = ".";
-	curdir[1] = nil;
-	if (c_dir_open(&dir, curdir, 0, nil) < 0)
+	if (c_dir_open(&dir, cdir, 0, nil) < 0)
 		c_err_die(1, "c_dir_open");
 	r = 0;
 	while ((p = c_dir_read(&dir))) {
@@ -158,12 +132,11 @@ main(int argc, char **argv)
 			case 0:
 				p->num = DEFDIR;
 				break;
-			case 1:
-			case 2:
-				p->num = getdirnum(p->path);
-				break;
 			default:
-				p->num = p->parent->num;
+				/* could be faster to ignore PREFIX
+				 * dirs and only call this function
+				 * when necessary */
+				p->num = getdirnum(p->path);
 			}
 			break;
 		case C_FSDP:
@@ -174,7 +147,7 @@ main(int argc, char **argv)
 			r = c_err_warnx("%s: %r", p->path, p->err);
 			break;
 		default:
-			if (!SCMP("INSTALL@", p->name))
+			if (!CMP("INSTALL@", p->name))
 				continue;
 			switch (p->parent->num) {
 			case DEFDIR:
@@ -188,7 +161,7 @@ main(int argc, char **argv)
 				c_ioq_fmt(&fp[num].ioq, "%s\n", p->path);
 				break;
 			case MANDIR:
-				if (!SCMP(".", p->name + p->nlen - 2)) {
+				if (!CMP(".", p->name + p->nlen - 2)) {
 					switch (*(p->name + p->nlen - 1)) {
 					case '2':
 					case '3':
