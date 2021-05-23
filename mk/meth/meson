@@ -1,27 +1,26 @@
 #!/bin/rc
-prefix=$"PREFIX
-if (test -z $prefix) prefix=/
-
 if ($static) {
 	static=static
 }; if not {
 	static=shared
 }
 
+if (test -z $PREFIX) PREFIX='/'
+
 if (! test -d $PORTSYS_TMP_BUILDDIR) {
-	meson                             \
-	    --prefix'='$prefix            \
-	    --bindir'='$PREFIX$BINDIR     \
-	    --datadir'='$PREFIX$DRTDIR    \
-	    --includedir'='$PREFIX$INCDIR \
-	    --libdir'='$PREFIX$LIBDIR     \
-	    --mandir'='$PREFIX$MANDIR     \
-	    --sbindir'='$PREFIX$BINDIR    \
-	    --sysconfdir'='$PREFIX$ETCDIR \
-	    --buildtype'='plain           \
-	    --default-library'='$static   \
-	    $PORTSYS_METH_FLAGS           \
-	    --                            \
+	meson                           \
+	    --prefix'='$PREFIX          \
+	    --bindir'='$BINDIR          \
+	    --datadir'='$DRTDIR         \
+	    --includedir'='$INCDIR      \
+	    --libdir'='$LIBDIR          \
+	    --mandir'='$MANDIR          \
+	    --sbindir'='$BINDIR         \
+	    --sysconfdir'='$ETCDIR      \
+	    --buildtype'='plain         \
+	    --default-library'='$static \
+	    $PORTSYS_METH_FLAGS         \
+	    --                          \
 	    $PORTSYS_TMP_BUILDDIR
 }
 
