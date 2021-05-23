@@ -23,6 +23,8 @@ fn wrap_install {
 	switch ($1) {
 	case 'bin'
 		dest=$"DESTDIR$"BINDIR
+	case 'drt'
+		dest=$"DESTDIR$"DRTDIR
 	case 'inc'
 		dest=$"DESTDIR$"INCDIR
 	case 'lib'
