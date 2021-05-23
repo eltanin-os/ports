@@ -1,11 +1,10 @@
 #!/bin/rc
-dir=$"PORTSYS_TMP_BUILDDIR
-mkdir $dir
-cd $dir
+mkdir $PORTSYS_TMP_BUILDDIR
+cd $PORTSYS_TMP_BUILDDIR
 
 flags=()
 if ($static) {
-	flags=(-D BUILD_SHARED_LIBS'='OFF -D LIBTYPE'='STATIC)
+	flags=(-D BUILD_SHARED_LIBS'='OFF -DLIBTYPE'='STATIC)
 }; if not {
 	flags=(-D BUILD_SHARED_LIBS'='ON)
 }
@@ -19,21 +18,21 @@ case *'-Os'*
 	flags=($flags -DCMAKE_BUILD_TYPE'='MinSizeRel)
 }
 
-if (! test -n $"PREFIX) PREFIX='/'
-cmake                                     \
-    -GNinja                               \
+
+if (test -z $PREFIX) PREFIX='/'
+
+cmake                                      \
+    -GNinja                                \
     -DCMAKE_PREFIX_PATH'='$PORTSYS_ROOTPWD \
-    -DCMAKE_INSTALL_PREFIX'='$PREFIX      \
-    -DCMAKE_INSTALL_BINDIR'='$BINDIR      \
-    -DCMAKE_INSTALL_SBINDIR'='$BINDIR     \
-    -DCMAKE_INSTALL_SYSCONFDIR'='$ETCDIR  \
-    -DCMAKE_INSTALL_LIBDIR'='$LIBDIR      \
-    -DCMAKE_INSTALL_INCLUDEDIR'='$INCDIR  \
-    -DCMAKE_INSTALL_DATAROOTDIR'='$DRTDIR \
-    -DCMAKE_INSTALL_MANDIR'='$MANDIR      \
-    $flags                                \
-    $PORTSYS_METH_FLAGS                   \
+    -DCMAKE_INSTALL_PREFIX'='$PREFIX       \
+    -DCMAKE_INSTALL_BINDIR'='$BINDIR       \
+    -DCMAKE_INSTALL_SBINDIR'='$BINDIR      \
+    -DCMAKE_INSTALL_SYSCONFDIR'='$ETCDIR   \
+    -DCMAKE_INSTALL_LIBDIR'='$LIBDIR       \
+    -DCMAKE_INSTALL_INCLUDEDIR'='$INCDIR   \
+    -DCMAKE_INSTALL_DATAROOTDIR'='$DRTDIR  \
+    -DCMAKE_INSTALL_MANDIR'='$MANDIR       \
+    $flags                                 \
+    $PORTSYS_METH_FLAGS                    \
     ..
-args=()
-if (! ~ $#* 0) args=(--target $*)
-exec cmake --build . $args
+exec $NINJA $*
