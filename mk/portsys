@@ -181,7 +181,7 @@ for (pkg in $args) {
 	name=`{dbman -k name $pkg}
 	message $pkg: building...
 	@{ PORTSYS_TMP_BUILDDIR=`{mktemp -u 'PORTSYS@XXXXXXXXX'}
-	PATH=$PATH:$PORTS/mk/utils
+	PATH=$PATH:$PORTS/mk/utils:$PORTSYS_ROOTPWD$"BINDIR
 	dir=`{$PORTS/mk/bin/dbman $pkg}
 	@{ DESTDIR=$WRKDIR/pkgroot/$name
 	. $PORTS/mk/com/premeth.rc
@@ -191,7 +191,7 @@ for (pkg in $args) {
 	$PORTS/mk/bin/prepare
 	# copy dev files in a single dir
 	$PORTS/mk/bin/list
-	@{ SYSPATH=$WRKDIR/tmproot
+	@{ SYSPATH=$PORTSYS_ROOTPWD
 	$PORTS/mk/bin/install -c <INSTALL@DEF
 	$PORTS/mk/bin/install -c <INSTALL@DYNLIB
 	$PORTS/mk/bin/install -c <INSTALL@DEV } } }
