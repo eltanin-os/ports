@@ -42,5 +42,6 @@ if (! test -f AUTOHELL@DONE) @{
 	touch AUTOHELL@DONE
 }
 if (~ $#* 0) exit 0
-if ($_static) V=(LDFLAGS'='$"LDFLAGS' -all-static'); if not V=()
+if ($_static) LDFLAGS'='$"LDFLAGS' -all-static'
+PORTSYS_MK_FLAGS=($PORTSYS_MK_FLAGS nopath)
 exec $PORTS/mk/meth/make $*

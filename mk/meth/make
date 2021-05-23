@@ -1,21 +1,14 @@
 #!/bin/rc
-for (flag in $PORTSYS_MK_FLAGS) {
-	switch ($flag) {
-	case 'replace'
-		_A=(CFLAGS'='$"CFLAGS CPPFLAGS'='$"CPPFLAGS LDFLAGS'='$"LDFLAGS)
-		PORTSYS_METH_FLAGS=($PORTSYS_METH_FLAGS $_A)
-	}
-}
-
-_MAKE='make LIBTOOL='$"LIBTOOL
-
-exec make -j $nprocs       \
+VG=(                       \
     AR'='$AR               \
     CC'='$CC               \
     CXX'='$CXX             \
     YACC'='$YACC           \
     STRIP'='$STRIP         \
     RANLIB'='$RANLIB       \
+)
+
+VP=(                       \
     PREFIX'='$PREFIX       \
     BINDIR'='$BINDIR       \
     LIBDIR'='$LIBDIR       \
@@ -23,7 +16,25 @@ exec make -j $nprocs       \
     DFLDIR'='$DFLDIR       \
     MANDIR'='$MANDIR       \
     INCDIR'='$INCDIR       \
-    DESTDIR'='$DESTDIR     \
-    LIBTOOL'='$LIBTOOL     \
-    MAKE'='$_MAKE          \
+)
+
+for (flag in $PORTSYS_MK_FLAGS) {
+	switch ($flag) {
+	case 'nopath'
+		VP=()
+	case 'replace'
+		A=(CFLAGS'='$"CFLAGS CPPFLAGS'='$"CPPFLAGS LDFLAGS'='$"LDFLAGS)
+		PORTSYS_METH_FLAGS=($PORTSYS_METH_FLAGS $A)
+	}
+}
+
+_MAKE='make LIBTOOL='$"LIBTOOL
+
+exec make -j $nprocs \
+    $VG \
+    $VP \
+    DESTDIR'='$DESTDIR \
+    LIBTOOL'='$LIBTOOL \
+    MAKE'='$_MAKE \
+    PORTSYS_METH_FLAGS'='$"PORTSYS_METH_FLAGS \
     $*
