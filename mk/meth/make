@@ -38,7 +38,6 @@ exec make -j $nprocs \
     $VG \
     $VP \
     DESTDIR'='$DESTDIR \
-    LIBTOOL'='$LIBTOOL \
     MAKE'='$_MAKE \
     $PORTSYS_METH_FLAGS \
     $*
