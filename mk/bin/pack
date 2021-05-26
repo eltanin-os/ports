@@ -1,5 +1,4 @@
 #!/bin/rc
-if (! test -s $1) exit 0
 dest=$name'#'$version.$pkgsuf
 if (test -n $PKGPATH) dest=$PKGPATH/$dest
-$PKG_PACK <$1 | $PKG_COMPRESS >$dest
+$PKG_PACK | $PKG_COMPRESS >$dest

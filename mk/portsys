@@ -216,7 +216,7 @@ fn _install {
 	@{ name=$1
 	if (test -e $PORTSYS_DBDIR/$name) {
 		mv $PORTSYS_DBDIR/$name $TDBDIR
-		$PORTS/mk/bin/$mk $2
+		$PORTS/mk/bin/$mk <$2
 	}
 	true }
 }
