@@ -50,6 +50,9 @@ fn wrap_install {
 		s=$1
 		shift
 		for (arg in $*) ln -s $s $dest/$arg
+	case '-r'
+		shift
+		cp -R $* $dest
 	case *
 		$INSTALL $* $dest
 	}
