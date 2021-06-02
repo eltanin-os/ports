@@ -5,7 +5,7 @@ if (test -z $PORTS) {
 }
 true # only god knows why
 argv0=$0
-. $PORTS/mk/config
+. $PORTS/mk/config.rc
 . $PORTS/mk/com/io.rc
 
 message creating temporary environment...

@@ -5,7 +5,7 @@ if (test -z $PORTS) {
 }
 true # '-e' sucks
 argv0=`{basename $0}
-. $PORTS/mk/config
+. $PORTS/mk/config.rc
 . $PORTS/mk/com/io.rc
 
 repos=`{ls $PORTS/pkg}
