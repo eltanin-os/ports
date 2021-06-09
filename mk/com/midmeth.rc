@@ -5,6 +5,6 @@ for (flag in $PORTSYS_MK_FLAGS) {
 		LDFLAGS=`{echo $LDFLAGS | sed 's/-static//g'}
 		LDFLAGS=$"LDFLAGS
 	case 'nocppflags'
-		CPPFLAGS=$"CFLAGS' '$"CPPFLAGS
+		CFLAGS=$"CFLAGS' '$"CPPFLAGS
 	}
 }
