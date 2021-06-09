@@ -1,7 +1,7 @@
 #!/bin/rc
 if (test -z $CONFIGURE) CONFIGURE='./configure'
 gnu=false
-if (test -e $CONFIGURE'.ac') gnu=true
+if (test -e $CONFIGURE'.ac') if (test -e m4/libtool.m4) gnu=true
 
 OBDIR=true
 switch ($PORTSYS_MK_FLAGS) {
