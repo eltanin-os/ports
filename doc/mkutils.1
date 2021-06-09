@@ -1,4 +1,4 @@
-.Dd $Mdocdate: May 22 2021 $
+.Dd $Mdocdate: June 02 2021 $
 .Dt MKUTILS 1
 .Os
 .Sh NAME
@@ -21,7 +21,7 @@ with the given
 Executes
 .Ar command
 with the portsys environment.
-.It Cm install Bro Cm bin | drt | inc | lib | man Brc Oo Fl d | Fl e | l Oc Ar
+.It Cm install Bro Cm bin | drt | inc | lib | man Brc Oo Fl d | Fl e | l | r Oc Ar
 Copy files according to its category.
 .Bl -tag -width Ds -compact
 .It Fl d
@@ -30,6 +30,8 @@ Delete files instead of copying.
 Create empty files.
 .It Fl l
 Create symbolic links
+.It Fl r
+Copy directories recursively.
 .El
 .It Cm sed Ar file args ...
 Executes the system sed and replaces the
