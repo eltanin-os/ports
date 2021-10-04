@@ -17,8 +17,8 @@ findstart(struct cfg *p)
 	ctype_fd fd;
 
 	fd = c_ioq_fileno(&p->ioq);
-	c_sys_seek(fd, 0, C_SEEKSET);
-	c_ioq_init(&p->ioq, fd, p->buf, sizeof(p->buf), &c_sys_read);
+	c_nix_seek(fd, 0, C_SEEKSET);
+	c_ioq_init(&p->ioq, fd, p->buf, sizeof(p->buf), &c_nix_fdread);
 }
 
 static char *
@@ -41,7 +41,7 @@ getline(struct cfg *p, ctype_status *r)
 void
 cfginit(struct cfg *p, ctype_fd fd)
 {
-	c_ioq_init(&p->ioq, fd, p->buf, sizeof(p->buf), &c_sys_read);
+	c_ioq_init(&p->ioq, fd, p->buf, sizeof(p->buf), &c_nix_fdread);
 	p->tag = 0;
 	p->fd = fd;
 }
@@ -182,8 +182,8 @@ main(int argc, char **argv)
 
 	k = *argv++;
 
-	if ((fd = c_sys_open(*argv, C_OREAD, 0)) < 0)
-		c_err_die(1, "c_sys_open");
+	if ((fd = c_nix_fdopen2(*argv, C_OREAD)) < 0)
+		c_err_die(1, "c_nix_fdopen2");
 
 	c_mem_set(&cfg, sizeof(cfg), 0);
 	cfginit(&cfg, fd);
@@ -197,7 +197,7 @@ main(int argc, char **argv)
 		c_ioq_fmt(ioq1, "%s\n", getkey(&cfg, k, 0));
 	}
 	cfgclose(&cfg);
-	c_sys_close(fd);
+	c_nix_fdclose(fd);
 	c_ioq_flush(ioq1);
 	return 0;
 }

@@ -116,13 +116,13 @@ main(int argc, char **argv)
 		c_err_die(1, "c_std_alloc");
 
 	for (num = 0; num < ALL; ++num) {
-		if ((fd = c_sys_open(strtab[num], WMODE, 0666)) < 0)
-			c_err_die(1, "c_sys_open %s", strtab[num]);
+		if ((fd = c_nix_fdopen3(strtab[num], WMODE, 0666)) < 0)
+			c_err_die(1, "c_nix_fdopen3 %s", strtab[num]);
 		c_ioq_init(&fp[num].ioq, fd, fp[num].buf,
-		    sizeof(fp[num].buf), c_sys_write);
+		    sizeof(fp[num].buf), c_nix_fdwrite);
 	}
 
-	if (c_dir_open(&dir, cdir, 0, nil) < 0)
+	if (c_dir_open(&dir, cdir, C_FSLOG, nil) < 0)
 		c_err_die(1, "c_dir_open");
 	r = 0;
 	while ((p = c_dir_read(&dir))) {
@@ -139,6 +139,7 @@ main(int argc, char **argv)
 				p->num = getdirnum(p->path);
 			}
 			break;
+		case C_FSDC:
 		case C_FSDP:
 			break;
 		case C_FSDNR:

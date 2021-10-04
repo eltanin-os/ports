@@ -56,8 +56,8 @@ gencache(char *root, char *path)
 		c_err_die(1, "c_dyn_fmt");
 
 	tmp = c_arr_data(&arr);
-	if ((fd = c_std_mktemp(tmp, c_arr_bytes(&arr), 0)) < 0)
-		c_err_die(1, "c_std_mktemp %s", tmp);
+	if ((fd = c_nix_mktemp(tmp, c_arr_bytes(&arr), 0)) < 0)
+		c_err_die(1, "c_nix_mktemp %s", tmp);
 
 	if (c_cdb_mkstart(&cdbmk, fd) < 0)
 		c_err_die(1, "c_cdb_init");
@@ -99,10 +99,10 @@ gencache(char *root, char *path)
 
 	if (c_cdb_mkfinish(&cdbmk) < 0)
 		c_err_die(1, "c_cdb_mkfinish");
-	c_sys_close(fd);
+	c_nix_fdclose(fd);
 
-	if (c_sys_rename(tmp, path) < 0)
-		c_err_die(1, "c_sys_rename %s %s", tmp, path);
+	if (c_nix_rename(path, tmp) < 0)
+		c_err_die(1, "c_nix_rename %s <- %s", path, tmp);
 	c_dyn_free(&arr);
 }
 
@@ -157,8 +157,8 @@ main(int argc, char **argv)
 	if (!argc)
 		usage();
 
-	if ((fd = c_sys_open(s, C_OREAD, 0)) < 0)
-		c_err_die(1, "c_sys_open %s", s);
+	if ((fd = c_nix_fdopen2(s, C_OREAD)) < 0)
+		c_err_die(1, "c_nix_fdopen2 %s", s);
 	c_cdb_init(&cdb, fd);
 
 	if (!(s = getpath(*argv)))

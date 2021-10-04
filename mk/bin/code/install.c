@@ -8,52 +8,14 @@ static int cflag;
 static char *rootdir;
 
 static ctype_status
-makedir(char *s, uint mode)
-{
-	ctype_stat st;
-
-	if (c_sys_mkdir(s, mode) < 0) {
-		if (errno == C_EEXIST) {
-			if ((c_sys_stat(&st, s) < 0) || !C_ISDIR(st.mode)) {
-				errno = C_ENOTDIR;
-				return -1;
-			}
-		} else {
-			return -1;
-		}
-	}
-	return 0;
-}
-
-static ctype_status
-mkpath(char *dir, uint mode)
-{
-	char *s;
-
-	s = dir;
-	if (*s == '/')
-		++s;
-
-	for (;;) {
-		if (!(s = c_str_chr(s, C_USIZEMAX, '/')))
-			break;
-		*s = 0;
-		if (makedir(dir, mode) < 0)
-			return c_err_warn("makedir %s", dir);
-		*s++ = '/';
-	}
-	return 0;
-}
-
-static ctype_status
-copy(char *s, char *d)
+copy(char *d, char *s)
 {
 	ctype_status r;
 
-	if ((r = c_sys_link(s, d)) < 0 &&
+	if ((r = c_nix_link(d, s)) < 0 &&
 	    errno == C_EEXIST) {
-		c_sys_unlink(d);
-		r = c_sys_link(s, d);
+		c_nix_unlink(d);
+		r = c_nix_link(d, s);
 	}
 	return r;
 }
@@ -70,18 +32,22 @@ sysmove(char *p)
 	c_arr_trunc(&arr, 0, sizeof(uchar));
 	if (c_dyn_fmt(&arr, "%s/%s", rootdir, p) < 0)
 		c_err_die(1, "c_dyn_fmt");
-	d = c_arr_data(&arr);
-	if (mkpath(d, 0755) < 0)
-		c_err_die(1, "mkpath %s", d);
 
-	r = cflag ? copy(p, d) : c_sys_rename(p, d);
+	d = c_arr_data(&arr);
+	if (c_nix_mkpath(c_gen_dirname(d), 0755, 0755) < 0)
+		c_err_die(1, "c_nix_mkpath %s", d);
+
+	c_arr_trunc(&arr, 0, sizeof(uchar));
+	c_arr_fmt(&arr, "%s/%s", rootdir, p);
+
+	r = cflag ? copy(d, p) : c_nix_rename(d, p);
 	if (r < 0) {
 		if (errno != C_EXDEV)
-			c_err_die(1, "sysmove %s %s", p, d);
+			c_err_die(1, "sysmove %s <- %s", d, p);
 		INITAV4(argv, "cp", "-p", p, d);
 		if (!(id = c_exc_spawn0(*argv, argv, environ)))
 			c_err_die(1, "c_exc_spawn0 %s", *argv);
-		c_sys_waitpid(id, nil, 0);
+		c_nix_waitpid(id, nil, 0);
 	}
 }
 
@@ -136,17 +102,17 @@ main(int argc, char **argv)
 		while ((r = c_ioq_getln(file, &arr)) > 0) {
 			dest = c_arr_data(&arr);
 			dest[c_arr_bytes(&arr) - 1] = 0;
-			if (c_sys_lstat(&st, dest) < 0)
-				c_err_die(1, "c_sys_lstat %s", dest);
-			len += st.blocks;
+			if (c_nix_lstat(&st, dest) < 0)
+				c_err_die(1, "c_nix_lstat %s", dest);
+			len += st.size;
 			c_arr_trunc(&arr, 0, sizeof(uchar));
 		}
-		/* free arr */
+		c_dyn_free(&arr);
 
 		if (r < 0)
 			c_std_exit(-1);
 
-		c_ioq_fmt(ioq1, "%lluo\n", (uvlong)C_HOWMANY(len, 2));
+		c_ioq_fmt(ioq1, "%llud\n", (uvlong)C_HOWMANY(len, 1024/512));
 		c_std_exit(0);
 	}
 
@@ -160,6 +126,6 @@ main(int argc, char **argv)
 		sysmove(dest);
 		c_arr_trunc(&arr, 0, sizeof(uchar));
 	}
-	/* free arr */
+	c_dyn_free(&arr);
 	return r;
 }
