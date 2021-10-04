@@ -156,9 +156,9 @@ for (pkg in $args) {
 	version=`{dbman -k version $pkg}
 	src=`{getsrc $pkg}
 	tmp=`{mktemp -p $WRKDIR}
-	$PORTS/mk/bin/fetch $tmp $mirrors
+	$PORTS/mk/bin/fetch $tmp $mirrors || exit 1
 	message $pkg: exploding...
-	$PORTS/mk/bin/explode $tmp
+	$PORTS/mk/bin/explode $tmp || exit 1
 	message $pkg: patching...
 	dir=`{$PORTS/mk/bin/dbman $pkg}
 	patches=`{dbman -t patches $pkg}
