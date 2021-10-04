@@ -1,7 +1,3 @@
-#!/bin/true
-# code for /bin/rc instead of /bin/true
-fn search {
-	@{ for (p in $path) if (test -f $p/$1) exit 0 } ||;
-}
-search libtool || exit 0
-libtool $*
+#!/bin/rc
+if ($static) exec slibtool-static $*
+exec slibtool $*
