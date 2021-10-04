@@ -29,9 +29,9 @@ shift
 		}
 	}
 }} ||;
-if (test -z $cksum) {
+if (test -n $cksum) {
 	file=`{cat $tmp}
-	fsum=`{$CKSUM $file}
-	if (! ~ $cksum $fsum) error $file: checksum mismatch
+	sum=`{$CKSUM $file}
+	if (! ~ $cksum $sum(1)) error $file: checksum mismatch
 }
-true # only god knows why
+true # '-e' sucks
