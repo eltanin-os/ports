@@ -36,8 +36,7 @@ INCDIR=$"PREFIX/include
 # TOOLS
 AWK=awk
 SED=sed
-TAR=(pax -x ustar -w)
-UNTAR=(pax -r)
+UNTAR=(tar -xf -)
 FETCH=(curl -LO)
 CKSUM=(venus-cksum -w)
 SU=doas
@@ -48,13 +47,6 @@ STRIP=strip
 MAN_COMPRESS=(pigz -9)
 PKG_COMPRESS=(clzip -9)
 PKG_PACK=(venus-ar -c)
-
-# COMPRESSION TOOLS
-BZ2=(bzip2 -9)
-GZ=(pigz -9)
-LZ=(clzip -9)
-XZ=(xz -9)
-ZZ=(pigz -z9)
 
 # UNCOMPRESSION TOOLS
 UBZ2=(bzcat)
