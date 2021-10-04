@@ -7,6 +7,10 @@ fn findpattern {
 	find $dir -type f '(' -name '' `{printf ' -o -name %s' $*} ')'
 }
 
+fn readlink {
+	ls -l $1 | sed 's;.*-> ;;'
+}
+
 rm -f `{findpattern . `{cat $PORTS/mk/blacklist}}
 rm -Rf .$DRTDIR/info # TODO: move to blacklist
 
@@ -22,9 +26,9 @@ if (test -d .$MANDIR) {
 	for (l in `{find .$MANDIR -type l}) {
 		dir=`{dirname $l}
 		file=`{basename $l}
-		lp=`{basename `{ls -l $l | sed 's/.*-> //g'}}
+		lp=`{basename `{readlink $l}}
 		@{ cd $dir
-		if (test -f $lp.zz) lp=$lp.zz
+		if (test -f $lp.gz) lp=$lp.gz
 		ln -sf $lp $file }
 	}
 }
