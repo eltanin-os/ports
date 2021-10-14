@@ -44,7 +44,7 @@ sysmove(char *p)
 	if (r < 0) {
 		if (errno != C_EXDEV)
 			c_err_die(1, "sysmove %s <- %s", d, p);
-		INITAV4(argv, "cp", "-p", p, d);
+		INITAV4(argv, "cp", "-Pp", p, d);
 		if (!(id = c_exc_spawn0(*argv, argv, environ)))
 			c_err_die(1, "c_exc_spawn0 %s", *argv);
 		c_nix_waitpid(id, nil, 0);
