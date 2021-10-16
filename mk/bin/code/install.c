@@ -2,7 +2,7 @@
 #include <tertium/std.h>
 
 #define INITAV4(a, b, c, d, e) \
-{ (a)[0] = (b); (a)[1] = (c); (a)[2] = (d); (a)[3] = (e); }
+{ (a)[0] = (b); (a)[1] = (c); (a)[2] = (d); (a)[3] = (e); (a)[4] = nil; }
 
 static int cflag;
 static char *rootdir;
@@ -23,10 +23,10 @@ copy(char *d, char *s)
 static void
 sysmove(char *p)
 {
-	static ctype_arr arr;
+	static ctype_arr arr; /* "memory leak" */
 	ctype_id id;
 	ctype_status r;
-	char *argv[4];
+	char *argv[5];
 	char *d;
 
 	c_arr_trunc(&arr, 0, sizeof(uchar));
