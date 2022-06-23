@@ -1,10 +1,10 @@
 #!/bin/rc -e
+argv0=`{basename $0}
 if (test -z $PORTS) {
-	echo '<error>' $0: missing PORTS environmental variable >[1=2]
+	echo '<error>' $argv0: missing PORTS environmental variable >[1=2]
 	exit 1
 }
 true # '-e' sucks
-argv0=`{basename $0}
 . $PORTS/mk/config.rc
 . $PORTS/mk/com/io.rc
 
@@ -125,14 +125,13 @@ fn sigexit {
 fn dbman {
 	a1=$1; a2=$2; a3=$3
 	if (~ $a1 '-k') a1=()
-	if (~ $a1 '-t') a2=$"a2'{'
 	dir=`{$PORTS/mk/bin/dbman $a3}
-	$PORTS/mk/bin/dbread $a1 $a2 $"dir/vars
+	venus-conf $a1 $2 $dir/vars
 }
 
 fn getsrc {
 	dir=`{dbman -k src $1}
-	if (! ~ $dir '<nil>') {
+	if (! ~ $#dir 0) {
 		echo -n $dir
 	}; if not {
 		name=`{dbman -k name $1}
@@ -163,7 +162,7 @@ for (pkg in $args) {
 	dir=`{$PORTS/mk/bin/dbman $pkg}
 	patches=`{dbman -t patches $pkg}
 	plvl=`{dbman -k patch-level $pkg}
-	if (~ $plvl '<nil>') plvl=1
+	if (~ $#plvl 0) plvl=1
 	@{ cd $src
 	for (p in $patches) patch -p$plvl < $dir/patches/$p }
 }

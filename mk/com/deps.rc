@@ -3,10 +3,10 @@
 # $1: package
 fn portsys_dep @{
 	dir=`{$PORTS/mk/bin/dbman $1}
-	deps=`{$PORTS/mk/bin/dbread -t 'mdeps{' $"dir/vars}
+	deps=`{venus-conf -t mdeps $dir/vars}
 	for (dep in $deps) {
 		if (! test -e $"SYSPATH$"DBDIR/$dep'-dev') {
-			portsys_dep $dep
+			@{ portsys_dep $dep }
 			echo $dep
 		}
 		true

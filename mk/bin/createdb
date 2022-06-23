@@ -27,7 +27,7 @@ for (dep in $mdeps) {
 # rdeps
 if (! ~ $#rdeps 0) {
 	echo 'rdeps{'
-	printf '\t%s\n' $rdeps
+	printf '%s\n' $rdeps
 	echo '}'
 } >> $tmp
 # mdeps
@@ -38,14 +38,14 @@ if (! ~ $#makedeps 0) {
 		if (test -e $SYSDBDIR/$d) v=`{$SED -n 's/version://p' $SYSDBDIR/$d}
 		if not v=`{$SED -n 's/version://p' $PORTSYS_DBDIR/$d}
 		dep=$d'#'$v
-		printf '\t%s\n' $dep
+		echo $dep
 	}
 	echo '}'
 } >> $tmp
 # files
 {
 echo 'files{'
-xargs venus-cksum <$1 | sed 's;^;	;g'
+xargs venus-cksum <$1
 echo '}'
 } >> $tmp
 # gen

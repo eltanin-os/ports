@@ -11,9 +11,8 @@ static ctype_status
 copy(char *d, char *s)
 {
 	ctype_status r;
-
 	if ((r = c_nix_link(d, s)) < 0 &&
-	    errno == C_EEXIST) {
+	    errno == C_ERR_EEXIST) {
 		c_nix_unlink(d);
 		r = c_nix_link(d, s);
 	}
@@ -30,8 +29,7 @@ sysmove(char *p)
 	char *d;
 
 	c_arr_trunc(&arr, 0, sizeof(uchar));
-	if (c_dyn_fmt(&arr, "%s/%s", rootdir, p) < 0)
-		c_err_die(1, "c_dyn_fmt");
+	if (c_dyn_fmt(&arr, "%s/%s", rootdir, p) < 0) c_err_die(1, "c_dyn_fmt");
 
 	d = c_arr_data(&arr);
 	if (c_nix_mkpath(c_gen_dirname(d), 0755, 0755) < 0)
@@ -42,7 +40,7 @@ sysmove(char *p)
 
 	r = cflag ? copy(d, p) : c_nix_rename(d, p);
 	if (r < 0) {
-		if (errno != C_EXDEV)
+		if (errno != C_ERR_EXDEV)
 			c_err_die(1, "sysmove %s <- %s", d, p);
 		INITAV4(argv, "cp", "-Pp", p, d);
 		if (!(id = c_exc_spawn0(*argv, argv, environ)))
@@ -90,12 +88,9 @@ main(int argc, char **argv)
 	}
 	argc -= argmain->idx;
 	argv += argmain->idx;
-
-	if (argc)
-		usage();
+	if (argc) usage();
 
 	file = ioq0;
-
 	if (nflag) {
 		len = 0;
 		c_mem_set(&arr, sizeof(arr), 0);
@@ -108,11 +103,8 @@ main(int argc, char **argv)
 			c_arr_trunc(&arr, 0, sizeof(uchar));
 		}
 		c_dyn_free(&arr);
-
-		if (r < 0)
-			c_std_exit(-1);
-
-		c_ioq_fmt(ioq1, "%llud\n", (uvlong)C_HOWMANY(len, 1024/512));
+		if (r < 0) c_std_exit(-1);
+		c_ioq_fmt(ioq1, "%llud\n", (uvlong)C_STD_HOWMANY(len, 2));
 		c_std_exit(0);
 	}
 

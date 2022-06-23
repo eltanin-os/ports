@@ -31,7 +31,7 @@ shift
 }} ||;
 if (test -n $cksum) {
 	file=`{cat $tmp}
-	sum=`{$CKSUM $file}
-	if (! ~ $cksum $sum(1)) error $file: checksum mismatch
+	sum=`{$CKSUM $file | venus-conf $file}
+	if (! ~ $cksum $sum) error $file: checksum mismatch
 }
 true # '-e' sucks

@@ -1,12 +1,13 @@
 #!/bin/rc -e
+argv0=`{basename $0}
 if (test -z $PORTS) {
-	echo '<error>' $0: missing PORTS environmental variable >[1=2]
+	echo '<error>' $argv0: missing PORTS environmental variable >[1=2]
 	exit 1
 }
-true # only god knows why
-argv0=$0
+true # '-e' sucks
 . $PORTS/mk/config.rc
 . $PORTS/mk/com/io.rc
+PATH=$PORTS/mk/utils:$PATH
 
 message creating temporary environment...
 tmpfile=`{mktemp}
@@ -26,18 +27,24 @@ DESTDIR=''
 $CC $CFLAGS $CPPFLAGS $LDFLAGS -o $tmpfile.out $tmpfile -ltertium || {
 	warning tertium not found
 	message bootstraping tertium...
-	dir='tertium-0.10.0'
+	dir='tertium-0.1.0'
 	@{ cd $tmpdir
-	$FETCH http://downloads.eltan.in.net/files/tertium/$dir.tar.lz
+	$FETCH https://downloads.eltaninos.org/repo/sources/$dir.tar.lz
 	$ULZ $dir.tar.lz | $UNTAR
 	cd $dir
 	CFLAGS=$"CFLAGS' -fno-builtin'
-	ARCH=`{uname -m}
-	OS=`{uname -s | tr '[A-Z]' '[a-z]'}
 	. $PORTS/mk/com/premeth.rc
-	$PORTS/mk/utils/portmk -f replace make OSNAME'='$"OS OBJTYPE'='$"ARCH }
+	echo > config.rc
+	OSNAME=`{uname -s | $AWK '{print(tolower($0))}'}
+	OBJTYPE=`{uname -m}
+	portmk -f envtolist redo }
 	CPPFLAGS=$"CPPFLAGS' -I'$"tmpdir/$"dir/inc
 	LDFLAGS=$"LDFLAGS' -L'$"tmpdir/$"dir/lib
 }
+fn compile {
+	$CC `{echo $CFLAGS $CPPFLAGS $LDFLAGS} -o $1 $1.c -ltertium
+}
 message bootstraping ports tools...
-$PORTS/mk/utils/portmk make bootstrap
+progs=(dbman install list)
+for (prog in $progs) compile $prog
+mv $progs ..

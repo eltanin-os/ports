@@ -1,7 +1,6 @@
 #include <tertium/cpu.h>
 #include <tertium/std.h>
 
-#define CSTRCMP(a, b) c_mem_cmp((a), sizeof((a)), (b))
 #define fmtstr(...) fmtstr_(__VA_ARGS__, nil)
 
 static char *ports;
@@ -12,11 +11,9 @@ fmtstr_(char *fmt, ...)
 {
 	static ctype_arr arr;
 	va_list ap;
-
 	va_start(ap, fmt);
 	c_arr_trunc(&arr, 0, sizeof(uchar));
-	if (c_dyn_vfmt(&arr, fmt, ap) < 0)
-		c_err_die(1, "c_dyn_vfmt");
+	if (c_dyn_vfmt(&arr, fmt, ap) < 0) c_err_die(1, "c_dyn_vfmt");
 	va_end(ap);
 	return c_arr_data(&arr);
 }
@@ -27,8 +24,7 @@ getpath(char *s)
 	static ctype_arr arr;
 	usize len, pos;
 
-	if (c_cdb_find(&cdb, s, c_str_len(s, -1)) <= 0)
-		return nil;
+	if (c_cdb_find(&cdb, s, c_str_len(s, -1)) <= 0) return nil;
 	len = c_cdb_datalen(&cdb);
 	c_arr_trunc(&arr, 0, sizeof(uchar));
 	if (c_dyn_ready(&arr, len + 1, sizeof(uchar)) < 0)
@@ -54,41 +50,37 @@ gencache(char *root, char *path)
 	c_mem_set(&arr, sizeof(arr), 0);
 	if (c_dyn_fmt(&arr, "%s/PORTS@XXXXXXXXX", root) < 0)
 		c_err_die(1, "c_dyn_fmt");
-
 	tmp = c_arr_data(&arr);
-	if ((fd = c_nix_mktemp(tmp, c_arr_bytes(&arr), 0)) < 0)
+	if ((fd = c_nix_mktemp(tmp, c_arr_bytes(&arr))) < 0)
 		c_err_die(1, "c_nix_mktemp %s", tmp);
 
-	if (c_cdb_mkstart(&cdbmk, fd) < 0)
-		c_err_die(1, "c_cdb_init");
-
+	if (c_cdb_mkstart(&cdbmk, fd) < 0) c_err_die(1, "c_cdb_init");
 	argv[0] = ports;
 	argv[1] = nil;
-	if (c_dir_open(&dir, argv, C_FSLOG, nil) < 0)
+	if (c_dir_open(&dir, argv, C_DIR_FSLOG, nil) < 0)
 		c_err_die(1, "c_dir_open");
-
 	while ((ep = c_dir_read(&dir))) {
 		switch (ep->info) {
-		case C_FSD:
+		case C_DIR_FSD:
 			if (ep->name[0] == '.' && ep->name[1]) {
-				c_dir_set(&dir, ep, C_FSSKP);
+				c_dir_set(&dir, ep, C_DIR_FSSKP);
 				continue;
 			}
 			break;
-		case C_FSDP:
+		case C_DIR_FSDP:
 			if (ep->num)
 				if (c_cdb_mkadd(&cdbmk, ep->name, ep->nlen,
 				    ep->path, ep->len) < 0)
 					c_err_die(1, "c_cdb_mkadd");
 			break;
-		case C_FSF:
-			if (!CSTRCMP("build", ep->name) ||
-			    !CSTRCMP("vars", ep->name))
+		case C_DIR_FSF:
+			if (!C_STR_SCMP("build", ep->name) ||
+			    !C_STR_SCMP("vars", ep->name))
 				++ep->parent->num; /* tag the parent */
 			break;
-		case C_FSDNR:
-		case C_FSNS:
-		case C_FSERR:
+		case C_DIR_FSDNR:
+		case C_DIR_FSNS:
+		case C_DIR_FSERR:
 			c_err_warnx("%s: %r", ep->path, ep->err);
 			/* FALLTHROUGH */
 		default:
@@ -96,9 +88,7 @@ gencache(char *root, char *path)
 		}
 	}
 	c_dir_close(&dir);
-
-	if (c_cdb_mkfinish(&cdbmk) < 0)
-		c_err_die(1, "c_cdb_mkfinish");
+	if (c_cdb_mkfinish(&cdbmk) < 0) c_err_die(1, "c_cdb_mkfinish");
 	c_nix_fdclose(fd);
 
 	if (c_nix_rename(path, tmp) < 0)
@@ -149,18 +139,14 @@ main(int argc, char **argv)
 	if (uflag) {
 		gencache(ports, s);
 		/* free ports */
-		if (!argc)
-			return 0;
+		if (!argc) return 0;
 	}
 	/* free ports */
+	if (!argc) usage();
 
-	if (!argc)
-		usage();
-
-	if ((fd = c_nix_fdopen2(s, C_OREAD)) < 0)
+	if ((fd = c_nix_fdopen2(s, C_NIX_OREAD)) < 0)
 		c_err_die(1, "c_nix_fdopen2 %s", s);
 	c_cdb_init(&cdb, fd);
-
 	if (!(s = getpath(*argv)))
 		c_err_diex(1, "%s: package not found", *argv);
 	c_ioq_fmt(ioq1, "%s\n", s);

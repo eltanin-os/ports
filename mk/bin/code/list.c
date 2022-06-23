@@ -16,11 +16,11 @@ enum {
 	MANDIR,
 };
 
-#define WMODE (C_OCREATE | C_OWRITE | C_OCEXEC)
+#define WMODE (C_NIX_OCREATE|C_NIX_OWRITE|C_NIX_OCEXEC)
 #define CMP(a, b) c_mem_cmp((a), sizeof((a)) - 1, (b))
 
 struct file {
-	char buf[C_BIOSIZ];
+	char buf[C_IOQ_BSIZ];
 	ctype_ioq ioq;
 	ctype_fd fd;
 };
@@ -103,18 +103,14 @@ main(int argc, char **argv)
 	}
 	argc -= argmain->idx;
 	argv += argmain->idx;
-
-	if (argc)
-		usage();
+	if (argc) usage();
 
 	getenv(&drtdir, &drtlen, "DRTDIR");
 	getenv(&incdir, &inclen, "INCDIR");
 	getenv(&libdir, &liblen, "LIBDIR");
 	getenv(&mandir, &manlen, "MANDIR");
 
-	if (!(fp = c_std_alloc(ALL, sizeof(*fp))))
-		c_err_die(1, "c_std_alloc");
-
+	if (!(fp = c_std_alloc(ALL, sizeof(*fp)))) c_err_die(1, "c_std_alloc");
 	for (num = 0; num < ALL; ++num) {
 		if ((fd = c_nix_fdopen3(strtab[num], WMODE, 0666)) < 0)
 			c_err_die(1, "c_nix_fdopen3 %s", strtab[num]);
@@ -122,12 +118,12 @@ main(int argc, char **argv)
 		    sizeof(fp[num].buf), c_nix_fdwrite);
 	}
 
-	if (c_dir_open(&dir, cdir, C_FSLOG, nil) < 0)
+	if (c_dir_open(&dir, cdir, C_DIR_FSLOG, nil) < 0)
 		c_err_die(1, "c_dir_open");
 	r = 0;
 	while ((p = c_dir_read(&dir))) {
 		switch (p->info) {
-		case C_FSD:
+		case C_DIR_FSD:
 			switch (p->depth) {
 			case 0:
 				p->num = DEFDIR;
@@ -139,12 +135,12 @@ main(int argc, char **argv)
 				p->num = getdirnum(p->path);
 			}
 			break;
-		case C_FSDC:
-		case C_FSDP:
+		case C_DIR_FSDC:
+		case C_DIR_FSDP:
 			break;
-		case C_FSDNR:
-		case C_FSNS:
-		case C_FSERR:
+		case C_DIR_FSDNR:
+		case C_DIR_FSNS:
+		case C_DIR_FSERR:
 			r = c_err_warnx("%s: %r", p->path, p->err);
 			break;
 		default:
@@ -181,9 +177,6 @@ main(int argc, char **argv)
 		}
 	}
 	c_dir_close(&dir);
-
-	for (num = 0; num < ALL; ++num)
-		c_ioq_flush(&fp[num].ioq);
-
+	for (num = 0; num < ALL; ++num) c_ioq_flush(&fp[num].ioq);
 	return r;
 }
